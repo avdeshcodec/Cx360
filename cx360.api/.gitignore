@@ -25,10 +25,3 @@ Generated\ Files/
 *.pubxml
 *.publishproj
 *.publishproj
-
-#Ignore Web.Config
-[Ww]eb.config
-[Ww]eb*.config
-
-#Ignore App.Config
-[Aa]pp*.config
