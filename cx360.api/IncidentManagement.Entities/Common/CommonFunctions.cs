@@ -390,6 +390,18 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_CommunicationLanguage":
                     storeProcedure = MappedStoreProcedure.CCO_CommunicationLanguage;
                     break;
+                case "CCO_MemberProviders":
+                    storeProcedure = MappedStoreProcedure.CCO_MemberProviders;
+                    break;
+                case "CCO_CircleOfSupport":
+                    storeProcedure = MappedStoreProcedure.CCO_MemberProviders;
+                    break;
+                case "CCO_GuardianshipAndAdvocacy":
+                    storeProcedure = MappedStoreProcedure.CCO_GuardianshipAndAdvocacy;
+                    break;
+                case "CCO_AdvancedDirectivesFuturePlanning":
+                    storeProcedure = MappedStoreProcedure.CCO_AdvancedDirectivesFuturePlanning;
+                    break;
                 default:
                     // code block
                     break;

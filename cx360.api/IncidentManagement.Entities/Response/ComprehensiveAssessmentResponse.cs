@@ -51,6 +51,9 @@ namespace IncidentManagement.Entities.Response
             public int CompAssessmentVersioningId { get; set; }
             public int CommunicationId { get; set; }
             public int EligibilityInformationId { get; set; }
+            public int MemberProviderId { get; set; }
+            public int GuardianshipAndAdvocacyId { get; set; }
+            public int AdvancedDirectivesFuturePlanningId { get; set; }
             public string DocumentStatus { get; set; }
             public string DocumentVersion { get; set; }
             public bool? ValidatedRecord { get; set; }

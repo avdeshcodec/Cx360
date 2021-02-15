@@ -119,5 +119,9 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_ComprehensiveAssessment = "usp_InsertModifyCCO_ComprehensiveAssessment";
         public static readonly string CCO_EligibilityInformation = "usp_InsertModifyCCO_EligibilityInformationSection";
         public static readonly string CCO_CommunicationLanguage = "usp_InsertModifyCCO_CommunicationSection";
+        public static readonly string CCO_MemberProviders = "usp_InsertModifyCCO_MemberProviderSection";
+        public static readonly string CCO_CircleOfSupport = "usp_InsertModifyCCO_CircleofSupportSection";
+        public static readonly string CCO_GuardianshipAndAdvocacy = "usp_InsertModifyCCO_GuardianshipAndAdvocacySection";
+        public static readonly string CCO_AdvancedDirectivesFuturePlanning = "usp_InsertModifyCCO_AdvancedDirectivesFuturePlanningSection";
     }
 }
