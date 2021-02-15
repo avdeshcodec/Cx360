@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--HFS XML docmumet-->
+<root>
+  <header>
+    <hfsxmlver>918911_2020-11-17</hfsxmlver>
+    <providersubmittingonbehalf>test</providersubmittingonbehalf>
+    <submittingprovider>test</submittingprovider>
+  </header>
+  <row>
+    <header>
+      <canstype type="list">Intitial</canstype>
+      <rownum>1</rownum>
+      <refnum>6fd819a1-41b6-466a-8d0d-2d245cdcdcf7</refnum>
+    </header>
+    <clientinfo>
+      <firstname type="str">Iris</firstname>
+      <lastname type="str">Cowan</lastname>
+      <dateofbirth type="date">07-23-95</dateofbirth>
+      <gender type="list">Male      </gender>
+      <datefirstcont type="date">1900-01-01</datefirstcont>
+      <phone type="str">297-783-4013</phone>
+      <maritalstatus type="list">1. Single</maritalstatus>
+      <address type="str">null 556 Rocky Milton Way</address>
+      <city type="str">Mobile</city>
+      <state type="list">AL</state>
+      <zipcode type="int">36660</zipcode>
+      <uscitizen type="bool">Yes</uscitizen>
+      <race type="list">Hispanic or Latino</race>
+      <ethnicity type="list">Arab Chaldean</ethnicity>
+      <insurcoverage type="list">No</insurcoverage>
+    </clientinfo>
+    <caregiveraddendum>
+      <caregiverfullname type="str">fdgghgfgffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</caregiverfullname>
+      <caregiverrelationshiptoclient type="str">dfgfgggh</caregiverrelationshiptoclient>
+      <caregiveraddtlprimary type="str">fgghgh</caregiveraddtlprimary>
+      <caregiversupportinginformation type="str">Supporting Information: Provide additional information on caregiver strengths (some items rated 0 and 1) and needs (rated 2 and 3).Supporting Information: Provide additional information on caregiver strengths (some items rated 0 and 1) and needs (rated 2 and 3).</caregiversupportinginformation>
+      <caregiversupervision type="list">0</caregiversupervision>
+      <caregiverinvolvementwithcare type="list">0</caregiverinvolvementwithcare>
+      <caregiverknowledge type="list">0</caregiverknowledge>
+      <caregiversocialresources type="list">0</caregiversocialresources>
+      <caregiverfinancialresources type="list">0</caregiverfinancialresources>
+      <caregiverresidentialstability type="list">0</caregiverresidentialstability>
+      <caregivermedicalphysical type="list">0</caregivermedicalphysical>
+      <caregivermentalhealth type="list">0</caregivermentalhealth>
+      <caregiversubstanceuse type="list">0</caregiversubstanceuse>
+      <caregiverdevelopmental type="list">0</caregiverdevelopmental>
+      <caregiverorganization type="list">0</caregiverorganization>
+      <caregiversafety type="list">0</caregiversafety>
+      <caregiverfamilystress type="list">0</caregiverfamilystress>
+      <caregivermaritalpartnerviolence type="list">0</caregivermaritalpartnerviolence>
+      <caregivermilitarytrans type="list">0</caregivermilitarytrans>
+      <caregiverselfcarelivingskills type="list">0</caregiverselfcarelivingskills>
+      <caregiveremployeducfunc type="list">0</caregiveremployeducfunc>
+      <caregiverlegalinvolvement type="list">0</caregiverlegalinvolvement>
+      <caregiverfamrelationtosystem type="list">0</caregiverfamrelationtosystem>
+      <caregiveraccesstochildcare type="list">0</caregiveraccesstochildcare>
+      <caregiveremathychildren type="list">0</caregiveremathychildren>
+    </caregiveraddendum>
+    <dcfsaddendum>
+      <!--geninfo-->
+      <dcfsinvlvythincare type="bool">Yes</dcfsinvlvythincare>
+      <dcfsinvlvintfam type="bool">Yes</dcfsinvlvintfam>
+      <dcfsinvlvips type="bool">Yes</dcfsinvlvips>
+      <!--/geninfo-->
+      <!--sexagg-->
+      <sxagbhtemporalconsist type="bool">3</sxagbhtemporalconsist>
+      <sxagbhshistsexabusebeh type="bool">3</sxagbhshistsexabusebeh>
+      <sxagbhseveritysxabuse type="bool">2</sxagbhseveritysxabuse>
+      <sxagbhpriortreatmnt type="bool">3</sxagbhpriortreatmnt>
+      <sxagbhsuppinfo type="str">Supplemental Information: Provide additional information regarding the youth’s needs as it relates to his/her sexually aggressive behavior (items rated 2 and 3).
+Supplemental Information: Provide additional information regarding the youth’s needs as it relates to his/her sexually aggressive behavior (items rated 2 and 3).
+</sxagbhsuppinfo>
+      <!--/sexagg-->
+      <!--pgsafe-->
+      <pgsafediscipln type="list">3</pgsafediscipln>
+      <pgsafefrsutrtoler type="list">3</pgsafefrsutrtoler>
+      <pgsafemaltreatment type="list">3</pgsafemaltreatment>
+      <pgsafehomecond type="list">3</pgsafehomecond>
+      <pgsafesuppinfo type="str">Supplemental Information: Provide additional information regarding parent/guardian safety (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7Supplemental Information: Provide additional information regarding parent/guardian safety (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7</pgsafesuppinfo>
+      <!--/pgsafe-->
+      <!--pgwell-->
+      <pgwelltraumreact type="list">3</pgwelltraumreact>
+      <pgwellimpactownbeh type="list">3</pgwellimpactownbeh>
+      <pgwelleffctparntapprch type="list">3</pgwelleffctparntapprch>
+      <pgwellindeplivskills type="list">3</pgwellindeplivskills>
+      <pgwellcntctcasewrker type="list">3</pgwellcntctcasewrker>
+      <pgwellresponsmaltrtmnt type="list">3</pgwellresponsmaltrtmnt>
+      <pgwellrelatwthabuser type="list">3</pgwellrelatwthabuser>
+      <pgwellsuppinfo type="str">Supplemental Information: Provide additional information regarding parent/guardian resilience (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7).
+Supplemental Information: Provide additional information regarding parent/guardian resilience (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7).
+</pgwellsuppinfo>
+      <!--/pgwell-->
+      <!--pgperm-->
+      <pgpermfamconnect type="list">0</pgpermfamconnect>
+      <pgpermpersonaltrtmnt type="list">2</pgpermpersonaltrtmnt>
+      <pgpermparticvisit type="list">1</pgpermparticvisit>
+      <pgpermcommitreunifi type="list">3</pgpermcommitreunifi>
+      <pgpermsuppinfo type="str">Supplemental Information: Provide additional information regarding parent/guardian resilience (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7).
+Supplemental Information: Provide additional information regarding parent/guardian resilience (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7).
+Supplemental Information: Provide additional information regarding parent/guardian resilience (items rated 2 and 3). The narrative can include relevant information from the Family Information section (IM+CANS, p. 7).
+</pgpermsuppinfo>
+      <!--/pgperm-->
+      <!--subcomitperm-->
+      <subcomitpermna type="bool">No</subcomitpermna>
+      <subcomitpermcollabothprnt type="list">0</subcomitpermcollabothprnt>
+      <subcomitpermsupptpermplan type="list">0</subcomitpermsupptpermplan>
+      <subcomitperminclusythfstfam type="list">0</subcomitperminclusythfstfam>
+      <subcomitpermsuppinfo type="str">Supplemental Information: Provide additional information regarding the substitute caregiver’s commitment to the permanency plan goal(items rated 2 and 3). The narrative can include relevant information from the Caregiver Needs and Strengths Addendum.</subcomitpermsuppinfo>
+      <subcomitpermna type="bool">Yes</subcomitpermna>
+      <subcomitpermna type="bool">Yes</subcomitpermna>
+      <subcomitpermna type="bool">Yes</subcomitpermna>
+      <!--/subcomitperm-->
+      <!--intact-->
+      <intfamsvcna type="bool">Yes</intfamsvcna>
+      <!--/intact-->
+      <!--ips-->
+      <ipsna type="bool">Yes</ipsna>
+      <!--/ips-->
+    </dcfsaddendum>
+  </row>
+  <trailer>
+    <rowtotal>1</rowtotal>
+  </trailer>
+</root>

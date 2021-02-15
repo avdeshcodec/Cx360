@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--HFS XML docmumet-->
+<root>
+  <header>
+    <hfsxmlver>971525_2020-11-20</hfsxmlver>
+    <providersubmittingonbehalf>test</providersubmittingonbehalf>
+    <submittingprovider>test</submittingprovider>
+  </header>
+  <row>
+    <header>
+      <canstype type="list">Intitial</canstype>
+      <rownum>1</rownum>
+      <refnum>a7c0275d-19b7-4f28-9699-2157ae7e61a2</refnum>
+    </header>
+    <clientinfo>
+      <firstname type="str">Shelia</firstname>
+      <lastname type="str">Alvarado</lastname>
+      <dateofbirth type="date">08-24-90</dateofbirth>
+      <gender type="list">Female    </gender>
+      <datefirstcont type="date">1900-01-01</datefirstcont>
+      <phone type="str">781-574-8578</phone>
+      <maritalstatus type="list">2. Married</maritalstatus>
+      <address type="str">52 South Second Road 223 Green Hague St.</address>
+      <city type="str">Russellville</city>
+      <state type="list">TN</state>
+      <zipcode type="int">37860</zipcode>
+      <uscitizen type="bool">Yes</uscitizen>
+      <race type="list">Multi-Racial</race>
+      <ethnicity type="list">Hispanic</ethnicity>
+      <insurcoverage type="list">No</insurcoverage>
+    </clientinfo>
+    <treatmentplan>
+      <planrefnum type="str">1</planrefnum>
+      <planpart type="list">Action Items</planpart>
+      <plansortkey type="str">01</plansortkey>
+      <plandetail type="str">item1</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">2</planrefnum>
+      <planpart type="list">Goal</planpart>
+      <plansortkey type="str">0101</plansortkey>
+      <plandetail type="str">goal1</plandetail>
+      <goalstatus type="list">Completed</goalstatus>
+      <goaldate type="date">2020-11-27T00:00:00</goaldate>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010101</plansortkey>
+      <plandetail type="str">obj1</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010102</plansortkey>
+      <plandetail type="str">obj2</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">2</planrefnum>
+      <planpart type="list">Goal</planpart>
+      <plansortkey type="str">0102</plansortkey>
+      <plandetail type="str">goal2</plandetail>
+      <goalstatus type="list">Discontinue</goalstatus>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010201</plansortkey>
+      <plandetail type="str">obj1</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">1</planrefnum>
+      <planpart type="list">Action Items</planpart>
+      <plansortkey type="str">03</plansortkey>
+      <plandetail type="str">item2</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">2</planrefnum>
+      <planpart type="list">Goal</planpart>
+      <plansortkey type="str">0301</plansortkey>
+      <plandetail type="str">goal1</plandetail>
+      <goalstatus type="list">Continue</goalstatus>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">03030101</plansortkey>
+      <plandetail type="str">obj1</plandetail>
+    </treatmentplan>
+  </row>
+  <row>
+    <header>
+      <canstype type="list">Discharge</canstype>
+      <rownum>2</rownum>
+      <refnum>5e658b74-1d97-492c-abf6-59836c9fec7a</refnum>
+    </header>
+    <clientinfo>
+      <firstname type="str">Claire</firstname>
+      <lastname type="str">Golden</lastname>
+      <dateofbirth type="date">05-02-07</dateofbirth>
+      <gender type="list">Male      </gender>
+      <datefirstcont type="date">1900-01-01</datefirstcont>
+      <phone type="str">293-737-0473</phone>
+      <maritalstatus type="list">4. other</maritalstatus>
+      <address type="str">42 North Green Hague Avenue 899 White Cowley St.</address>
+      <city type="str">Ludlow</city>
+      <state type="list">MS</state>
+      <zipcode type="int">39098</zipcode>
+      <uscitizen type="bool">Yes</uscitizen>
+      <race type="list">Hispanic or Latino</race>
+      <ethnicity type="list">Other Hispanic</ethnicity>
+      <insurcoverage type="list">No</insurcoverage>
+    </clientinfo>
+    <treatmentplan>
+      <planrefnum type="str">1</planrefnum>
+      <planpart type="list">Action Items</planpart>
+      <plansortkey type="str">01</plansortkey>
+      <plandetail type="str">sdffd</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">2</planrefnum>
+      <planpart type="list">Goal</planpart>
+      <plansortkey type="str">0101</plansortkey>
+      <plandetail type="str">dffd</plandetail>
+      <goalstatus type="list">Continue</goalstatus>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010101</plansortkey>
+      <plandetail type="str">dfdf</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010102</plansortkey>
+      <plandetail type="str">dffddf</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010103</plansortkey>
+      <plandetail type="str">dffddffdfd</plandetail>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Service</planpart>
+      <plandetail type="str">dffddffdfd</plandetail>
+      <plansortkey type="str">0101010101010301</plansortkey>
+      <serviceagcystaff type="str">dfsfdfd ffd</serviceagcystaff>
+    </treatmentplan>
+    <treatmentplan>
+      <planrefnum type="str">3</planrefnum>
+      <planpart type="list">Objective</planpart>
+      <plansortkey type="str">01010104</plansortkey>
+      <plandetail type="str">fddffdfd</plandetail>
+    </treatmentplan>
+  </row>
+  <trailer>
+    <rowtotal>2</rowtotal>
+  </trailer>
+</root>
