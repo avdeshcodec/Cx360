@@ -306,41 +306,9 @@ namespace IncidentManagement.Repository.Repository
             }
         }
 
-        private string GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest)
-        {
-            DataSet dataSet = new DataSet();
-            string newpdfPath = string.Empty;
-            try
-            {
-                string storeProcedure = CommonFunctions.GetMappedStoreProcedure(tabName);
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
-                {
+        private string GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest)        {            DataSet dataSet = new DataSet();            string newpdfPath = string.Empty;            try            {                string storeProcedure = CommonFunctions.GetMappedStoreProcedure(tabName);                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))                {
                     //Create the SqlCommand object
-                    using (SqlCommand cmd = new SqlCommand("usp_GetComprehensiveAssessmentDetails", con))
-                    {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                       
-                        cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.Int).Value = fillablePDFRequest.ComprehensiveAssessmentId;
-                        con.Open();
-
-                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
-                        sqlDataAdapter.SelectCommand = cmd;
-                        sqlDataAdapter.Fill(dataSet);
-                        con.Close();
-                    }
-                }
-                if (dataSet.Tables.Count > 0 && dataSet.Tables[15].Rows.Count > 0)
-                {
-                   
-                            newpdfPath = ComprehensiveAssessmentDFTemplate(pdfPath, dataSet, fillablePDFRequest);
-                }
-            }
-            catch (Exception Ex)
-            {
-                throw Ex;
-            }
-            return newpdfPath;
-        }
+                    using (SqlCommand cmd = new SqlCommand("usp_GetComprehensiveAssessmentDetails", con))                    {                        cmd.CommandType = System.Data.CommandType.StoredProcedure;                                               cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.Int).Value = fillablePDFRequest.ComprehensiveAssessmentId;                        con.Open();                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();                        sqlDataAdapter.SelectCommand = cmd;                        sqlDataAdapter.Fill(dataSet);                        con.Close();                    }                }                if (dataSet.Tables.Count > 0 && dataSet.Tables[15].Rows.Count > 0)                {                                               newpdfPath = ComprehensiveAssessmentDFTemplate(pdfPath, dataSet, fillablePDFRequest);                }            }            catch (Exception Ex)            {                throw Ex;            }            return newpdfPath;        }
         public string ComprehensiveAssessmentDFTemplate(string pdfPath, DataSet dataSetFillPDF, ComprehensiveAssessmentRequest fillablePDFRequest)
         {
             string newFile = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Completed_Comprehensive_Assessment.pdf";

@@ -11,27 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncidentManagement.Reposito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncidentManagement.Service", "IncidentManagement.Service\IncidentManagement.Service.csproj", "{36A8AC93-186B-4A5E-B2F8-89878EE3027E}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "New folder", "..\New folder\", "{2DF4CB1A-B2C9-4918-8E47-6F79B54E371A}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_60057"
-		Debug.AspNetCompiler.PhysicalPath = "..\New folder\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60057\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_60057"
-		Release.AspNetCompiler.PhysicalPath = "..\New folder\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60057\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "60057"
-		SlnRelativePath = "..\New folder\"
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,15 +33,8 @@ Global
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2DF4CB1A-B2C9-4918-8E47-6F79B54E371A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DF4CB1A-B2C9-4918-8E47-6F79B54E371A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2DF4CB1A-B2C9-4918-8E47-6F79B54E371A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{2DF4CB1A-B2C9-4918-8E47-6F79B54E371A}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B335BA00-9C1A-42AE-B51D-EBCF4AA58AD6}
 	EndGlobalSection
 EndGlobal

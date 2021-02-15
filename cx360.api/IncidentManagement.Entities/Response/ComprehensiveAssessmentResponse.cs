@@ -81,12 +81,7 @@ namespace IncidentManagement.Entities.Response
             public string JSONDomesticViolanceRelationship { get; set; }
             public string JSONLegalCourtDates { get; set; }
 
-            public int AssessmentAreasSafeguardReviewId { get; set; }
-            public int AssessmentBehavioralSupportServicesId { get; set; }
-            public int AssessmentEducationalVocationalStatusId { get; set; }
-            public int AssessmentIndependentLivingSkillsId { get; set; }
-            public int AssessmentSelfDirectedServicesId { get; set; }
-            public int AssessmentTransitionPlanningId { get; set; }
+            public int AssessmentAreasSafeguardReviewId { get; set; }            public int AssessmentBehavioralSupportServicesId { get; set; }            public int AssessmentEducationalVocationalStatusId { get; set; }            public int AssessmentIndependentLivingSkillsId { get; set; }            public int AssessmentSelfDirectedServicesId { get; set; }            public int AssessmentTransitionPlanningId { get; set; }
 
             public string Status { get; set; }
 
