@@ -1252,13 +1252,13 @@
                                                                         <tr>
                                                                             <td>
                                                                                 <div class="row">
-                                                                                    <div class="col-md-6">
+                                                                                    <!-- <div class="col-md-6">
                                                                                         <button type="button"
                                                                                             class="btn commonBtn btn-font-size"
                                                                                             onclick="collapseSection('memberProvidersHeader');">
                                                                                             Edit
                                                                                         </button>
-                                                                                    </div>
+                                                                                    </div> -->
                                                                                     <div class="col-md-6">
                                                                                         <button type="button"
                                                                                             class="btn commonBtn btnCommon btn-font-size"
@@ -1294,13 +1294,13 @@
                                                                         <tr>
                                                                             <td>
                                                                                 <div class="row">
-                                                                                    <div class="col-md-6">
+                                                                                    <!-- <div class="col-md-6">
                                                                                         <button type="button"
                                                                                                 class="btn commonBtn btn-font-size"
                                                                                                 onclick="collapseSection('memberProvidersHeader');">
                                                                                             Edit
                                                                                         </button>
-                                                                                    </div>
+                                                                                    </div> -->
                                                                                     <div class="col-md-6">
                                                                                         <button type="button"
                                                                                                 class="btn commonBtn btnCommon btn-font-size"
@@ -1396,34 +1396,38 @@
                                                     <div class="row">
 
                                                         <div class="col-md-6 col-sm-12">
-                                                            <label class="labelAlign lineHeightAligh">
-                                                                No Active Guardian </label>
+                                                            <!--<label class="labelAlign lineHeightAligh">
+                                                                No Active Guardian
+                                                            </label>-->
                                                             <div class="form-group mb-0">
                                                                 <ul class="hasListing1">
                                                                     <li>
                                                                         <label class="checkboxField">
-                                                                            Other
+                                                                            No Active Guardian
                                                                             <input type="checkbox" value="4"
                                                                                    name="NoActiveGuardian"
-                                                                                   id="NoActiveGuardian  "
+                                                                                   id="NoActiveGuardian"
+                                                                            onchange="ShowHideFields(this,'checkbox','NoActiveGuardian')"
+
                                                                                    class="form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-12">
+                                                        </div><div class="col-md-6 col-sm-12">
                                                             <label class="labelAlign lineHeightAligh">
-                                                                Not Applicable </label>
+                                                                <!--Not Applicable-->
+                                                            </label>
                                                             <div class="form-group mb-0">
                                                                 <ul class="hasListing1">
                                                                     <li>
                                                                         <label class="checkboxField">
-                                                                            Other
+                                                                            Not Applicable
                                                                             <input type="checkbox" value="4"
                                                                                    name="NotApplicable"
-                                                                                   id="NotApplicable  "
+                                                                                   id="NotApplicable"
+                                                                                   onchange="ShowHideFields(this,'checkbox','guardianAndApplicable')"
                                                                                    class="form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
@@ -1431,183 +1435,204 @@
                                                                 </ul>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <label>
-                                                                <span class="red">*</span>Who helps the member make
-                                                                decisions and choices in their life?
-                                                            </label>
-                                                            <div class="form-group">
-                                                                <select class="req_feild form-control comprehensiveAssessment"
-                                                                        name="DropDownWhoHelpMemberMakeDecisionInLife"
-                                                                        id="DropDownWhoHelpMemberMakeDecisionInLife">
-                                                                    <option value="">--Select--</option>
-                                                                    <option value="1">--test--</option>
-                                                                </select>
-                                                                <span class="errorMessage hidden">
-                                                                    This field is
-                                                                    required<i class="fa fa-times close"
-                                                                               aria-hidden="true"></i>
-                                                                </span>
-                                                            </div>
-                                                        </div>
 
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <label>
-                                                                <span class="red">*</span>How does this person help the
-                                                                member make decisions?
-                                                            </label>
-                                                            <div class="form-group">
-                                                                <select class="req_feild form-control comprehensiveAssessment"
-                                                                        name="DropDownHowPersonHelpMemberMakeDecision"
-                                                                        id="DropDownHowPersonHelpMemberMakeDecision"
-                                                                        onchange="ShowHideFields(this,'dropdown','memberMakeDecisionClass')">
-                                                                    <option value="">--Select--</option>
-                                                                    <option value="1">Legal Guardian</option>
-                                                                    <option value="2">Actively involved spouse</option>
-                                                                    <option value="3">Actively involved parent</option>
-                                                                    <option value="4">
-                                                                        Actively involved adult child
-                                                                    </option>
-                                                                    <option value="5">
-                                                                        Actively involved adult sibling
-                                                                    </option>
-                                                                    <option value="6">
-                                                                        Actively involved family member
-                                                                    </option>
-                                                                    <option value="7">Consumer Advisory Board</option>
-                                                                </select>
-                                                                <span class="errorMessage hidden">
-                                                                    This field is
-                                                                    required<i class="fa fa-times close"
-                                                                               aria-hidden="true"></i>
-                                                                </span>
-
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <label>
-                                                                What is this person's level of involvement with the
-                                                                member?
-                                                            </label>
-                                                            <div class="form-group">
-                                                                <textarea class="form-control comprehensiveAssessment"
-                                                                          name="TextBoxPersonInvolvementWithMember"
-                                                                          id="TextBoxPersonInvolvementWithMember"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-12">
-                                                            <label class="labelAlign lineHeightAligh">
-                                                                <span class="red">*</span>Select all the ways this
-                                                                contact
-                                                                supports the individual to make decisions
-                                                            </label>
-                                                            <div class="form-group mb-0">
-                                                                <ul class="hasListing1">
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Helps to sign/approve the Life Plan
-                                                                            <input type="checkbox" value="1"
-                                                                                   name="CheckboxHelpSignApproveLifePlan"
-                                                                                   id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Helps to make medical decisions
-                                                                            <input type="checkbox" value="2"
-                                                                                   name="CheckboxHelpSignApproveMedical"
-                                                                                   id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Helps to make financial decisions
-                                                                            <input type="checkbox" value="3"
-                                                                                   name="CheckboxHelpSignApproveFinancial"
-                                                                                   id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Other
-                                                                            <input type="checkbox" value="4"
-                                                                                   name="CheckboxOther"
-                                                                                   id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="col-md-6 col-sm-12">
-                                                                    <span class="errorMessage hidden">
-                                                                        This field is
-                                                                        required<i class="fa fa-times close"
-                                                                                   aria-hidden="true"></i>
-                                                                    </span>
+                                                        <div class="row guardianAndApplicable" hidden>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <label class="labelAlign lineHeightAligh">
+                                                                    Not Applicable
+                                                                </label>
+                                                                <div class="form-group mb-0">
+                                                                    <ul class="hasListing1">
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Other
+                                                                                <input type="checkbox" value="4"
+                                                                                       name="NotApplicable"
+                                                                                       id="NotApplicable  "
+                                                                                       class="form-control" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-6 col-sm-12 memberMakeDecisionClass" hidden>
-                                                            <label class="labelAlign lineHeightAligh">
-                                                                <span class="red">*</span>Is there proof of Guardianship
-                                                                in
-                                                                the member's record?
-                                                            </label>
-                                                            <div class="form-group mb-0">
-                                                                <ul class="hasListing1">
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Yes
-                                                                            <input type="radio" value="1"
-                                                                                   name="RadioGuardianshipProof"
-                                                                                   id="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            No
-                                                                            <input type="radio" value="2"
-                                                                                   name="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <label class="checkboxField">
-                                                                            Unknown
-                                                                            <input type="radio" value="3"
-                                                                                   name="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
-                                                                            <span class="checkmark cmdDesign"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                </ul>
-                                                                <div class="col-md-6 col-sm-12">
-                                                                    <span class="errorMessage hidden">
-                                                                        This field is
-                                                                        required<i class="fa fa-times close"
-                                                                                   aria-hidden="true"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-12 hidden">
-                                                                <label>Hidden Id</label>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <label>
+                                                                    <span class="red">*</span>Who helps the member make
+                                                                    decisions and choices in their life?
+                                                                </label>
                                                                 <div class="form-group">
-                                                                    <input type="text" class="form-control  comprehensiveAssessment"
-                                                                           name="TextBoxGuardianshipAndAdvocacyId" id="TextBoxGuardianshipAndAdvocacyId" />                                                          
+                                                                    <select class="req_feild form-control comprehensiveAssessment"
+                                                                            name="DropDownWhoHelpMemberMakeDecisionInLife"
+                                                                            id="DropDownWhoHelpMemberMakeDecisionInLife">
+                                                                        <option value="">--Select--</option>
+                                                                        <option value="1">--test--</option>
+                                                                    </select>
+                                                                    <span class="errorMessage hidden">
+                                                                        This field is
+                                                                        required<i class="fa fa-times close"
+                                                                                   aria-hidden="true"></i>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <label>
+                                                                    <span class="red">*</span>How does this person help the
+                                                                    member make decisions?
+                                                                </label>
+                                                                <div class="form-group">
+                                                                    <select class="req_feild form-control comprehensiveAssessment"
+                                                                            name="DropDownHowPersonHelpMemberMakeDecision"
+                                                                            id="DropDownHowPersonHelpMemberMakeDecision"
+                                                                            onchange="ShowHideFields(this,'dropdown','memberMakeDecisionClass')">
+                                                                        <option value="">--Select--</option>
+                                                                        <option value="1">Legal Guardian</option>
+                                                                        <option value="2">Actively involved spouse</option>
+                                                                        <option value="3">Actively involved parent</option>
+                                                                        <option value="4">
+                                                                            Actively involved adult child
+                                                                        </option>
+                                                                        <option value="5">
+                                                                            Actively involved adult sibling
+                                                                        </option>
+                                                                        <option value="6">
+                                                                            Actively involved family member
+                                                                        </option>
+                                                                        <option value="7">Consumer Advisory Board</option>
+                                                                    </select>
+                                                                    <span class="errorMessage hidden">
+                                                                        This field is
+                                                                        required<i class="fa fa-times close"
+                                                                                   aria-hidden="true"></i>
+                                                                    </span>
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <label>
+                                                                    What is this person's level of involvement with the
+                                                                    member?
+                                                                </label>
+                                                                <div class="form-group">
+                                                                    <textarea class="form-control comprehensiveAssessment"
+                                                                              name="TextBoxPersonInvolvementWithMember"
+                                                                              id="TextBoxPersonInvolvementWithMember"></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-12">
+                                                                <label class="labelAlign lineHeightAligh">
+                                                                    <span class="red">*</span>Select all the ways this
+                                                                    contact
+                                                                    supports the individual to make decisions
+                                                                </label>
+                                                                <div class="form-group mb-0">
+                                                                    <ul class="hasListing1">
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Helps to sign/approve the Life Plan
+                                                                                <input type="checkbox" value="1"
+                                                                                       name="CheckboxHelpSignApproveLifePlan"
+                                                                                       id="SupportsIndividualDecisions"
+                                                                                       class="req_feild form-control comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Helps to make medical decisions
+                                                                                <input type="checkbox" value="2"
+                                                                                       name="CheckboxHelpSignApproveMedical"
+                                                                                       id="SupportsIndividualDecisions"
+                                                                                       class="req_feild form-control comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Helps to make financial decisions
+                                                                                <input type="checkbox" value="3"
+                                                                                       name="CheckboxHelpSignApproveFinancial"
+                                                                                       id="SupportsIndividualDecisions"
+                                                                                       class="req_feild form-control comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Other
+                                                                                <input type="checkbox" value="4"
+                                                                                       name="CheckboxOther"
+                                                                                       id="SupportsIndividualDecisions"
+                                                                                       class="req_feild form-control comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="col-md-6 col-sm-12">
+                                                                        <span class="errorMessage hidden">
+                                                                            This field is
+                                                                            required<i class="fa fa-times close"
+                                                                                       aria-hidden="true"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-12 memberMakeDecisionClass" hidden>
+                                                                <label class="labelAlign lineHeightAligh">
+                                                                    <span class="red">*</span>Is there proof of Guardianship
+                                                                    in
+                                                                    the member's record?
+                                                                </label>
+                                                                <div class="form-group mb-0">
+                                                                    <ul class="hasListing1">
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Yes
+                                                                                <input type="radio" value="1"
+                                                                                       name="RadioGuardianshipProof"
+                                                                                       id="RadioGuardianshipProof"
+                                                                                       class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                No
+                                                                                <input type="radio" value="2"
+                                                                                       name="RadioGuardianshipProof"
+                                                                                       class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Unknown
+                                                                                <input type="radio" value="3"
+                                                                                       name="RadioGuardianshipProof"
+                                                                                       class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <div class="col-md-6 col-sm-12">
+                                                                        <span class="errorMessage hidden">
+                                                                            This field is
+                                                                            required<i class="fa fa-times close"
+                                                                                       aria-hidden="true"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-12 hidden">
+                                                                    <label>Hidden Id</label>
+                                                                    <div class="form-group">
+                                                                        <input type="text" class="form-control  comprehensiveAssessment"
+                                                                               name="TextBoxGuardianshipAndAdvocacyId" id="TextBoxGuardianshipAndAdvocacyId" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-
 
 
                                                         <div class="col-md-12 col-sm-12 mt-4">

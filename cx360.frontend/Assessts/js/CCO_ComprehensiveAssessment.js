@@ -544,7 +544,11 @@ function ShowHideFields(current, type, hideFieldClass) {
             uncheckedFields(hideFieldClass);
             hideFields(hideFieldClass);
         }
-
+        if (($(current).prop("checked") && (hideFieldClass == 'guardianAndApplicable'))) {
+            if ($('#NoActiveGuardian').prop("checked") && $('#NotApplicable').prop("checked") ) {
+                showFields(hideFieldClass);
+            }
+        }
         else {
             hideFields(hideFieldClass);
         }
