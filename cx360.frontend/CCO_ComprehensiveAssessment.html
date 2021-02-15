@@ -24,7 +24,7 @@
     <!--<script src="Assessts/js/ComprehensiveAssessment.js" type="text/javascript"></script>-->
     <script src="Assessts/js/CCO_ComprehensiveAssessment.js" type="text/javascript"></script>
     <script type="text/javascript">
-        _token = '+y4xJfY628ct3JeyNZ9uFNJJTowAUXKAlf7jt6/R3q19bMdeTN1lpVm4oGgLy0XfQwyGTzxPYfBz7KldBHtTjw==';
+        _token = 'TfAx3r46HbEOAoFZqaHLXdNUw7klOhYPvTGewS+UUooUTtVlNtZNq9Hceh28p8reZOeDHcdrhW8drqgIi0+eeQ==';
         _userId = 452;
         if (isEmpty(_token)) GetTokenFromLocalStorage();
     </script>
@@ -1092,7 +1092,7 @@
                                                                     <input type="text"
                                                                            class="req_feild form-control comprehensiveAssessment"
                                                                            onkeypress="CloseErrorMeeage('memberProviders')"
-                                                                           name="TextBoxPrimaryCarePhysician "
+                                                                           name="TextBoxPrimaryCarePhysician"
                                                                            id="TextBoxPrimaryCarePhysician" />
                                                                     <span class="errorMessage hidden">
                                                                         This field is
@@ -1107,7 +1107,7 @@
                                                                     <input type="text"
                                                                            class="req_feild form-control comprehensiveAssessment"
                                                                            onkeypress="CloseErrorMeeage('memberProviders')"
-                                                                           name="TextBoxDentist " id="TextBoxDentist" />
+                                                                           name="TextBoxDentist" id="TextBoxDentist" />
                                                                     <span class="errorMessage hidden">
                                                                         This field is
                                                                         required<i class="fa fa-times close"
@@ -1120,7 +1120,7 @@
                                                                 <div class="form-group">
                                                                     <input type="text"
                                                                            class="form-control comprehensiveAssessment"
-                                                                           name="TextBoxPsychiatrist "
+                                                                           name="TextBoxPsychiatrist"
                                                                            id="TextBoxPsychiatrist" />
                                                                 </div>
                                                             </div>
@@ -1129,7 +1129,7 @@
                                                                 <div class="form-group">
                                                                     <input type="text"
                                                                            class="form-control comprehensiveAssessment"
-                                                                           name="TextBoxPsychologist "
+                                                                           name="TextBoxPsychologist"
                                                                            id="TextBoxPsychologist" />
                                                                 </div>
                                                             </div>
@@ -1138,7 +1138,7 @@
                                                                 <div class="form-group">
                                                                     <input type="text"
                                                                            class="form-control comprehensiveAssessment"
-                                                                           name="TextBoxEyeDoctor "
+                                                                           name="TextBoxEyeDoctor"
                                                                            id="TextBoxEyeDoctor" />
                                                                 </div>
                                                             </div>
@@ -1148,7 +1148,7 @@
                                                                     <input type="text"
                                                                            class="req_feild form-control comprehensiveAssessment"
                                                                            onkeypress="CloseErrorMeeage('memberProviders')"
-                                                                           name="TextBoxPharmacy " id="TextBoxPharmacy" />
+                                                                           name="TextBoxPharmacy" id="TextBoxPharmacy" />
                                                                     <span class="errorMessage hidden">
                                                                         This field is
                                                                         required<i class="fa fa-times close"
@@ -1162,7 +1162,7 @@
                                                                     <input type="text"
                                                                            class="req_feild form-control comprehensiveAssessment"
                                                                            onkeypress="CloseErrorMeeage('memberProviders')"
-                                                                           name="TextBoxHospital " id="TextBoxHospital" />
+                                                                           name="TextBoxHospital" id="TextBoxHospital" />
                                                                     <span class="errorMessage hidden">
                                                                         This field is
                                                                         required<i class="fa fa-times close"
@@ -1170,7 +1170,13 @@
                                                                     </span>
                                                                 </div>
                                                             </div>
-
+                                                            <div class="col-md-6 col-sm-12 hidden">
+                                                                <label>Hidden Id</label>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control  comprehensiveAssessment"
+                                                                           name="TextBoxMemberProviderId" id="TextBoxMemberProviderId" />                                                          
+                                                                </div>
+                                                            </div>
                                                             <div class="col-md-12 col-sm-12 mt-4">
                                                                 <div class="form-group text-center formSmBtn">
                                                                     <button type="button"
@@ -1180,7 +1186,7 @@
                                                                     </button>
                                                                     <button type="button"
                                                                             class="btn commonBtn equalWidth btnCommon"
-                                                                            onclick="InsertModify('memberProviders')"
+                                                                            onclick="InsertModify('memberProviders','comprehensiveAssessment','CCO_MemberProviders'); return false;"
                                                                             id="btnMemberProviders">
                                                                         Ok
                                                                     </button>
@@ -1256,7 +1262,7 @@
                                                                                     <div class="col-md-6">
                                                                                         <button type="button"
                                                                                             class="btn commonBtn btnCommon btn-font-size"
-                                                                                            onclick="InsertModify('memberProviders')"
+                                                                                            onclick="InsertModify('circleOfSupport','comprehensiveAssessment'); return false;"
                                                                                             id="btnMemberProviders">
                                                                                             Add
                                                                                         </button>
@@ -1485,7 +1491,7 @@
                                                                 member?
                                                             </label>
                                                             <div class="form-group">
-                                                                <textarea class="form-control"
+                                                                <textarea class="form-control comprehensiveAssessment"
                                                                           name="TextBoxPersonInvolvementWithMember"
                                                                           id="TextBoxPersonInvolvementWithMember"></textarea>
                                                             </div>
@@ -1504,7 +1510,7 @@
                                                                             <input type="checkbox" value="1"
                                                                                    name="CheckboxHelpSignApproveLifePlan"
                                                                                    id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1514,7 +1520,7 @@
                                                                             <input type="checkbox" value="2"
                                                                                    name="CheckboxHelpSignApproveMedical"
                                                                                    id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1524,7 +1530,7 @@
                                                                             <input type="checkbox" value="3"
                                                                                    name="CheckboxHelpSignApproveFinancial"
                                                                                    id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1534,7 +1540,7 @@
                                                                             <input type="checkbox" value="4"
                                                                                    name="CheckboxOther"
                                                                                    id="SupportsIndividualDecisions"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1561,7 +1567,8 @@
                                                                             Yes
                                                                             <input type="radio" value="1"
                                                                                    name="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision" />
+                                                                                   id="RadioGuardianshipProof"
+                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1570,7 +1577,7 @@
                                                                             No
                                                                             <input type="radio" value="2"
                                                                                    name="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision" />
+                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1579,7 +1586,7 @@
                                                                             Unknown
                                                                             <input type="radio" value="3"
                                                                                    name="RadioGuardianshipProof"
-                                                                                   class="req_feild form-control memberMakeDecision" />
+                                                                                   class="req_feild form-control memberMakeDecision comprehensiveAssessment" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1590,6 +1597,13 @@
                                                                         required<i class="fa fa-times close"
                                                                                    aria-hidden="true"></i>
                                                                     </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-12 hidden">
+                                                                <label>Hidden Id</label>
+                                                                <div class="form-group">
+                                                                    <input type="text" class="form-control  comprehensiveAssessment"
+                                                                           name="TextBoxGuardianshipAndAdvocacyId" id="TextBoxGuardianshipAndAdvocacyId" />                                                          
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1604,7 +1618,7 @@
                                                                 </button>
                                                                 <button type="button"
                                                                         class="btn commonBtn equalWidth btnDisable btnCommon"
-                                                                        onclick="InsertModify('guardianshipAndAdvocacy'); return false;"
+                                                                        onclick="InsertModify('guardianshipAndAdvocacy','comprehensiveAssessment','CCO_GuardianshipAndAdvocacy'); return false;"
                                                                         id="btnAssessmentLegal">
                                                                     Ok
                                                                 </button>
@@ -1646,9 +1660,9 @@
                                             </h2>
                                         </div>
                                         <div hidden>
-                                            <input type="text" class="form-control"
-                                                   id="TextBoxAssessmentAreasSafeguardReviewId"
-                                                   name="TextBoxAssessmentAreasSafeguardReviewId" />
+                                            <input type="text" class="form-control comprehensiveAssessment"
+                                                   id="TextBoxAdvancedDirectivesFuturePlanningId"
+                                                   name="TextBoxAdvancedDirectivesFuturePlanningId" />
                                         </div>
                                         <div id="collapseAdvancedDirectivesFuturePlanning" class="collapse"
                                              aria-labelledby="headingAsr" data-parent="#accordionExample">
@@ -1670,7 +1684,7 @@
                                                                             <input type="radio" value="1"
                                                                                    name="RadioMemHaveHealthCareProxy"
                                                                                    onchange="ShowHideFields(this,'radio','healthCareProxyClass')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1680,7 +1694,7 @@
                                                                             <input type="radio" value="2"
                                                                                    name="RadioMemHaveHealthCareProxy"
                                                                                    onchange="ShowHideFields(this,'radio','healthCareProxyClass')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1690,7 +1704,7 @@
                                                                             <input type="radio" value="3"
                                                                                    name="RadioMemHaveHealthCareProxy"
                                                                                    onchange="ShowHideFields(this,'radio','healthCareProxyClass')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1737,7 +1751,7 @@
                                                                             <input type="radio" value="1"
                                                                                    name="RadioMemLearnAdvancedHealthProxies"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1747,7 +1761,7 @@
                                                                             <input type="radio" value="2"
                                                                                    name="RadioMemLearnAdvancedHealthProxies"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1757,7 +1771,7 @@
                                                                             <input type="radio" value="3"
                                                                                    name="RadioMemLearnAdvancedHealthProxies"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1785,7 +1799,7 @@
                                                                             <input type="radio" value="1"
                                                                                    name="RadioMemSurrogateDesMakingCommittee"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1795,7 +1809,7 @@
                                                                             <input type="radio" value="2"
                                                                                    name="RadioMemSurrogateDesMakingCommittee"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1805,7 +1819,7 @@
                                                                             <input type="radio" value="3"
                                                                                    name="RadioMemSurrogateDesMakingCommittee"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1835,7 +1849,7 @@
                                                                             <input type="radio" value="1"
                                                                                    name="RadioMemUtiCommitAproveBehavioralSupportPlan"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1845,7 +1859,7 @@
                                                                             <input type="radio" value="2"
                                                                                    name="RadioMemUtiCommitAproveBehavioralSupportPlan"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1855,7 +1869,7 @@
                                                                             <input type="radio" value="3"
                                                                                    name="RadioMemUtiCommitAproveBehavioralSupportPlan"
                                                                                    onchange="ShowHideFields(this,'treatmentPlanRadio','radio')"
-                                                                                   class="req_feild form-control" />
+                                                                                   class="req_feild form-control comprehensiveAssessment" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
                                                                     </li>
@@ -1878,7 +1892,7 @@
                                                                 <button type="button"
                                                                         class="btn commonBtn equalWidth btnDisable btnCommon"
                                                                         id="AreasSafeguardReviewSaveBtn"
-                                                                        onclick="InsertModify('advancedDirectivesFuturePlanning');">
+                                                                        onclick="InsertModify('advancedDirectivesFuturePlanning','comprehensiveAssessment','CCO_AdvancedDirectivesFuturePlanning'); return false;">
                                                                     Ok
                                                                 </button>
                                                             </div>

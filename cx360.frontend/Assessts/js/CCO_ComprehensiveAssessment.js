@@ -675,6 +675,63 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 
                 }
             }
+            if (result.AllTabsComprehensiveAssessment[0].MemberProviderId!=0) {
+
+                $("#TextBoxMemberProviderId").val(result.AllTabsComprehensiveAssessment[0].MemberProviderId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedMemberProviders").show();
+                        $("#statusStartMemberProviders").hide();
+                        $("#statusInprogressMemberProviders").hide();
+                    }
+                    else {
+                        $("#statusCompletedMemberProviders").hide();
+                        $("#statusStartMemberProviders").hide();
+                        $("#statusInprogressMemberProviders").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].GuardianshipAndAdvocacyId!=0) {
+
+                $("#TextBoxGuardianshipAndAdvocacyId").val(result.AllTabsComprehensiveAssessment[0].GuardianshipAndAdvocacyId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedGuardianshipAndAdvocacy").show();
+                        $("#statusStartGuardianshipAndAdvocacy").hide();
+                        $("#statusInprogressGuardianshipAndAdvocacy").hide();
+                    }
+                    else {
+                        $("#statusCompletedGuardianshipAndAdvocacy").hide();
+                        $("#statusStartGuardianshipAndAdvocacy").hide();
+                        $("#statusInprogressGuardianshipAndAdvocacy").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].AdvancedDirectivesFuturePlanningId!=0) {
+
+                $("#TextBoxAdvancedDirectivesFuturePlanningId").val(result.AllTabsComprehensiveAssessment[0].AdvancedDirectivesFuturePlanningId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedAdvancedDirectivesFuturePlanning").show();
+                        $("#statusStartAdvancedDirectivesFuturePlanning").hide();
+                        $("#statusInprogressAdvancedDirectivesFuturePlanning").hide();
+                    }
+                    else {
+                        $("#statusCompletedAdvancedDirectivesFuturePlanning").hide();
+                        $("#statusStartAdvancedDirectivesFuturePlanning").hide();
+                        $("#statusInprogressAdvancedDirectivesFuturePlanning").show();
+                    }
+                
+                }
+            }
         }
     }
     else {
