@@ -25,6 +25,7 @@ body, p, td, th, div {
     padding-right: 5px;
 }
  .bgColor{
+	 
      background: #d9e8fb !important;
  }
  .btn-font-size{
@@ -2022,4 +2023,15 @@ html.borderradius #scrollgrabber {
 	.ccoComprehensiveAssessment .hasListing li {
 		width: 100%;
 	}
+}
+.ccoComprehensiveAssessment .circleSupport ul li {
+    list-style: none;
+}
+.ccoComprehensiveAssessment .circleSupport ul label {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+}
+.circleSupport {
+    width: 100%;
 }
