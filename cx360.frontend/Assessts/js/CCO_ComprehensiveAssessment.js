@@ -1,6 +1,8 @@
 ﻿var parentClass = "";
 var _age;
 var sectionStatus;
+var dataTableFamilyMembersFlg = false;
+var editPermission, deletePermission;
 $(document).ready(function () {
 
     BindDropDowns()
@@ -8,6 +10,9 @@ $(document).ready(function () {
     InitalizeDateControls();
     $('.bgStart').show();
     DisableSaveButtonChildSection();
+    var table = $('#GuardianshipAndAdvocacy').DataTable();
+
+    AddGuardianshipAndAdvocacy();
 
 });
 function InitalizeDateControls() {
@@ -187,7 +192,7 @@ function validateMasterSectionTab(sectionName) {
     $("." + parentClass + " .req_feild").each(function () {
         console.log($(this).val());
         console.log($(this).attr("name"));
-
+        if ($(this).is(":visible"))
         if ($(this).val() == "" || $(this).val() == "-1") {
             console.log($(this));
             $(this).siblings("span.errorMessage").removeClass("hidden");
@@ -736,6 +741,44 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 
                 }
             }
+            if (result.AllTabsComprehensiveAssessment[0].IndependentLivingSkillId!=0) {
+
+                $("#TextBoxIndependentLivingSkillId").val(result.AllTabsComprehensiveAssessment[0].IndependentLivingSkillId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedIndependentLivingSkills").show();
+                        $("#statusStartIndependentLivingSkills").hide();
+                        $("#statusInprogressIndependentLivingSkills").hide();
+                    }
+                    else {
+                        $("#statusCompletedIndependentLivingSkills").hide();
+                        $("#statusStartIndependentLivingSkills").hide();
+                        $("#statusInprogressIndependentLivingSkills").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].SocialServiceNeedId!=0) {
+
+                $("#TextBoxSocialServiceNeedId").val(result.AllTabsComprehensiveAssessment[0].SocialServiceNeedId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedSocialServiceNeeds").show();
+                        $("#statusStartSocialServiceNeeds").hide();
+                        $("#statusInprogressSocialServiceNeeds").hide();
+                    }
+                    else {
+                        $("#statusCompletedSocialServiceNeeds").hide();
+                        $("#statusStartSocialServiceNeeds").hide();
+                        $("#statusInprogressSocialServiceNeeds").show();
+                    }
+                
+                }
+            }
         }
     }
     else {
@@ -751,6 +794,111 @@ function DisableSaveButtonChildSection() {
     $("#labelAssessmentStatus, #labelDocumentVersion").text("");
     $(".bgProgress").hide();
     $(".bgInprogress").hide();
+}
+function CreateChildBtnWithPermission(editEvent,deleteEvent) {
+    var notificationBtn = "";
+    if (!isEmpty(editPermission) && !isEmpty(deletePermission)) {
+        if (editPermission == "true" && deletePermission == "false") {
+            notificationBtn = '<a href="#" class="editSubRows"  onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+                + '<span><a href="#" class="deleteSubRows disable-click" onclick="' + deleteEvent+'(this);event.preventDefault();">Delete</a></span>';
+        }
+        if (editPermission == "false" && deletePermission == "true") {
+            notificationBtn = '<a href="#" class="editSubRows disable-click" onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+                + '<span><a href="#" class="deleteSubRows" onclick="' + deleteEvent +'(this); event.preventDefault();">Delete</a></span>';
+        }
+        if (editPermission == "true" && deletePermission == "true") {
+            notificationBtn = '<a href="#" class="editSubRows" onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+                + '<span><a href="#" class="deleteSubRows" onclick="' + deleteEvent +'(this); event.preventDefault();">Delete</a></span>';
+        }
+    }
+    return notificationBtn;
+}
+
+function AddGuardianshipAndAdvocacy() {
+    $("#AddGuardianshipAndAdvocacy").on("click", function () {
+        var RadioGuardianshipProof = '';
+        if (!$("#AddGuardianshipAndAdvocacy").hasClass("editRow")) {
+            if ($("#DropDownWhoHelpMemberMakeDecisionInLife").val() == '' && $("#DropDownHowPersonHelpMemberMakeDecision").val() == '' && $("#TextBoxPersonInvolvementWithMember").val() == '' && $('input[id=SupportsIndividualDecisions]:checked').val() == undefined && $('input[name=RadioGuardianshipProof]:checked').val() == undefined) {
+                showErrorMessage(" select atleast one field.");
+                return;
+            }
+            RadioGuardianshipProof = $('input[name=RadioGuardianshipProof]:checked').val();
+            if (RadioGuardianshipProof != undefined) {
+                RadioGuardianshipProof = $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim();
+            }
+            else {
+                RadioGuardianshipProof = '';
+            }
+            if (dataTableFamilyMembersFlg) {
+                newRow = $('#GuardianshipAndAdvocacy').DataTable();
+                var rowExists = false;
+                var valueCol = $('#GuardianshipAndAdvocacy').DataTable().column(1).data();
+                var index = valueCol.length;
+               
+                var rowCount = $('#GuardianshipAndAdvocacy tr').length;
+                if (rowCount > 8) {
+                    showErrorMessage(" Not allowed more than 8 records");
+                    return;
+
+                }
+                else {
+                    var text = [{
+                        "Actions": CreateChildBtnWithPermission("EditFamilyMembers", "DeleteFamilyMembers"),
+
+                        "FamilyMemberName": $("#TextBoxFamilyMemberName").val(),
+                        "FamilyMemberAge": $("#TextBoxFamilyMemberAge").val(),
+                        "FamilyMemberRelation": $("#TextBoxFamilyMemberRelation").val(),
+                        "FamilyMemberInHome": LivingInHome,
+                        "GeneralInfoFamilyMembersId": $("#TextBoxGeneralInfoFamilyMembersId").val() == undefined ? '' : $("#TextBoxGeneralInfoFamilyMembersId").val(),
+
+                    }];
+                    var stringyfy = JSON.stringify(text);
+                    var data = JSON.parse(stringyfy);
+                    newRow.rows.add(data).draw(false);
+                    showRecordSaved("Family Member added successfully.");
+
+                    clearFamilyMembersFields();
+                }
+
+            }
+            else {
+                var rowExists = false;
+                newRow = $('#GuardianshipAndAdvocacy').DataTable();
+                var valueCol = $('#GuardianshipAndAdvocacy').DataTable().column(1).data();
+                var index = valueCol.length;
+               
+                var rowCount = $('#GuardianshipAndAdvocacy tr').length;
+                if (rowCount > 8) {
+                    showErrorMessage("Not allowed more than 8 records");
+                    return;
+                }
+                else {
+                    newRow.row.add([
+                        CreateChildBtnWithPermission("EditFamilyMembers", "DeleteFamilyMembers"),
+                       
+                        $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
+                        $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),                       
+                        $("#TextBoxPersonInvolvementWithMember").val(),
+                        $('input[id=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
+                        $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim()
+
+                    ]).draw(false);
+                    showRecordSaved("Added successfully.");
+
+                    clearGuardianshipAndAdvocacy();
+                }
+
+            }
+
+        }
+
+    });
+}
+function clearGuardianshipAndAdvocacy(){
+
+    $(".guardianship").val("");
+    $("input[name=RadioGuardianshipProof]").prop('checked', false);
+
 }
 
 

@@ -280,7 +280,8 @@ table.dataTable {
     position: relative;
     clear: both;
     *zoom: 1;
-    zoom: 1
+    zoom: 1;
+    overflow: overlay;
 }
 
     .dataTables_wrapper .dataTables_length {
