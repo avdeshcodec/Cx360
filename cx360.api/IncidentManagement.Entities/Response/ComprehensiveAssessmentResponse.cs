@@ -54,6 +54,8 @@ namespace IncidentManagement.Entities.Response
             public int MemberProviderId { get; set; }
             public int GuardianshipAndAdvocacyId { get; set; }
             public int AdvancedDirectivesFuturePlanningId { get; set; }
+            public int IndependentLivingSkillId { get; set; }
+            public int SocialServiceNeedId { get; set; }
             public string DocumentStatus { get; set; }
             public string DocumentVersion { get; set; }
             public bool? ValidatedRecord { get; set; }

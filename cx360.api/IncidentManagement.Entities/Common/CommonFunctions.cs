@@ -402,6 +402,12 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_AdvancedDirectivesFuturePlanning":
                     storeProcedure = MappedStoreProcedure.CCO_AdvancedDirectivesFuturePlanning;
                     break;
+                case "CCO_IndependentLivingSkills":
+                    storeProcedure = MappedStoreProcedure.CCO_IndependentLivingSkills;
+                    break;
+                case "CCO_SocialServiceNeed":
+                    storeProcedure = MappedStoreProcedure.CCO_SocialServiceNeed;
+                    break;
                 default:
                     // code block
                     break;

@@ -123,5 +123,7 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_CircleOfSupport = "usp_InsertModifyCCO_CircleofSupportSection";
         public static readonly string CCO_GuardianshipAndAdvocacy = "usp_InsertModifyCCO_GuardianshipAndAdvocacySection";
         public static readonly string CCO_AdvancedDirectivesFuturePlanning = "usp_InsertModifyCCO_AdvancedDirectivesFuturePlanningSection";
+        public static readonly string CCO_IndependentLivingSkills = "usp_InsertModifyCCO_IndependentLivingSkillSection";
+        public static readonly string CCO_SocialServiceNeed = "usp_InsertModifyCCO_SocialServiceNeedSection";
     }
 }
