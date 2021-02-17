@@ -10,10 +10,17 @@ $(document).ready(function () {
     InitalizeDateControls();
     $('.bgStart').show();
     DisableSaveButtonChildSection();
-    var table = $('#GuardianshipAndAdvocacy').DataTable();
-
-    AddGuardianshipAndAdvocacy();
-
+    // var table = $('#GuardianshipAndAdvocacy').DataTable();
+    $('#GuardianshipAndAdvocacy').DataTable({
+        "stateSave": true,
+        "bDestroy": true,
+        "paging": true,
+        "searching": false,
+        "autoWidth": false,
+        'columnDefs': [
+        { 'visible': false, 'targets': [6, 7, 8, 9, 10, 11,12] }
+        ]
+    });
 });
 function InitalizeDateControls() {
     InitCalendar($(".date"), "date controls");
@@ -128,9 +135,9 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
     var json = [],
         item = {},
         tag;
-    blankComprehensiveAssessmentId = $("#TextBoxComprehensiveAssessmentId").val();
+    blankComprehensiveAssessmentId = $("#TextBoxCompAssessmentId").val();
     $('.' + sectionName + ' .' + _class).each(function () {
-        tag = $(this).attr('name').replace("TextBox", "").replace("Checkbox", "").replace("DropDown", "").replace("Radio", "").replace("TextBox1", "");
+        tag = $(this).attr('id').replace("TextBox", "").replace("Checkbox", "").replace("DropDown", "").replace("Radio", "").replace("TextBox1", "");
         if ($(this).hasClass("required")) {
             if ($(this).val() == "") {
                 item[tag] = $(this).val(-1);
@@ -155,6 +162,20 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
             }
         }
     });
+    if (sectionName=='guardianshipAndAdvocacy') {
+
+        // var oTable = $("#PriorSubstanceAbuseTreatment").DataTable().rows().data();
+        // $.each(oTable, function (index, value) {
+            
+        //     itemBodyFirst["Subabusehistwhen"] = value[1] == undefined ? value.Subabusehistwhen : value[1];
+        //     itemBodyFirst["Subabusehistwhere"] = value[2] == undefined ? value.Subabusehistwhere : value[2];
+        //     itemBodyFirst["Subabusehistwithwhom"] = value[3] == undefined ? value.Subabusehistwithwhom : value[3];
+        //     itemBodyFirst["Subabusehistreason"] = value[4] == undefined ? value.Subabusehistreason : value[4];
+        //     itemBodyFirst["SubstanceAbuseTreatmentID"] = value[5] == undefined ? value.SubstanceAbuseTreatmentID : value[5];
+        //     jsonChildFirst.push(itemBodyFirst);
+
+        // });
+    }
     item["CompanyId"] = "1";
     if (sectionName != 'masterSection') {
         item["CompAssessmentId"] = $("#TextBoxCompAssessmentId").val();
@@ -213,9 +234,9 @@ function validateMasterSectionTab(sectionName) {
 
         }
         else if ($(this).attr("type") == "checkbox") {
-            var element = $(this).attr("id");
-            checkBoxLength = $('input[id=' + element + ']:checked').length;
-            if ($('input[id=' + element + ']:checked').length == 0 && $(this).is(":visible")) {
+            var element = $(this).attr("name");
+            checkBoxLength = $('input[name=' + element + ']:checked').length;
+            if ($('input[name=' + element + ']:checked').length == 0 && $(this).is(":visible")) {
                 $(this).parent().parent().parent().next().children().removeClass("hidden");
                 $(this).focus();
                 checked = false;
@@ -396,7 +417,7 @@ function ShowHideFields(current, type, hideFieldClass) {
         }
         else if (hideFieldClass == 'involvementInCriminalClass') {
             $("input[name=RadioMemCurrOnProbation]").prop('checked', false);
-            $("input[name=RadioMemInvolCriminalJusticeSystem]").prop('checked', false);
+           // $("input[name=RadioMemInvolCriminalJusticeSystem]").prop('checked', false);
             $("input[name=RadioMemNeedLegalAid]").prop('checked', false);
             $("input[name=RadioCrimJustSystemImpactHousing]").prop('checked', false);
             $("input[name=RadioCrimJustSystemImpactEmployment]").prop('checked', false);
@@ -550,8 +571,10 @@ function ShowHideFields(current, type, hideFieldClass) {
             hideFields(hideFieldClass);
         }
         if (($(current).prop("checked") && (hideFieldClass == 'guardianAndApplicable'))) {
-            if ($('#NoActiveGuardian').prop("checked") && $('#NotApplicable').prop("checked") ) {
+            if ($('#CheckboxNoActiveGuardian').prop("checked") && $('#CheckboxNotApplicableGuardian').prop("checked") ) {
                 showFields(hideFieldClass);
+                AddGuardianshipAndAdvocacy();
+                $("#GuardianshipAndAdvocacy").val("");
             }
         }
         else {
@@ -879,8 +902,18 @@ function AddGuardianshipAndAdvocacy() {
                         $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
                         $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),                       
                         $("#TextBoxPersonInvolvementWithMember").val(),
-                        $('input[id=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
-                        $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim()
+                        $('input[name=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
+                        $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim(),
+                        $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').val(),
+                        $('#DropDownHowPersonHelpMemberMakeDecision option:selected').val(),                       
+                        $("#TextBoxPersonInvolvementWithMember").val(),
+                        $("#CheckboxHelpSignApproveLifePlan").prop("checked") == true?1:0,
+                        $("#CheckboxHelpSignApproveMedical").prop("checked") == true?1:0,
+                        $("#CheckboxHelpSignApproveFinancial").prop("checked") == true?1:0,
+                        $("#CheckboxOther").prop("checked") == true?1:0,                      
+                        $('input[name=RadioGuardianshipProof]:checked').val()
+
+
 
                     ]).draw(false);
                     showRecordSaved("Added successfully.");
@@ -898,6 +931,7 @@ function clearGuardianshipAndAdvocacy(){
 
     $(".guardianship").val("");
     $("input[name=RadioGuardianshipProof]").prop('checked', false);
+    $('input[id=SupportsIndividualDecisions]:checked').prop('checked', false);
 
 }
 
