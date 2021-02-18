@@ -2,7 +2,7 @@
 var _age;
 var sectionStatus;
 var dataTableFamilyMembersFlg = false;
-var editPermission, deletePermission;
+var editPermission="true", deletePermission="true";
 $(document).ready(function () {
 
     BindDropDowns()
@@ -10,7 +10,7 @@ $(document).ready(function () {
     InitalizeDateControls();
     $('.bgStart').show();
     DisableSaveButtonChildSection();
-    // var table = $('#GuardianshipAndAdvocacy').DataTable();
+    
     $('#GuardianshipAndAdvocacy').DataTable({
         "stateSave": true,
         "bDestroy": true,
@@ -18,7 +18,7 @@ $(document).ready(function () {
         "searching": false,
         "autoWidth": false,
         'columnDefs': [
-        { 'visible': false, 'targets': [6, 7, 8, 9, 10, 11,12] }
+        { 'visible': false, 'targets': [5, 6, 7, 8, 9,10,11,12] }
         ]
     });
 });
@@ -131,7 +131,7 @@ function InsertModify(sectionName, _class, tabName) {
 }
 
 function InsertModifySectionTabs(sectionName, _class, tabName) {
-   
+   debugger;
     var json = [],
         item = {},
         tag;
@@ -162,20 +162,6 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
             }
         }
     });
-    if (sectionName=='guardianshipAndAdvocacy') {
-
-        // var oTable = $("#PriorSubstanceAbuseTreatment").DataTable().rows().data();
-        // $.each(oTable, function (index, value) {
-            
-        //     itemBodyFirst["Subabusehistwhen"] = value[1] == undefined ? value.Subabusehistwhen : value[1];
-        //     itemBodyFirst["Subabusehistwhere"] = value[2] == undefined ? value.Subabusehistwhere : value[2];
-        //     itemBodyFirst["Subabusehistwithwhom"] = value[3] == undefined ? value.Subabusehistwithwhom : value[3];
-        //     itemBodyFirst["Subabusehistreason"] = value[4] == undefined ? value.Subabusehistreason : value[4];
-        //     itemBodyFirst["SubstanceAbuseTreatmentID"] = value[5] == undefined ? value.SubstanceAbuseTreatmentID : value[5];
-        //     jsonChildFirst.push(itemBodyFirst);
-
-        // });
-    }
     item["CompanyId"] = "1";
     if (sectionName != 'masterSection') {
         item["CompAssessmentId"] = $("#TextBoxCompAssessmentId").val();
@@ -183,6 +169,29 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
         item["Status"] = sectionStatus;
     }
     json.push(item);
+
+    if (sectionName=='guardianshipAndAdvocacy') {
+        json=[];       
+        var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
+        $.each(oTable, function (index, value) {
+            var itemBodyFirst = {};
+            itemBodyFirst["CompAssessmentId"] = $("#TextBoxCompAssessmentId").val();
+            itemBodyFirst["CompAssessmentVersioningId"] = $("#TextBoxCompAssessmentVersioningId").val();
+            itemBodyFirst["Status"] = sectionStatus;
+            itemBodyFirst["NoActiveGuardian"] = $("#CheckboxNoActiveGuardian").prop("checked") == true?1:0;
+            itemBodyFirst["NotApplicableGuardian"] = $("#CheckboxNotApplicableGuardian").prop("checked") == true?1:0;
+            itemBodyFirst["WhoHelpToMakeDecisionInLife"] = value[6] == undefined ? value.HelpToMakeDecisionInLife : value[6];
+            itemBodyFirst["HowPersonHelpMemberMakeDecision"] = value[7] == undefined ? value.HowHelpToMakeDecision : value[7];
+            itemBodyFirst["PersonInvolvementWithMember"] = value[8] == undefined ? value.PersonInvolvementWithMember : value[8];
+            itemBodyFirst["HelpSignApproveLifePlan"] = value[9] == undefined ? value.HelpSignApproveLifePlan :  value[9];
+            itemBodyFirst["HelpSignApproveMedical"] = value[10] == undefined ? value.HelpSignApproveMedical : value[10];
+            itemBodyFirst["HelpSignApproveFinancial"] = value[11] == undefined ? value.HelpSignApproveFinancial : value[11];
+            itemBodyFirst["Other"] = value[12] == undefined ? value.Other : value[12];
+            itemBodyFirst["GuardianshipProof"] = value[13] == undefined ? value.GuardianshipProof : null;
+            json.push(itemBodyFirst);
+        });
+    }
+  
     $.ajax({
         type: "POST",
         data: { TabName: tabName, Json: JSON.stringify(json), ReportedBy: reportedBy },
@@ -214,7 +223,7 @@ function validateMasterSectionTab(sectionName) {
         console.log($(this).val());
         console.log($(this).attr("name"));
         if ($(this).is(":visible"))
-        if ($(this).val() == "" || $(this).val() == "-1") {
+        if (($(this).val() == "" || $(this).val() == "-1" )&& ($(this).attr("type") != "checkbox")  ) {
             console.log($(this));
             $(this).siblings("span.errorMessage").removeClass("hidden");
             $(this).focus();
@@ -257,7 +266,7 @@ function CloseErrorMeeage() {
         }
     });
     $('input').blur(function () {
-        if ($(this).attr("type") == "radio" && $(this).hasClass("req_feild")) {
+        if (($(this).attr("type") == "radio" && $(this).hasClass("req_feild"))) {
             var radio = $(this).attr("name");
             $('input[name=' + radio + ']').change(function () {
                 $(this).parent().parent().parent().next().children().addClass("hidden");
@@ -265,8 +274,8 @@ function CloseErrorMeeage() {
             })
         }
         else if ($(this).attr("type") == "checkbox" && $(this).hasClass("req_feild")) {
-            var checkboxId = $(this).attr("id");
-            $('input[id=' + checkboxId + ']').change(function () {
+            var checkboxId = $(this).attr("name");
+            $('input[name=' + checkboxId + ']').change(function () {
                 $(this).parent().parent().parent().next().children().addClass("hidden");
 
             })
@@ -819,18 +828,19 @@ function DisableSaveButtonChildSection() {
     $(".bgInprogress").hide();
 }
 function CreateChildBtnWithPermission(editEvent,deleteEvent) {
+    debugger;
     var notificationBtn = "";
     if (!isEmpty(editPermission) && !isEmpty(deletePermission)) {
         if (editPermission == "true" && deletePermission == "false") {
-            notificationBtn = '<a href="#" class="editSubRows"  onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+            notificationBtn = '<a href="#" class="editSubRows"  onclick="' + editEvent +'(this);event.preventDefault();">Edit </a>'
                 + '<span><a href="#" class="deleteSubRows disable-click" onclick="' + deleteEvent+'(this);event.preventDefault();">Delete</a></span>';
         }
         if (editPermission == "false" && deletePermission == "true") {
-            notificationBtn = '<a href="#" class="editSubRows disable-click" onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+            notificationBtn = '<a href="#" class="editSubRows disable-click" onclick="' + editEvent +'(this);event.preventDefault();">Edit </a>'
                 + '<span><a href="#" class="deleteSubRows" onclick="' + deleteEvent +'(this); event.preventDefault();">Delete</a></span>';
         }
         if (editPermission == "true" && deletePermission == "true") {
-            notificationBtn = '<a href="#" class="editSubRows" onclick="' + editEvent +'(this);event.preventDefault();">Edit</a>'
+            notificationBtn = '<a href="#" class="editSubRows" onclick="' + editEvent +'(this);event.preventDefault();">Edit </a>'
                 + '<span><a href="#" class="deleteSubRows" onclick="' + deleteEvent +'(this); event.preventDefault();">Delete</a></span>';
         }
     }
@@ -838,6 +848,7 @@ function CreateChildBtnWithPermission(editEvent,deleteEvent) {
 }
 
 function AddGuardianshipAndAdvocacy() {
+    debugger;
     $("#AddGuardianshipAndAdvocacy").on("click", function () {
         var RadioGuardianshipProof = '';
         if (!$("#AddGuardianshipAndAdvocacy").hasClass("editRow")) {
@@ -866,13 +877,21 @@ function AddGuardianshipAndAdvocacy() {
                 }
                 else {
                     var text = [{
-                        "Actions": CreateChildBtnWithPermission("EditFamilyMembers", "DeleteFamilyMembers"),
+                        "Actions": CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
 
-                        "FamilyMemberName": $("#TextBoxFamilyMemberName").val(),
-                        "FamilyMemberAge": $("#TextBoxFamilyMemberAge").val(),
-                        "FamilyMemberRelation": $("#TextBoxFamilyMemberRelation").val(),
-                        "FamilyMemberInHome": LivingInHome,
-                        "GeneralInfoFamilyMembersId": $("#TextBoxGeneralInfoFamilyMembersId").val() == undefined ? '' : $("#TextBoxGeneralInfoFamilyMembersId").val(),
+                        "HelpToMakeDecisionLife":  $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
+                        "HowHelpToMakeDecisions": $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
+                        "PersonInvolvementWithMembers":  $("#TextBoxPersonInvolvementWithMember").val(),
+                        "SupportsIndividualDecision": $('input[name=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
+                        "Guardianship":$('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim(),
+                        "HelpToMakeDecisionInLife": $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').val(),
+                        "HowHelpToMakeDecision":$('#DropDownHowPersonHelpMemberMakeDecision option:selected').val(),
+                        "PersonInvolvementWithMember": $("#TextBoxPersonInvolvementWithMember").val(),
+                        "HelpSignApproveLifePlan": $("#CheckboxHelpSignApproveLifePlan").prop("checked") == true?1:0,
+                        "HelpSignApproveMedical":$("#CheckboxHelpSignApproveMedical").prop("checked") == true?1:0,
+                        "HelpSignApproveFinancial":$("#CheckboxHelpSignApproveFinancial").prop("checked") == true?1:0,
+                        "Other":$("#CheckboxOther").prop("checked") == true?1:0,
+                        "GuardianshipProof":$('#RadioGuardianshipProof').val(),
 
                     }];
                     var stringyfy = JSON.stringify(text);
@@ -897,7 +916,7 @@ function AddGuardianshipAndAdvocacy() {
                 }
                 else {
                     newRow.row.add([
-                        CreateChildBtnWithPermission("EditFamilyMembers", "DeleteFamilyMembers"),
+                        CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
                        
                         $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
                         $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),                       
@@ -911,8 +930,7 @@ function AddGuardianshipAndAdvocacy() {
                         $("#CheckboxHelpSignApproveMedical").prop("checked") == true?1:0,
                         $("#CheckboxHelpSignApproveFinancial").prop("checked") == true?1:0,
                         $("#CheckboxOther").prop("checked") == true?1:0,                      
-                        $('input[name=RadioGuardianshipProof]:checked').val()
-
+                        $('#RadioGuardianshipProof').val()
 
 
                     ]).draw(false);
@@ -933,6 +951,36 @@ function clearGuardianshipAndAdvocacy(){
     $("input[name=RadioGuardianshipProof]").prop('checked', false);
     $('input[id=SupportsIndividualDecisions]:checked').prop('checked', false);
 
+}
+function EditGuardianshipAndAdvocacy(object) {
+    var table = $('#MembersFamilyConstellation').DataTable();
+    currentRowFamilyMembers = $(object).parents("tr");
+
+    //FamilyMembers = table.row(currentRowFamilyMembers).data()[1] == undefined ? table.row(currentRowFamilyMembers).data().Notification : table.row(currentRowFamilyMembers).data()[1];
+    var Name = table.row(currentRowFamilyMembers).data()[1] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberName : table.row(currentRowFamilyMembers).data()[1];
+    var Age = table.row(currentRowFamilyMembers).data()[2] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberAge : table.row(currentRowFamilyMembers).data()[2];
+    var RelationToClient = table.row(currentRowFamilyMembers).data()[3] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberRelation : table.row(currentRowFamilyMembers).data()[3];
+    var LivingInHome = table.row(currentRowFamilyMembers).data()[4] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[4];
+    var GeneralInfoFamilyMembersId = table.row(currentRowFamilyMembers).data()[5] == undefined ? table.row(currentRowFamilyMembers).data().GeneralInfoFamilyMembersId : table.row(currentRowFamilyMembers).data()[5];
+
+    $("#TextBoxFamilyMemberName").val(Name);
+    $("#TextBoxFamilyMemberAge").val(Age);
+    $("#TextBoxFamilyMemberRelation").val(RelationToClient);
+    if (LivingInHome == 'Yes') {
+        LivingInHome = 1;
+    }
+    else if (LivingInHome == 'No') {
+        LivingInHome = 0;
+    }
+    else {
+        LivingInHome = '';
+    }
+    LivingInHome == '' ? $("input[name='RadioFamilyMemberInHome']").prop('checked', false) : $("input[name='RadioFamilyMemberInHome'][value=" + LivingInHome + "]").prop('checked', true);
+    $("GeneralInfoFamilyMembersId").val(GeneralInfoFamilyMembersId);
+    $("#AddMemberOfFamilyConstellation").attr("onclick", "EditExistingRowFamilyMembers();return false;");
+    $("#AddMemberOfFamilyConstellation").addClass("editRow");
+    $("#AddMemberOfFamilyConstellation").text("Edit");
+    return false;
 }
 
 
