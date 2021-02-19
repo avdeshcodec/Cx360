@@ -430,8 +430,13 @@ namespace IncidentManagement.Entities.Common
                     storeProcedure = MappedStoreProcedure.CCO_CommunitySocial;
                     break;
                 default:
-                    // code block
+                case "CCO_Education":
+                    storeProcedure = MappedStoreProcedure.CCO_Education;
                     break;
+                case "CCO_TransitionPlanning":
+                    storeProcedure = MappedStoreProcedure.CCO_TransitionPlanning;
+                    break;
+
             }
             
             return storeProcedure;

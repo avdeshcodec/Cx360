@@ -662,7 +662,7 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
             $("#btnSaveAsNew").addClass("hidden");
             $("#btnPublishVersion").show();
             $("#btnPrintPDf").show();
-            //changeExistingURL(result.AllTabsComprehensiveAssessment[0].ComprehensiveAssessmentId, result.AllTabsComprehensiveAssessment[0].AssessmentVersioningId);
+
             if (sectionName == 'masterSection') {
                 $("#TextBoxCompAssessmentId").val(result.AllTabsComprehensiveAssessment[0].CompAssessmentId);
                 $("#TextBoxCompAssessmentVersioningId").val(result.AllTabsComprehensiveAssessment[0].CompAssessmentVersioningId);
@@ -672,10 +672,7 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 $("#TextBoxDocumentStatus").text(result.AllTabsComprehensiveAssessment[0].DocumentStatus);
                 $("#TextBoxDocumentVersion").text(result.AllTabsComprehensiveAssessment[0].DocumentVersion);
             }
-            //$('.masterSection .comprehensiveAssessment').attr("disabled", true);
-            //if ($("#ComprehensiveAssessmentSaveBtn").text() == "Ok") {
-            //    $("#ComprehensiveAssessmentSaveBtn").text("Edit");
-            //}
+           
            
             if (result.AllTabsComprehensiveAssessment[0].EligibilityInformationId!=0 ) {
 
@@ -944,6 +941,44 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 
                 }
             }
+            if (result.AllTabsComprehensiveAssessment[0].EducationId!=0) {
+
+                $("#TextBoxEducationId").val(result.AllTabsComprehensiveAssessment[0].EducationId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedEducation").show();
+                        $("#statusStartEducation").hide();
+                        $("#statusInprogressEducation").hide();
+                    }
+                    else {
+                        $("#statusCompletedEducation").hide();
+                        $("#statusStartEducation").hide();
+                        $("#statusInprogressEducation").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].TransitionPlanningId!=0) {
+
+                $("#TextBoxTransitionPlanningId").val(result.AllTabsComprehensiveAssessment[0].TransitionPlanningId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedTransitionPlanning").show();
+                        $("#statusStartTransitionPlanning").hide();
+                        $("#statusInprogressTransitionPlanning").hide();
+                    }
+                    else {
+                        $("#statusCompletedTransitionPlanning").hide();
+                        $("#statusStartTransitionPlanning").hide();
+                        $("#statusInprogressTransitionPlanning").show();
+                    }
+                
+                }
+            }
         }
     }
     else {
@@ -1086,34 +1121,48 @@ function clearGuardianshipAndAdvocacy(){
 
 }
 function EditGuardianshipAndAdvocacy(object) {
-    var table = $('#MembersFamilyConstellation').DataTable();
+    debugger;
+    var table = $('#GuardianshipAndAdvocacy').DataTable();
     currentRowFamilyMembers = $(object).parents("tr");
-
+    
     //FamilyMembers = table.row(currentRowFamilyMembers).data()[1] == undefined ? table.row(currentRowFamilyMembers).data().Notification : table.row(currentRowFamilyMembers).data()[1];
-    var Name = table.row(currentRowFamilyMembers).data()[1] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberName : table.row(currentRowFamilyMembers).data()[1];
-    var Age = table.row(currentRowFamilyMembers).data()[2] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberAge : table.row(currentRowFamilyMembers).data()[2];
-    var RelationToClient = table.row(currentRowFamilyMembers).data()[3] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberRelation : table.row(currentRowFamilyMembers).data()[3];
-    var LivingInHome = table.row(currentRowFamilyMembers).data()[4] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[4];
+    var WhoHelpMemberMakeDecisionInLife = table.row(currentRowFamilyMembers).data()[6] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberName : table.row(currentRowFamilyMembers).data()[6];
+    var HowPersonHelpMemberMakeDecision = table.row(currentRowFamilyMembers).data()[7] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberAge : table.row(currentRowFamilyMembers).data()[7];
+    var PersonInvolvementWithMember = table.row(currentRowFamilyMembers).data()[8] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberRelation : table.row(currentRowFamilyMembers).data()[8];
+    var CheckboxHelpSignApproveLifePlan = table.row(currentRowFamilyMembers).data()[9] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[9];
+    var CheckboxHelpSignApproveMedical = table.row(currentRowFamilyMembers).data()[10] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[10];
+    var CheckboxHelpSignApproveFinancial = table.row(currentRowFamilyMembers).data()[11] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[11];
+    var CheckboxOther = table.row(currentRowFamilyMembers).data()[12] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[12];
     var GeneralInfoFamilyMembersId = table.row(currentRowFamilyMembers).data()[5] == undefined ? table.row(currentRowFamilyMembers).data().GeneralInfoFamilyMembersId : table.row(currentRowFamilyMembers).data()[5];
-
-    $("#TextBoxFamilyMemberName").val(Name);
-    $("#TextBoxFamilyMemberAge").val(Age);
-    $("#TextBoxFamilyMemberRelation").val(RelationToClient);
-    if (LivingInHome == 'Yes') {
-        LivingInHome = 1;
-    }
-    else if (LivingInHome == 'No') {
-        LivingInHome = 0;
-    }
-    else {
-        LivingInHome = '';
-    }
-    LivingInHome == '' ? $("input[name='RadioFamilyMemberInHome']").prop('checked', false) : $("input[name='RadioFamilyMemberInHome'][value=" + LivingInHome + "]").prop('checked', true);
-    $("GeneralInfoFamilyMembersId").val(GeneralInfoFamilyMembersId);
-    $("#AddMemberOfFamilyConstellation").attr("onclick", "EditExistingRowFamilyMembers();return false;");
-    $("#AddMemberOfFamilyConstellation").addClass("editRow");
-    $("#AddMemberOfFamilyConstellation").text("Edit");
+    
+    
+    
+    $("#DropDownWhoHelpMemberMakeDecisionInLife").val(WhoHelpMemberMakeDecisionInLife).trigger('change');
+    $("#DropDownHowPersonHelpMemberMakeDecision").val(HowPersonHelpMemberMakeDecision).trigger('change');
+    $("#TextBoxPersonInvolvementWithMember").val(PersonInvolvementWithMember);
+    CheckboxHelpSignApproveLifePlan == '' ? $("input[id='CheckboxHelpSignApproveLifePlan']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveLifePlan']").prop('checked', true);
+    CheckboxHelpSignApproveMedical == '' ? $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', true);
+    CheckboxHelpSignApproveFinancial == '' ? $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', true);
+    CheckboxOther == '' ? $("input[id='CheckboxOther']").prop('checked', false) : $("input[id='CheckboxOther']").prop('checked', true);
+    //$("#TextBoxFamilyMemberRelation").val(RelationToClient);
+    //if (LivingInHome == 'Yes') {
+    // LivingInHome = 1;
+    //}
+    //else if (LivingInHome == 'No') {
+    // LivingInHome = 0;
+    //}
+    //else {
+    // LivingInHome = '';
+    //}
+    //LivingInHome == '' ? $("input[name='RadioFamilyMemberInHome']").prop('checked', false) : $("input[name='RadioFamilyMemberInHome'][value=" + LivingInHome + "]").prop('checked', true);
+    //$("GeneralInfoFamilyMembersId").val(GeneralInfoFamilyMembersId);
+    //$("#AddMemberOfFamilyConstellation").attr("onclick", "EditExistingRowFamilyMembers();return false;");
+    //$("#AddMemberOfFamilyConstellation").addClass("editRow");
+    //$("#AddMemberOfFamilyConstellation").text("Edit");
+    //return false;
     return false;
-}
+    }
+    
+    
 
 

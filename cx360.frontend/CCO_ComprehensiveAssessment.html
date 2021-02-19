@@ -1209,7 +1209,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
                                                                             onclick="InsertModify('memberProviders','member','CCO_MemberProviders'); return false;"
                                                                             id="btnMemberProviders" disabled>
                                                                         Ok
@@ -11064,7 +11064,7 @@
                                                                     Cancel
                                                                 </button>
                                                                 <button type="button"
-                                                                        class="btn commonBtn equalWidth btnCommon"
+                                                                        class="btn commonBtn equalWidth btnCommon btnDisable"
                                                                         onclick="InsertModify('challengingBehaviors','challenging','CCO_ChallengingBehaviors'); return false;"
                                                                         id="btnChallengingBehaviors">
                                                                     Ok
@@ -11431,7 +11431,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
                                                                             onclick="InsertModify('behavioralSupportPlan','behavioralSupport','CCO_BehavioralSupportPlan'); return false;"
                                                                             id="btnbehavioralSupportPlan">
                                                                         Ok
@@ -11851,7 +11851,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
                                                                             onclick="InsertModify('communitySocial','community','CCO_CommunitySocial'); return false;"
                                                                             id="btnCommunitySocial">
                                                                         Ok
@@ -11892,8 +11892,8 @@
                                             </div>
                                             <div hidden>
                                                 <input type="text" class="form-control"
-                                                       id="TextBoxAssessmentAreasSafeguardReviewId"
-                                                       name="TextBoxAssessmentAreasSafeguardReviewId" />
+                                                       id="TextBoxEducationId"
+                                                       name="TextBoxEducationId" />
                                             </div>
                                             <div id="collapseEducation" class="collapse" aria-labelledby="headingAsr"
                                                  data-parent="#accordionExample">
@@ -11914,7 +11914,8 @@
                                                                                 Preschool
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11923,7 +11924,8 @@
                                                                                 Grade 1
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11932,7 +11934,8 @@
                                                                                 Grade 2
                                                                                 <input type="radio" value="3"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11941,7 +11944,8 @@
                                                                                 Grade 3
                                                                                 <input type="radio" value="4"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11950,7 +11954,8 @@
                                                                                 Grade 4
                                                                                 <input type="radio" value="5"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11959,7 +11964,8 @@
                                                                                 Grade 5
                                                                                 <input type="radio" value="6"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11968,7 +11974,8 @@
                                                                                 Grade 6
                                                                                 <input type="radio" value="7"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11977,7 +11984,8 @@
                                                                                 Grade 7
                                                                                 <input type="radio" value="8"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11986,7 +11994,8 @@
                                                                                 Grade 8
                                                                                 <input type="radio" value="9"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -11995,7 +12004,8 @@
                                                                                 Grade 9
                                                                                 <input type="radio" value="10"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12004,7 +12014,8 @@
                                                                                 Grade 10
                                                                                 <input type="radio" value="11"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12013,7 +12024,8 @@
                                                                                 Grade 11
                                                                                 <input type="radio" value="12"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12022,7 +12034,8 @@
                                                                                 Grade 12
                                                                                 <input type="radio" value="13"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12031,7 +12044,8 @@
                                                                                 Ungraded Education Program
                                                                                 <input type="radio" value="14"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12040,7 +12054,8 @@
                                                                                 Some College Classes
                                                                                 <input type="radio" value="15"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12049,7 +12064,8 @@
                                                                                 College Degree Program
                                                                                 <input type="radio" value="16"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12058,7 +12074,8 @@
                                                                                 Other
                                                                                 <input type="radio" value="17"
                                                                                        name="RadioMemCompletedEducationLevel"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompletedEducationLevel"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12085,8 +12102,9 @@
                                                                                 Yes
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioMemCurreSchoolEducation"
+                                                                                       id="RadioMemCurreSchoolEducation"
                                                                                        onchange="ShowHideFields(this,'radio','educationProgramsClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12095,8 +12113,9 @@
                                                                                 No
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemCurreSchoolEducation"
+                                                                                       id="RadioMemCurreSchoolEducation"
                                                                                        onchange="ShowHideFields(this,'radio','educationProgramsClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12105,8 +12124,9 @@
                                                                                 UnKnown
                                                                                 <input type="radio" value="3"
                                                                                        name="RadioMemCurreSchoolEducation"
+                                                                                       id="RadioMemCurreSchoolEducation"
                                                                                        onchange="ShowHideFields(this,'radio','educationProgramsClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12136,7 +12156,8 @@
                                                                                 Yes
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioCurreEducationMeetNeed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioCurreEducationMeetNeed"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark can"></span>
                                                                             </label>
                                                                         </li>
@@ -12145,7 +12166,8 @@
                                                                                 No
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioCurreEducationMeetNeed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioCurreEducationMeetNeed"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12154,7 +12176,8 @@
                                                                                 UnKnown
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioCurreEducationMeetNeed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioCurreEducationMeetNeed"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12178,7 +12201,8 @@
                                                                                 Yes
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioMemPursuingAdditionalEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemPursuingAdditionalEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12187,7 +12211,8 @@
                                                                                 No
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemPursuingAdditionalEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemPursuingAdditionalEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12196,7 +12221,8 @@
                                                                                 UnKnown
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemPursuingAdditionalEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemPursuingAdditionalEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12218,7 +12244,8 @@
                                                                                 Regents
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12227,7 +12254,8 @@
                                                                                 Advanced Regents
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12236,7 +12264,8 @@
                                                                                 Local Diploma
                                                                                 <input type="radio" value="3"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12245,7 +12274,8 @@
                                                                                 Local Diploma
                                                                                 <input type="radio" value="4"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12254,7 +12284,8 @@
                                                                                 Associates Degree
                                                                                 <input type="radio" value="5"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12263,7 +12294,8 @@
                                                                                 Bachelors Degree
                                                                                 <input type="radio" value="6"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12272,7 +12304,8 @@
                                                                                 Graduate Degree/Certification
                                                                                 <input type="radio" value="7"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12283,7 +12316,8 @@
                                                                                 (CDOS)
                                                                                 <input type="radio" value="8"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12293,7 +12327,8 @@
                                                                                 Credential (SACC)
                                                                                 <input type="radio" value="9"
                                                                                        name="RadioChooseCurrentEducation"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioChooseCurrentEducation"
+                                                                                       class="req_feild form-control educations" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12310,7 +12345,7 @@
                                                                     an educational setting:
                                                                 </label>
                                                                 <div class="form-group mb-0">
-                                                                    <textarea class="form-control comprehensiveAssessment"
+                                                                    <textarea class="form-control educations"
                                                                               name="TextBoxDescribeSupptResultInEducationSetting "
                                                                               id="TextBoxDescribeSupptResultInEducationSetting"></textarea>
                                                                 </div>
@@ -12320,12 +12355,13 @@
                                                                 <div class="form-group text-center formSmBtn">
                                                                     <button type="button"
                                                                             class="btn commonBtn equalWidth"
+                                                                            id="button"
                                                                             onclick="collapseSection('educationHeader');">
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
-                                                                            onclick="InsertModify('education')"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            onclick="InsertModify('education','educations','CCO_Education'); return false;"
                                                                             id="btnEducation">
                                                                         Ok
                                                                     </button>
@@ -12368,9 +12404,9 @@
                                                 </h2>
                                             </div>
                                             <div hidden>
-                                                <input type="text" class="form-control"
-                                                       id="TextBoxAssessmentAreasSafeguardReviewId"
-                                                       name="TextBoxAssessmentAreasSafeguardReviewId" />
+                                                <input type="text" class="form-control transition"
+                                                       id="TextBoxTransitionPlanningId"
+                                                       name="TextBoxTransitionPlanningId" />
                                             </div>
                                             <div id="collapseTransitionPlanning" class="collapse"
                                                  aria-labelledby="headingAsr" data-parent="#accordionExample">
@@ -12384,7 +12420,7 @@
                                                                     skills:
                                                                 </label>
                                                                 <div class="form-group">
-                                                                    <textarea class="form-control comprehensiveAssessment"
+                                                                    <textarea class="form-control transition"
                                                                               name="TextBoxDescribePrevocationalSkill "
                                                                               id="TextBoxDescribePrevocationalSkill"></textarea>
                                                                 </div>
@@ -12401,7 +12437,8 @@
                                                                                 Yes
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioMemCompetitivelyEmployed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompetitivelyEmployed"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12410,7 +12447,8 @@
                                                                                 No
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemCompetitivelyEmployed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompetitivelyEmployed"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12419,7 +12457,8 @@
                                                                                 Unknown
                                                                                 <input type="radio" value="3"
                                                                                        name="RadioMemCompetitivelyEmployed"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="RadioMemCompetitivelyEmployed"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12440,8 +12479,9 @@
                                                                                 Yes
                                                                                 <input type="radio" value="1"
                                                                                        name="RadioMemCurreReceivingServices"
+                                                                                       id="RadioMemCurreReceivingServices"
                                                                                        onchange="ShowHideFields(this,'radio','accessVRClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12450,8 +12490,9 @@
                                                                                 No
                                                                                 <input type="radio" value="2"
                                                                                        name="RadioMemCurreReceivingServices"
+                                                                                       id="RadioMemCurreReceivingServices"
                                                                                        onchange="ShowHideFields(this,'radio','accessVRClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12460,8 +12501,9 @@
                                                                                 Unknown
                                                                                 <input type="radio" value="3"
                                                                                        name="RadioMemCurreReceivingServices"
+                                                                                       id="RadioMemCurreReceivingServices"
                                                                                        onchange="ShowHideFields(this,'radio','accessVRClass')"
-                                                                                       class="req_feild form-control" />
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark"></span>
                                                                             </label>
                                                                         </li>
@@ -12475,7 +12517,7 @@
                                                                 </label>
                                                                 <div class="form-group">
                                                                     <input type="text"
-                                                                           class="form-control date backgroundHide"
+                                                                           class="form-control date backgroundHide transition"
                                                                            name="TextBoxStartDateACCESVRService"
                                                                            id="TextBoxStartDateACCESVRService"
                                                                            onblur="FormatDateControl(this);" />
@@ -12498,7 +12540,8 @@
                                                                                 Vocational Counseling and guidance
                                                                                 <input type="checkbox" value="1"
                                                                                        name="CheckboxVocationalCounseling"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       id="CheckboxVocationalCounseling"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12506,8 +12549,9 @@
                                                                             <label class="checkboxField">
                                                                                 Assessments and evaluations
                                                                                 <input type="checkbox" value="2"
-                                                                                       name="CheckboxAssessmentsAndEvaluations"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxAssessmentsAndEvaluations"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12515,8 +12559,9 @@
                                                                             <label class="checkboxField">
                                                                                 Rehabilitation technology
                                                                                 <input type="checkbox" value="3"
-                                                                                       name="CheckboxRehabilitationTechnology"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxRehabilitationTechnology"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12524,8 +12569,9 @@
                                                                             <label class="checkboxField">
                                                                                 Special transportation
                                                                                 <input type="checkbox" value="4"
-                                                                                       name="CheckboxSpecialTransportation"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxSpecialTransportation"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12533,8 +12579,9 @@
                                                                             <label class="checkboxField">
                                                                                 Adaptive driver training
                                                                                 <input type="checkbox" value="5"
-                                                                                       name="CheckboxAdaptiveDriverTraining"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxAdaptiveDriverTraining"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12542,8 +12589,9 @@
                                                                             <label class="checkboxField">
                                                                                 Work readiness
                                                                                 <input type="checkbox" value="6"
-                                                                                       name="CheckboxWorkReadiness"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxWorkReadiness"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12552,8 +12600,9 @@
                                                                                 Training including tuition, fees, and
                                                                                 textbooks
                                                                                 <input type="checkbox" value="7"
-                                                                                       name="CheckboxTuitionFeesTextbooks"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxTuitionFeesTextbooks"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12561,8 +12610,9 @@
                                                                             <label class="checkboxField">
                                                                                 Tutor, Reader, and/or Note Taker
                                                                                 <input type="checkbox" value="8"
-                                                                                       name="CheckboxNoteTaker"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxNoteTaker"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12570,8 +12620,9 @@
                                                                             <label class="checkboxField">
                                                                                 Youth Services
                                                                                 <input type="checkbox" value="9"
-                                                                                       name="CheckboxYouthService"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxYouthService"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12579,8 +12630,9 @@
                                                                             <label class="checkboxField">
                                                                                 Physical and mental restoration services
                                                                                 <input type="checkbox" value="10"
-                                                                                       name="CheckboxPhysicalMentalRestoration"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxPhysicalMentalRestoration"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12589,8 +12641,9 @@
                                                                                 Modifications to home, vehicle, or
                                                                                 worksite
                                                                                 <input type="checkbox" value="11"
-                                                                                       name="CheckboxHomeVehicleWorksite"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxHomeVehicleWorksite"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12598,8 +12651,9 @@
                                                                             <label class="checkboxField">
                                                                                 Job development and placement
                                                                                 <input type="checkbox" value="12"
-                                                                                       name="CheckboxJobDevelopmentPlacement"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxJobDevelopmentPlacement"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12607,8 +12661,9 @@
                                                                             <label class="checkboxField">
                                                                                 Work Try Out and On the Job Training
                                                                                 <input type="checkbox" value="13"
-                                                                                       name="CheckboxWorkTryOut"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxWorkTryOut"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12616,8 +12671,9 @@
                                                                             <label class="checkboxField">
                                                                                 Job Coaching
                                                                                 <input type="checkbox" value="14"
-                                                                                       name="CheckboxJobCoaching"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxJobCoaching"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12625,8 +12681,9 @@
                                                                             <label class="checkboxField">
                                                                                 Occupational tools and equipment
                                                                                 <input type="checkbox" value="15"
-                                                                                       name="CheckboxOccupationalToolEquipment"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxOccupationalToolEquipment"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12635,8 +12692,9 @@
                                                                                 Goods, inventory, equipment and supplies
                                                                                 for self-employment
                                                                                 <input type="checkbox" value="16"
-                                                                                       name="CheckboxGoodsInventoryEquipment"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxGoodsInventoryEquipment"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12644,8 +12702,9 @@
                                                                             <label class="checkboxField">
                                                                                 Occupational and business license
                                                                                 <input type="checkbox" value="17"
-                                                                                       name="CheckboxOccupationalBusinessLicense"
-                                                                                       class="req_feild form-control accessVR" />
+                                                                                       name="CheckboxVocationalCounseling"
+                                                                                       id="CheckboxOccupationalBusinessLicense"
+                                                                                       class="req_feild form-control accessVR transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12665,7 +12724,8 @@
                                                                                 Ticket to Work
                                                                                 <input type="checkbox" value="1"
                                                                                        name="CheckboxTicketToWork"
-                                                                                       class="req_feild form-control" />
+                                                                                       id="CheckboxTicketToWork"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12673,8 +12733,9 @@
                                                                             <label class="checkboxField">
                                                                                 Plan to Achieve Self Support (PASS)
                                                                                 <input type="checkbox" value="2"
-                                                                                       name="CheckboxPASS"
-                                                                                       class="req_feild form-control" />
+                                                                                       name="CheckboxTicketToWork"
+                                                                                       id="CheckboxPASS"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12682,8 +12743,9 @@
                                                                             <label class="checkboxField">
                                                                                 Welfare to Work
                                                                                 <input type="checkbox" value="3"
-                                                                                       name="CheckboxWelfareToWork"
-                                                                                       class="req_feild form-control" />
+                                                                                       name="CheckboxTicketToWork"
+                                                                                       id="CheckboxWelfareToWork"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12691,8 +12753,9 @@
                                                                             <label class="checkboxField">
                                                                                 Other
                                                                                 <input type="checkbox" value="4"
-                                                                                       name="CheckboxOther"
-                                                                                       class="req_feild form-control" />
+                                                                                       name="CheckboxTicketToWork"
+                                                                                       id="CheckboxOther"
+                                                                                       class="req_feild form-control transition" />
                                                                                 <span class="checkmark cmdDesign"></span>
                                                                             </label>
                                                                         </li>
@@ -12707,8 +12770,8 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
-                                                                            onclick="InsertModify('transitionPlanning')"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            onclick="InsertModify('transitionPlanning','transition','CCO_TransitionPlanning'); return false;"
                                                                             id="btnTransitionPlanning">
                                                                         Ok
                                                                     </button>
@@ -13442,7 +13505,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
                                                                             onclick="InsertModify('employment')"
                                                                             id="btnEmployment">
                                                                         Ok
