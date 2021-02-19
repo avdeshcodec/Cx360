@@ -125,5 +125,12 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_AdvancedDirectivesFuturePlanning = "usp_InsertModifyCCO_AdvancedDirectivesFuturePlanningSection";
         public static readonly string CCO_IndependentLivingSkills = "usp_InsertModifyCCO_IndependentLivingSkillSection";
         public static readonly string CCO_SocialServiceNeed = "usp_InsertModifyCCO_SocialServiceNeedSection";
+        public static readonly string CCO_MedicalHealth = "usp_InsertModifyCCO_MedicalHealthSection";
+        public static readonly string CCO_HealthPromotion = "usp_InsertModifyCCO_HealthPromotionSection";
+        public static readonly string CCO_BehavioralHealth = "usp_InsertModifyCCO_BehavioralHealth";
+        public static readonly string CCO_ChallengingBehavior = "usp_InsertModifyCCO_ChallengingBehaviors";
+        public static readonly string CCO_BehavioralSupportPlan = "usp_InsertModifyCCO_BehavioralSupportPlan";
+        public static readonly string CCO_Medications = "usp_InsertModifyCCO_Medications";
+        public static readonly string CCO_CommunitySocial = "usp_InsertModifyCCO_CommunityParticipation";
     }
 }

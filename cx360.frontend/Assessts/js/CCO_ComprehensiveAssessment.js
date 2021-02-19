@@ -811,6 +811,139 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 
                 }
             }
+            if (result.AllTabsComprehensiveAssessment[0].MedicalHealthId!=0) {
+
+                $("#TextBoxMedicalHealthId").val(result.AllTabsComprehensiveAssessment[0].MedicalHealthId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedMedicalHealth").show();
+                        $("#statusStartMedicalHealth").hide();
+                        $("#statusInprogressMedicalHealth").hide();
+                    }
+                    else {
+                        $("#statusCompletedMedicalHealth").hide();
+                        $("#statusStartMedicalHealth").hide();
+                        $("#statusInprogressMedicalHealth").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].HealthPromotionId!=0) {
+
+                $("#TextBoxHealthPromotionId").val(result.AllTabsComprehensiveAssessment[0].HealthPromotionId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedHealthPromotion").show();
+                        $("#statusStartHealthPromotion").hide();
+                        $("#statusInprogressHealthPromotion").hide();
+                    }
+                    else {
+                        $("#statusCompletedHealthPromotion").hide();
+                        $("#statusStartHealthPromotion").hide();
+                        $("#statusInprogressHealthPromotion").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].BehavioralHealthId!=0) {
+
+                $("#TextBoxBehavioralHealthId").val(result.AllTabsComprehensiveAssessment[0].BehavioralHealthId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedBehavioralHealth").show();
+                        $("#statusStartBehavioralHealth").hide();
+                        $("#statusInprogressBehavioralHealth").hide();
+                    }
+                    else {
+                        $("#statusCompletedBehavioralHealth").hide();
+                        $("#statusStartBehavioralHealth").hide();
+                        $("#statusInprogressBehavioralHealth").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].ChallengingBehaviorId!=0) {
+
+                $("#TextBoxChallengingBehaviorId").val(result.AllTabsComprehensiveAssessment[0].ChallengingBehaviorId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedChallengingBehaviors").show();
+                        $("#statusStartChallengingBehaviors").hide();
+                        $("#statusInprogressChallengingBehaviors").hide();
+                    }
+                    else {
+                        $("#statusCompletedChallengingBehaviors").hide();
+                        $("#statusStartChallengingBehaviors").hide();
+                        $("#statusInprogressChallengingBehaviors").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].BehavioralSupportPlanId!=0) {
+
+                $("#TextBoxBehavioralSupportPlanId").val(result.AllTabsComprehensiveAssessment[0].BehavioralSupportPlanId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedBehavioralSupportPlan").show();
+                        $("#statusStartBehavioralSupportPlan").hide();
+                        $("#statusInprogressBehavioralSupportPlan").hide();
+                    }
+                    else {
+                        $("#statusCompletedBehavioralSupportPlan").hide();
+                        $("#statusStartBehavioralSupportPlan").hide();
+                        $("#statusInprogressBehavioralSupportPlan").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].MedicationId!=0) {
+
+                $("#TextBoxMedicationId").val(result.AllTabsComprehensiveAssessment[0].MedicationId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedMedications").show();
+                        $("#statusStartMedications").hide();
+                        $("#statusInprogressMedications").hide();
+                    }
+                    else {
+                        $("#statusCompletedMedications").hide();
+                        $("#statusStartMedications").hide();
+                        $("#statusInprogressMedications").show();
+                    }
+                
+                }
+            }
+            if (result.AllTabsComprehensiveAssessment[0].CommunityParticipationId!=0) {
+
+                $("#TextBoxCommunityParticipationId").val(result.AllTabsComprehensiveAssessment[0].CommunityParticipationId);
+
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                    var status = result.AllTabsComprehensiveAssessment[0].Status;
+                    if (status == "Completed") {
+                        $("#statusCompletedCommunitySocial").show();
+                        $("#statusStartCommunitySocial").hide();
+                        $("#statusInprogressCommunitySocial").hide();
+                    }
+                    else {
+                        $("#statusCompletedCommunitySocial").hide();
+                        $("#statusStartCommunitySocial").hide();
+                        $("#statusInprogressCommunitySocial").show();
+                    }
+                
+                }
+            }
         }
     }
     else {

@@ -408,6 +408,27 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_SocialServiceNeed":
                     storeProcedure = MappedStoreProcedure.CCO_SocialServiceNeed;
                     break;
+                case "CCO_MedicalHealth":
+                    storeProcedure = MappedStoreProcedure.CCO_MedicalHealth;
+                    break;
+                case "CCO_HealthPromotion":
+                    storeProcedure = MappedStoreProcedure.CCO_HealthPromotion;
+                    break;
+                case "CCO_BehavioralHealth":
+                    storeProcedure = MappedStoreProcedure.CCO_BehavioralHealth;
+                    break;
+                case "CCO_ChallengingBehaviors":
+                    storeProcedure = MappedStoreProcedure.CCO_ChallengingBehavior;
+                    break;
+                case "CCO_BehavioralSupportPlan":
+                    storeProcedure = MappedStoreProcedure.CCO_BehavioralSupportPlan;
+                    break;
+                case "CCO_Medications":
+                    storeProcedure = MappedStoreProcedure.CCO_Medications;
+                    break;
+                case "CCO_CommunitySocial":
+                    storeProcedure = MappedStoreProcedure.CCO_CommunitySocial;
+                    break;
                 default:
                     // code block
                     break;

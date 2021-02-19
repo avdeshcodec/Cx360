@@ -56,6 +56,13 @@ namespace IncidentManagement.Entities.Response
             public int AdvancedDirectivesFuturePlanningId { get; set; }
             public int IndependentLivingSkillId { get; set; }
             public int SocialServiceNeedId { get; set; }
+            public int MedicalHealthId { get; set; }
+            public int HealthPromotionId { get; set; }
+            public int BehavioralHealthId { get; set; }
+            public int ChallengingBehaviorId { get; set; }
+            public int BehavioralSupportPlanId { get; set; }
+            public int MedicationId { get; set; }
+            public int CommunityParticipationId { get; set; }
             public string DocumentStatus { get; set; }
             public string DocumentVersion { get; set; }
             public bool? ValidatedRecord { get; set; }
