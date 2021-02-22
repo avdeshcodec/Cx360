@@ -5,7 +5,8 @@ var dataTableFamilyMembersFlg = false;
 var editPermission="true", deletePermission="true";
 $(document).ready(function () {
 
-    BindDropDowns()
+    BindDropDowns();
+    BindDiagnosis();
     CloseErrorMeeage();
     InitalizeDateControls();
     $('.bgStart').show();
@@ -21,6 +22,19 @@ $(document).ready(function () {
         { 'visible': false, 'targets': [5, 6, 7, 8, 9,10,11,12] }
         ]
     });
+    $('#Medications').DataTable({
+        "stateSave": true,
+        "bDestroy": true,
+        "paging": true,
+        "searching": false,
+        "autoWidth": false,
+        'columnDefs': [
+            { 'visible': false, 'targets': [] }
+        ]
+    });
+
+    addFieldInExisingTable();
+    
 });
 function InitalizeDateControls() {
     InitCalendar($(".date"), "date controls");
@@ -43,6 +57,65 @@ function BindDropDowns() {
         },
         error: function (xhr) { HandleAPIError(xhr) }
     });
+    
+}
+function BindDiagnosis() {
+    debugger;
+    table = $('#medicalHealthTable').DataTable({
+    "infoEmpty": "No records available",
+    "ajax": function (data, callback, setting) {
+       $.ajax({
+        type: "GET",
+        data: { "FormName": "Diagnosis Codes", "Criteria": "1=1" },
+        url: 'https://staging-api.cx360.net/api/Common/GetList',
+        headers: {
+            'TOKEN': _token
+        },
+        success: function (response) {
+            var dataTouse = {};
+                    if (response!= null) {
+                        dataTouse.data = response;
+
+                        callback(dataTouse);
+                    }
+                    else {
+                        callback({ "data": [] });
+                    }
+            // BindDiagnosiscodes(response);
+
+        },
+        error: function (xhr) { HandleAPIError(xhr) }
+       });
+    },
+    headers: 'true',
+    "columns": [    
+                    
+        {
+            "className": 'details-control',
+            "orderable": false,
+            "data": null
+        },
+        { "data": "DiagnosisCode" },
+        { "data": "DiagnosisDescription" }, 
+        { "data": "DiagnosisType" },
+        { "data": "DiagnosisCode" },
+        { "data": "DiagnosisDescription" },      
+
+    ]
+   });
+}
+function BindDiagnosiscodes(result){
+   debugger;
+    newRow = $('#medicalHealthTable').DataTable();
+
+    for (let i = 0; i < result.length; i++) {
+
+        newRow.row.add([
+        result[i].DiagnosisCode,
+        result[i].DiagnosisDescription
+        ]).draw(false);
+        
+    }
 }
 function BindDropDownIndividualName(result) {
    
@@ -979,6 +1052,25 @@ function ComprehensiveAssessmentSaved(result,sectionName) {
                 
                 }
             }
+            if (result.AllTabsComprehensiveAssessment[0].EmploymentId != 0) {
+
+                $("#TextBoxEmploymentId").val(result.AllTabsComprehensiveAssessment[0].EmploymentId);
+                
+                if (result.AllTabsComprehensiveAssessment[0].Status != null) {
+                var status = result.AllTabsComprehensiveAssessment[0].Status;
+                if (status == "Completed") {
+                $("#statusCompletedEmployment").show();
+                $("#statusStartEmployment").hide();
+                $("#statusInprogressEmployment").hide();
+                }
+                else {
+                $("#statusCompletedEmployment").hide();
+                $("#statusStartEmployment").hide();
+                $("#statusInprogressEmployment").show();
+                }
+                
+                }
+                }
         }
     }
     else {

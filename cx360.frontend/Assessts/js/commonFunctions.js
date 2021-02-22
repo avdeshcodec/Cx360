@@ -192,7 +192,9 @@ function GetAPIEndPoints(key) {
         HANDLECANSVERSIONING: "/CANSAPI/HandleCansVersioning",
         GETCANSASSESSMENTDETAIL: "/CANSAPI/GetCANSAssessmentDetails",
         GENERATEANDIMPORTXML: "/CANSAPI/GenerateAndImportXML",
-        GETCANSASSESSMENTPDFTEMPLATE: "/CANSAPI/PrintAssessmentPDF"
+        GETCANSASSESSMENTPDFTEMPLATE: "/CANSAPI/PrintAssessmentPDF",
+        HANDLEMemberRepresentative: "/LifePlanAPI/HandleMemberRepresentative",
+        HANDLEMEMBERRIGHT: "/LifePlanAPI/HandleMemberRight"
 
     };
     return API_URL + API_ENDPONTS[key];

@@ -134,5 +134,6 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_CommunitySocial = "usp_InsertModifyCCO_CommunityParticipation";
         public static readonly string CCO_Education = "usp_InsertModifyCCO_Education";
         public static readonly string CCO_TransitionPlanning = "usp_InsertModifyCCO_TransitionPlanning";
+        public static readonly string CCO_Employment = "usp_InsertModifyCCO_Employment";
     }
 }

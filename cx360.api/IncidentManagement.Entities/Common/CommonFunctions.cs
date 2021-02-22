@@ -436,6 +436,9 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_TransitionPlanning":
                     storeProcedure = MappedStoreProcedure.CCO_TransitionPlanning;
                     break;
+                case "CCO_Employment":
+                    storeProcedure = MappedStoreProcedure.CCO_TransitionPlanning;
+                    break;
 
             }
             

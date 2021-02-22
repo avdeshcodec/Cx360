@@ -64,6 +64,7 @@ namespace IncidentManagement.Entities.Response
             public int MedicationId { get; set; }
             public int CommunityParticipationId { get; set; }
             public int EducationId { get; set; }
+            public int EmploymentId { get; set; }
             public int TransitionPlanningId { get; set; }
             public string DocumentStatus { get; set; }
             public string DocumentVersion { get; set; }
