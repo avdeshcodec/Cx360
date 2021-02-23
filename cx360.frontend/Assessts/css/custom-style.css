@@ -208,8 +208,20 @@ img {
 .checkboxField input:checked ~ .checkmark:after {
     display: block;
 }
-
 .checkboxField .checkmark:after {
+    left: 7px;
+    top: 7px;
+    width: 10px;
+    height: 10px;
+    border: none;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    background-color: #404040;
+    border-radius: 50%;
+}
+.checkboxField .checkmark.cmdDesign:after {
     left: 9px;
     top: 5px;
     width: 6px;
@@ -219,6 +231,8 @@ img {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+    background-color: transparent;
+    border-radius: 0;
 }
 /*  acoordion  */
 
