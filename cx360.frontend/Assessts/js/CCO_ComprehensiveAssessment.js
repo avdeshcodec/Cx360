@@ -1,25 +1,18 @@
 ﻿var parentClass = "";
 var _age;
 var sectionStatus;
-var dataTableFamilyMembersFlg = false;
+var dataTableGuardianshipAndAdvocacysFlg = false;
 var editPermission = "true", deletePermission = "true";
 $(document).ready(function () {
-    BindDropDowns();
-    BindDiagnosis();
-    BindMedicationsTable();
-    CloseErrorMeeage();
-    InitalizeDateControls();
-    $('.bgStart').show();
-    DisableSaveButtonChildSection();
-
-    $('#GuardianshipAndAdvocacy').DataTable({
+    $('#GuardianshipAndAdvocacy').DataTable();
+     $('#GuardianshipAndAdvocacy').DataTable({
         "stateSave": true,
         "bDestroy": true,
         "paging": true,
         "searching": false,
         "autoWidth": false,
         'columnDefs': [
-            { 'visible': false, 'targets': [5, 6, 7, 8, 9, 10, 11, 12] }
+            { 'visible': false, 'targets': [6,7,8,9,10,11,12,13] }
         ]
     });
     $('#Medications').DataTable({
@@ -33,7 +26,14 @@ $(document).ready(function () {
         ]
     });
 
-    addFieldInExisingTable();
+    BindDropDowns();
+    BindDiagnosis();
+    BindMedicationsTable();
+    CloseErrorMeeage();
+    InitalizeDateControls();
+    $('.bgStart').show();
+    DisableSaveButtonChildSection();
+    //addFieldInExisingTable();
 
 });
 function InitalizeDateControls() {
@@ -60,48 +60,232 @@ function BindDropDowns() {
 
 }
 function BindDiagnosis() {
-    table = $('#medicalHealthTable').DataTable({
-        "infoEmpty": "No records available",
-        "ajax": function (data, callback, setting) {
-            $.ajax({
-                type: "GET",
-                data: { "FormName": "Diagnosis Codes", "Criteria": "1=1" },
-                url: 'https://staging-api.cx360.net/api/Common/GetList',
-                headers: {
-                    'TOKEN': _token
-                },
-                success: function (response) {
-                    var dataTouse = {};
-                    if (response != null) {
-                        dataTouse.data = response;
-
-                        callback(dataTouse);
-                    }
-                    else {
-                        callback({ "data": [] });
-                    }
-                    // BindDiagnosiscodes(response);
-
-                },
-                error: function (xhr) { HandleAPIError(xhr) }
-            });
+    debugger;
+    $.ajax({
+        type: "GET",
+        data: { "FormName": "Diagnosis Codes", "Criteria": "1=1" },
+        url: 'https://staging-api.cx360.net/api/Common/GetList',
+        headers: {
+            'TOKEN': _token
         },
-        headers: 'true',
-        "columns": [
-
-            {
-                "className": 'details-control',
-                "orderable": false,
-                "data": null
-            },
-            { "data": "DiagnosisCode" },
-            { "data": "DiagnosisDescription" },
-            { "data": "DiagnosisType" },
-            { "data": "DiagnosisCode" },
-            { "data": "DiagnosisDescription" },
-
-        ]
+        success: function (response) {
+            if (response != 'undefined') {
+                ActiveDiagnosis(response);
+            }
+        },
+        error: function (xhr) { HandleAPIError(xhr) }
     });
+
+}
+function ActiveDiagnosis(response) {
+
+    var tbl = $("#activeDiagnosis tbody");
+    tbl.html("");
+
+    for (var i = 0; i < 10; i++) {
+        let tr = $("<tr/>");
+        $(tr).append(createTd(response[i].DiagnosisType));
+        $(tr).append(createTd(response[i].DiagnosisCode));
+        $(tr).append(createTd(response[i].DiagnosisDescription));
+        $(tr).append(createTd(response[i].DiagnosisType));
+        $(tr).append(createTd(response[i].DiagnosisType));
+        $(tr).append(createTd(response[i].DiagnosisType));
+        $(tbl).append(tr);
+
+        let tr1 = $("<tr><td colspan='6'>");
+        $(tr1).append(createTd(format()));
+        $(tbl).append(tr1);
+
+    }
+
+}
+function format() {
+
+    return "<div col-sm-12 memberCurrentDiagnosesClass'> " +
+        "<label class='labelAlign lineHeightAligh'> " +
+        " Have any of the " +
+        " member's symptoms gotten worse since onset of " +
+        " condition? " +
+        "</label> " +
+        "<div class='form-group'> " +
+        " <ul class='hasListing1'> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Yes " +
+        " <input type='radio' value='1' " +
+        " name='RadioMemSymptomsGottenWorse' " +
+        " id='RadioMemSymptomsGottenWorse' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " No " +
+        " <input type='radio' value='2' " +
+        " name='RadioMemSymptomsGottenWorse' " +
+        " id='RadioMemSymptomsGottenWorse' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Unknown " +
+        " <input type='radio' value='3' " +
+        " name='RadioMemSymptomsGottenWorse' " +
+        " id='RadioMemSymptomsGottenWorse' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " " +
+        " </ul> " +
+        "</div> " +
+        "</div> " +
+        "</div> " +
+        "<div col-sm-12 memberCurrentDiagnosesClass' " +
+        "> " +
+        "<label class='labelAlign lineHeightAligh'> " +
+        " Has the member " +
+        " experienced any new symptoms since onset of " +
+        " diagnosis? " +
+        "</label> " +
+        "<div class='form-group mb-0'> " +
+        " <ul class='hasListing1'> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Yes " +
+        " <input type='radio' value='1' " +
+        " name='RadioMemNewSymptoms' " +
+        " id='RadioMemNewSymptoms' " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " No " +
+        " <input type='radio' value='2' " +
+        " name='RadioMemNewSymptoms' " +
+        " id='RadioMemNewSymptoms' " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Unknown " +
+        " <input type='radio' value='3' " +
+        " name='RadioMemNewSymptoms' " +
+        " id='RadioMemNewSymptoms' " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " " +
+        " </ul> " +
+        "</div> " +
+        "</div> " +
+        "<div col-sm-12 memberCurrentDiagnosesClass' " +
+        "> " +
+        "<label class='labelAlign lineHeightAligh'> " +
+        " Is the member " +
+        " experiencing financial, transportation, or other " +
+        " barriers to " +
+        " being able to follow their physician's " +
+        " recommendations for " +
+        " this condition? " +
+        "</label> " +
+        "<div class='form-group mb-0'> " +
+        " <ul class='hasListing1'> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " No Concerns at this time " +
+        " <input type='radio' value='1' " +
+        " name='RadioMemFinacTranspOtherBarriers' " +
+        " id='RadioMemFinacTranspOtherBarriers' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Finacial " +
+        " <input type='radio' value='2' " +
+        " name='RadioMemFinacTranspOtherBarriers' " +
+        " id='RadioMemFinacTranspOtherBarriers' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Transportation " +
+        " <input type='radio' value='3' " +
+        " name='RadioMemFinacTranspOtherBarriers' " +
+        " id='RadioMemFinacTranspOtherBarriers' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Other " +
+        " <input type='radio' value='4' " +
+        " name='RadioMemFinacTranspOtherBarriers' " +
+        " id='RadioMemFinacTranspOtherBarriers' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " </ul> " +
+        "</div> " +
+        "</div> " +
+        "<div col-sm-12 memberCurrentDiagnosesClass' " +
+        "> " +
+        "<label class='labelAlign lineHeightAligh'> " +
+        " Does this condition " +
+        " interfere with the individual's ability to perform " +
+        " activies " +
+        " of daily living, including leisure skills or " +
+        " activities? " +
+        "</label> " +
+        "<div class='form-group mb-0'> " +
+        " <ul class='hasListing1'> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Yes " +
+        " <input type='radio' value='1' " +
+        " name='RadioIndvAbilityToDailyLiving' " +
+        " id='RadioIndvAbilityToDailyLiving' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " No " +
+        " <input type='radio' value='2' " +
+        " name='RadioIndvAbilityToDailyLiving' " +
+        " id='RadioIndvAbilityToDailyLiving' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " <li> " +
+        " <label class='checkboxField'> " +
+        " Unknown " +
+        " <input type='radio' value='3' " +
+        " name='RadioIndvAbilityToDailyLiving' " +
+        " id='RadioIndvAbilityToDailyLiving' " +
+        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " <span class='checkmark'></span> " +
+        " </label> " +
+        " </li> " +
+        " </ul> " +
+        "</div> " +
+        "</div>"
 }
 function BindMedicationsTable() {
     token = _token;
@@ -117,7 +301,6 @@ function BindMedicationsTable() {
                     'TOKEN':_token
                 },
                 success: function (response) {
-                    debugger;
                     var dataTouse = {};
                     if (response != null) {
                         dataTouse.data = response;
@@ -128,7 +311,6 @@ function BindMedicationsTable() {
                         callback({ "data": [] });
                     }
                     // BindDiagnosiscodes(response);
-
                 },
                 error: function (xhr) { HandleAPIError(xhr) }
             });
@@ -136,14 +318,14 @@ function BindMedicationsTable() {
         headers: 'true',
         "columns": [
 
-            {
-                "className": 'details-control',
-                "orderable": false,
-                "data": null
-            },
-            { "data": "" },
-            { "data": "" },
-            { "data": "" }
+            //{
+            //    "className": 'details-control',
+            //    "orderable": false,
+            //    "data": null
+            //},
+            { "data": "Medication List ID" },
+            { "data": "Medication Brand Name" },
+            { "data": "Medication Generic Name" }
 
         ]
     });
@@ -339,7 +521,7 @@ function validateMasterSectionTab(sectionName) {
         console.log($(this).val());
         console.log($(this).attr("name"));
         if ($(this).is(":visible"))
-            if (($(this).val() == "" || $(this).val() == "-1") && ($(this).attr("type") != "checkbox")) {
+            if (($(this).val() == "" || $(this).val() == "-1") && ($(this).attr("type") != "checkbox" && $(this).attr("type") != "radio" )) {
                 console.log($(this));
                 $(this).siblings("span.errorMessage").removeClass("hidden");
                 $(this).focus();
@@ -417,6 +599,9 @@ function showFields(hideFieldClass) {
 function hideFields(hideFieldClass) {
     $('.' + hideFieldClass).children().children().val("");
     $('.' + hideFieldClass).hide();
+    if (hideFieldClass == 'guardianAndApplicable') {
+        $('.' + hideFieldClass + ' .guardianship').val('');
+    }
 }
 
 function uncheckedFields(hideFieldClass, check = false) {
@@ -695,11 +880,21 @@ function ShowHideFields(current, type, hideFieldClass) {
             uncheckedFields(hideFieldClass);
             hideFields(hideFieldClass);
         }
-        if (($(current).prop("checked") && (hideFieldClass == 'guardianAndApplicable'))) {
-            if ($('#CheckboxNoActiveGuardian').prop("checked") && $('#CheckboxNotApplicableGuardian').prop("checked")) {
+        else if (($(current).prop("checked") && (hideFieldClass == 'guardianAndApplicable'))) {
+            if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
                 showFields(hideFieldClass);
                 AddGuardianshipAndAdvocacy();
                 $("#GuardianshipAndAdvocacy").val("");
+            }
+        }
+        else if (($(current).prop != "checked" && (hideFieldClass == 'guardianAndApplicable'))) {
+            if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
+                showFields(hideFieldClass);
+                AddGuardianshipAndAdvocacy();
+                $("#GuardianshipAndAdvocacy").val("");
+            }
+            else {
+                hideFields(hideFieldClass);    
             }
         }
         else {
@@ -1131,7 +1326,6 @@ function DisableSaveButtonChildSection() {
     $(".bgInprogress").hide();
 }
 function CreateChildBtnWithPermission(editEvent, deleteEvent) {
-    debugger;
     var notificationBtn = "";
     if (!isEmpty(editPermission) && !isEmpty(deletePermission)) {
         if (editPermission == "true" && deletePermission == "false") {
@@ -1147,26 +1341,43 @@ function CreateChildBtnWithPermission(editEvent, deleteEvent) {
                 + '<span><a href="#" class="deleteSubRows" onclick="' + deleteEvent + '(this); event.preventDefault();">Delete</a></span>';
         }
     }
+   
     return notificationBtn;
 }
 
 function AddGuardianshipAndAdvocacy() {
-    debugger;
+  
+    //$('#GuardianshipAndAdvocacy').DataTable();
+
     $("#AddGuardianshipAndAdvocacy").on("click", function () {
         var RadioGuardianshipProof = '';
         if (!$("#AddGuardianshipAndAdvocacy").hasClass("editRow")) {
-            if ($("#DropDownWhoHelpMemberMakeDecisionInLife").val() == '' && $("#DropDownHowPersonHelpMemberMakeDecision").val() == '' && $("#TextBoxPersonInvolvementWithMember").val() == '' && $('input[id=SupportsIndividualDecisions]:checked').val() == undefined && $('input[name=RadioGuardianshipProof]:checked').val() == undefined) {
-                showErrorMessage(" select atleast one field.");
+            //if ($("#DropDownHelpMemberMakeDecisionInLife").val() == '' && $("#DropDownHowPersonHelpMemberMakeDecision").val() == '' && $("#TextBoxPersonInvolvementWithMember").val() == ''
+            //    && $('input[id=SupportsIndividualDecisions]:checked').val() == undefined && $('input[name=RadioGuardianshipProof]:checked').val() == '') {
+            //    showErrorMessage(" select atleast one field.");
+            //    return;
+            //}
+            var data = validateMasterSectionTab('guardianshipAndAdvocacy');
+            if (data == false || data == undefined) {
                 return;
             }
             RadioGuardianshipProof = $('input[name=RadioGuardianshipProof]:checked').val();
-            if (RadioGuardianshipProof != undefined) {
-                RadioGuardianshipProof = $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim();
-            }
-            else {
-                RadioGuardianshipProof = '';
-            }
-            if (dataTableFamilyMembersFlg) {
+            //if (RadioGuardianshipProof == 1) {
+            //    RadioGuardianshipProof = 'Yes';
+            //}
+            //else if (RadioGuardianshipProof == 2) {
+            //    RadioGuardianshipProof = 'No';
+            //}
+            //else if (RadioGuardianshipProof == 3) {
+            //    RadioGuardianshipProof = 'Unknown';
+            //}
+            //if (RadioGuardianshipProof != undefined) {
+            //    RadioGuardianshipProof = $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim();
+            //}
+            //else {
+            //    RadioGuardianshipProof = '';
+            //}
+            if (dataTableGuardianshipAndAdvocacysFlg) {
                 newRow = $('#GuardianshipAndAdvocacy').DataTable();
                 var rowExists = false;
                 var valueCol = $('#GuardianshipAndAdvocacy').DataTable().column(1).data();
@@ -1179,11 +1390,11 @@ function AddGuardianshipAndAdvocacy() {
 
                 }
                 else {
+                    debugger;
                     var text = [{
                         "Actions": CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
-
                         "HelpToMakeDecisionLife": $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
-                        "HowHelpToMakeDecisions": $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
+                        "HelpToMakeDecisions": $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
                         "PersonInvolvementWithMembers": $("#TextBoxPersonInvolvementWithMember").val(),
                         "SupportsIndividualDecision": $('input[name=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
                         "Guardianship": $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim(),
@@ -1194,15 +1405,14 @@ function AddGuardianshipAndAdvocacy() {
                         "HelpSignApproveMedical": $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
                         "HelpSignApproveFinancial": $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
                         "Other": $("#CheckboxOther").prop("checked") == true ? 1 : 0,
-                        "GuardianshipProof": $('#RadioGuardianshipProof').val(),
-
+                        "GuardianshipProof": RadioGuardianshipProof == '' ? " " : " ",
                     }];
                     var stringyfy = JSON.stringify(text);
                     var data = JSON.parse(stringyfy);
                     newRow.rows.add(data).draw(false);
-                    showRecordSaved("Family Member added successfully.");
+                    showRecordSaved("Guardianship And Advocacy added successfully.");
 
-                    clearFamilyMembersFields();
+                    clearGuardianshipAndAdvocacysFields();
                 }
 
             }
@@ -1220,7 +1430,7 @@ function AddGuardianshipAndAdvocacy() {
                 else {
                     newRow.row.add([
                         CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
-
+                     
                         $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
                         $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
                         $("#TextBoxPersonInvolvementWithMember").val(),
@@ -1233,8 +1443,7 @@ function AddGuardianshipAndAdvocacy() {
                         $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
                         $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
                         $("#CheckboxOther").prop("checked") == true ? 1 : 0,
-                        $('#RadioGuardianshipProof').val()
-
+                        RadioGuardianshipProof === '' ? RadioGuardianshipProof : 0
 
                     ]).draw(false);
                     showRecordSaved("Added successfully.");
@@ -1249,37 +1458,40 @@ function AddGuardianshipAndAdvocacy() {
     });
 }
 function clearGuardianshipAndAdvocacy() {
-
-    $(".guardianship").val("");
+    $("#TextBoxPersonInvolvementWithMember").val("");
+    $("#DropDownWhoHelpMemberMakeDecisionInLife").val("");
+    $("#DropDownHowPersonHelpMemberMakeDecision").val("");
+    $(".memberMakeDecisionClass").hide();
     $("input[name=RadioGuardianshipProof]").prop('checked', false);
-    $('input[id=SupportsIndividualDecisions]:checked').prop('checked', false);
+    $('input[name=SupportsIndividualDecisions]:checked').prop('checked', false);
 
 }
 function EditGuardianshipAndAdvocacy(object) {
-    debugger;
     var table = $('#GuardianshipAndAdvocacy').DataTable();
-    currentRowFamilyMembers = $(object).parents("tr");
 
-    //FamilyMembers = table.row(currentRowFamilyMembers).data()[1] == undefined ? table.row(currentRowFamilyMembers).data().Notification : table.row(currentRowFamilyMembers).data()[1];
-    var WhoHelpMemberMakeDecisionInLife = table.row(currentRowFamilyMembers).data()[6] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberName : table.row(currentRowFamilyMembers).data()[6];
-    var HowPersonHelpMemberMakeDecision = table.row(currentRowFamilyMembers).data()[7] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberAge : table.row(currentRowFamilyMembers).data()[7];
-    var PersonInvolvementWithMember = table.row(currentRowFamilyMembers).data()[8] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberRelation : table.row(currentRowFamilyMembers).data()[8];
-    var CheckboxHelpSignApproveLifePlan = table.row(currentRowFamilyMembers).data()[9] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[9];
-    var CheckboxHelpSignApproveMedical = table.row(currentRowFamilyMembers).data()[10] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[10];
-    var CheckboxHelpSignApproveFinancial = table.row(currentRowFamilyMembers).data()[11] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[11];
-    var CheckboxOther = table.row(currentRowFamilyMembers).data()[12] == undefined ? table.row(currentRowFamilyMembers).data().FamilyMemberInHome : table.row(currentRowFamilyMembers).data()[12];
-    var GeneralInfoFamilyMembersId = table.row(currentRowFamilyMembers).data()[5] == undefined ? table.row(currentRowFamilyMembers).data().GeneralInfoFamilyMembersId : table.row(currentRowFamilyMembers).data()[5];
+    currentRowGuardianshipAndAdvocacys = $(object).parents("tr");
+    var HelpMemberMakeDecisionInLife = table.row(currentRowGuardianshipAndAdvocacys).data()[6] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyName : table.row(currentRowGuardianshipAndAdvocacys).data()[6];
+    var PersonHelpMemberMakeDecision = table.row(currentRowGuardianshipAndAdvocacys).data()[7] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyAge : table.row(currentRowGuardianshipAndAdvocacys).data()[7];
+    var PersonInvolvementWithMember = table.row(currentRowGuardianshipAndAdvocacys).data()[8] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyRelation : table.row(currentRowGuardianshipAndAdvocacys).data()[8];
+    var CheckboxHelpSignApproveLifePlan = table.row(currentRowGuardianshipAndAdvocacys).data()[9] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[9];
+    var CheckboxHelpSignApproveMedical = table.row(currentRowGuardianshipAndAdvocacys).data()[10] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[10];
+    var CheckboxHelpSignApproveFinancial = table.row(currentRowGuardianshipAndAdvocacys).data()[11] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[11];
+    var CheckboxOther = table.row(currentRowGuardianshipAndAdvocacys).data()[12] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[12];
+    var GuardianshipProof = table.row(currentRowGuardianshipAndAdvocacys).data()[13] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GeneralInfoGuardianshipAndAdvocacysId : table.row(currentRowGuardianshipAndAdvocacys).data()[13];
+    var GuardianshipAndAdvocacyId = table.row(currentRowGuardianshipAndAdvocacys).data()[5] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GeneralInfoGuardianshipAndAdvocacysId : table.row(currentRowGuardianshipAndAdvocacys).data()[5];
 
 
 
-    $("#DropDownWhoHelpMemberMakeDecisionInLife").val(WhoHelpMemberMakeDecisionInLife).trigger('change');
-    $("#DropDownHowPersonHelpMemberMakeDecision").val(HowPersonHelpMemberMakeDecision).trigger('change');
+    $("#DropDownWhoHelpMemberMakeDecisionInLife").val(HelpMemberMakeDecisionInLife).trigger('change');
+    $("#DropDownHowPersonHelpMemberMakeDecision").val(PersonHelpMemberMakeDecision).trigger('change');
     $("#TextBoxPersonInvolvementWithMember").val(PersonInvolvementWithMember);
     CheckboxHelpSignApproveLifePlan == '' ? $("input[id='CheckboxHelpSignApproveLifePlan']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveLifePlan']").prop('checked', true);
     CheckboxHelpSignApproveMedical == '' ? $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', true);
     CheckboxHelpSignApproveFinancial == '' ? $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', true);
     CheckboxOther == '' ? $("input[id='CheckboxOther']").prop('checked', false) : $("input[id='CheckboxOther']").prop('checked', true);
-    //$("#TextBoxFamilyMemberRelation").val(RelationToClient);
+    GuardianshipProof == '' ? $("input[id='RadioGuardianshipProof']").prop('checked', false) : $("input[id='RadioGuardianshipProof'][value=" + GuardianshipProof + "]").prop('checked', true);
+
+    //$("#TextBoxGuardianshipAndAdvocacyRelation").val(RelationToClient);
     //if (LivingInHome == 'Yes') {
     // LivingInHome = 1;
     //}
@@ -1289,13 +1501,131 @@ function EditGuardianshipAndAdvocacy(object) {
     //else {
     // LivingInHome = '';
     //}
-    //LivingInHome == '' ? $("input[name='RadioFamilyMemberInHome']").prop('checked', false) : $("input[name='RadioFamilyMemberInHome'][value=" + LivingInHome + "]").prop('checked', true);
-    //$("GeneralInfoFamilyMembersId").val(GeneralInfoFamilyMembersId);
-    //$("#AddMemberOfFamilyConstellation").attr("onclick", "EditExistingRowFamilyMembers();return false;");
-    //$("#AddMemberOfFamilyConstellation").addClass("editRow");
-    //$("#AddMemberOfFamilyConstellation").text("Edit");
+    //LivingInHome == '' ? $("input[name='RadioGuardianshipAndAdvocacyInHome']").prop('checked', false) : $("input[name='RadioGuardianshipAndAdvocacyInHome'][value=" + LivingInHome + "]").prop('checked', true);
+    $("GeneralInfoGuardianshipAndAdvocacysId").val(GuardianshipAndAdvocacyId);
+    $("#AddGuardianshipAndAdvocacy").attr("onclick", "EditExistingRowGuardianshipAndAdvocacys();return false;");
+    $("#AddGuardianshipAndAdvocacy").addClass("editRow");
+    $("#AddGuardianshipAndAdvocacy").text("Edit");
     //return false;
     return false;
+}
+function EditExistingRowGuardianshipAndAdvocacys() {
+    if ($("#AddGuardianshipAndAdvocacy").text() == 'Edit') {
+        $("#AddGuardianshipAndAdvocacy").text('Add');
+    };
+    var table = $('#GuardianshipAndAdvocacy').DataTable();
+    var currentata = "";
+    var data = validateMasterSectionTab('guardianshipAndAdvocacy');
+    if (data == false || data == undefined) {
+       
+        return;
+    }
+    var GuardianshipProof = '';
+    if ($("input[name=RadioGuardianshipProof]:checked").val() == 1) {
+        GuardianshipProof = 'Yes'
+    }
+    else if ($("input[name=RadioGuardianshipProof]:checked").val() == 2) {
+        GuardianshipProof = 'No'
+    }
+   else {
+        //$("input[name=RadioGuardianshipProof][value=3]:checked")
+        GuardianshipProof = 'Unknown'
+    };
+    if (dataTableGuardianshipAndAdvocacysFlg) {
+        var rowExists = false;
+        var valueCol = $('#MembersFamilyConstellation').DataTable().column(1).data();
+        var index = valueCol.length;
+
+        var rowCount = $('#MembersFamilyConstellation tr').length;
+        if (rowCount > 8) {
+            showErrorMessage(" Not allowed more than 8 records");
+            return;
+        }
+        else {
+            var data = {
+                "Actions": CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
+                "HelpToMakeDecisionLife": $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
+                "HelpToMakeDecisions": $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
+                "PersonInvolvementWithMembers": $("#TextBoxPersonInvolvementWithMember").val(),
+                "SupportsIndividualDecision": $('input[name=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
+                "Guardianship": $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim(),
+                "HelpToMakeDecisionInLife": $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').val(),
+                "HowHelpToMakeDecision": $('#DropDownHowPersonHelpMemberMakeDecision option:selected').val(),
+                "PersonInvolvementWithMember": $("#TextBoxPersonInvolvementWithMember").val(),
+                "HelpSignApproveLifePlan": $("#CheckboxHelpSignApproveLifePlan").prop("checked") == true ? 1 : 0,
+                "HelpSignApproveMedical": $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
+                "HelpSignApproveFinancial": $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
+                "Other": $("#CheckboxOther").prop("checked") == true ? 1 : 0,
+                "GuardianshipProof": $("input[name='RadioGuardianshipProof']:checked").val(),
+                "GeneralInfoGuardianshipAndAdvocacysId": $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val() == undefined ? '' : $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val(),
+
+            };
+            table.row(currentRowGuardianshipAndAdvocacys).data(data).draw(false);
+            $("#AddGuardianshipAndAdvocacy").removeAttr("onclick");
+            $("#AddGuardianshipAndAdvocacy").removeClass("editRow");
+            showRecordSaved("Guardianship And Advocacy edited successfully.");
+            clearGuardianshipAndAdvocacy();
+        }
+    }
+    else {
+        var rowExists = false;
+        var valueCol = $('#GuardianshipAndAdvocacy').DataTable().column(1).data();
+        var index = valueCol.length;
+        //for (var k = 0; k < index; k++) {
+        //    if (valueCol[k].toLowerCase().includes($("#DropDownNotificationType").find("option:selected").text().trim().toLowerCase())) {
+        //        rowExists = true;
+        //        currentata = $("#DropDownNotificationType").find("option:selected").text().trim().toLowerCase();
+        //        break;
+        //    }
+        //}
+        var rowCount = $('#MembersFamilyConstellation tr').length;
+        if (rowCount > 8) {
+            showErrorMessage(" Not allowed more than 8 records");
+            return;
+
+        }
+        else {
+            var data1 = [
+                CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "DeleteGuardianshipAndAdvocacy"),
+                $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
+                $('#DropDownHowPersonHelpMemberMakeDecision option:selected').text(),
+                $("#TextBoxPersonInvolvementWithMember").val(),
+                 $('input[name=SupportsIndividualDecisions]:checked').parent('label').text().trim(),
+                 $('input[name=RadioGuardianshipProof]:checked').parent('label').text().trim(),
+                $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').val(),
+                 $('#DropDownHowPersonHelpMemberMakeDecision option:selected').val(),
+               $("#TextBoxPersonInvolvementWithMember").val(),
+                 $("#CheckboxHelpSignApproveLifePlan").prop("checked") == true ? 1 : 0,
+                 $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
+                $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
+                $("#CheckboxOther").prop("checked") == true ? 1 : 0,
+                $("input[name='RadioGuardianshipProof']:checked").val(),
+                
+                //GuardianshipProof,
+                $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val() == undefined ? '' : $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val(),
+
+            ];
+            table.row(currentRowGuardianshipAndAdvocacys).data(data1).draw(false);
+            $("#AddGuardianshipAndAdvocacy").removeAttr("onclick");
+            $("#AddGuardianshipAndAdvocacy").removeClass("editRow");
+            showRecordSaved("Guardianship And Advocacy edited successfully.");
+            clearGuardianshipAndAdvocacy();
+        }
+    }
+}
+function Delete(object) {
+
+    var table = $('#GuardianshipAndAdvocacy').DataTable();
+    var row = $(object).closest("tr");
+    table.row(row).remove().draw();
+    if ($("#AddGuardianshipAndAdvocacy").attr("onclick") != undefined) {
+        $("#AddGuardianshipAndAdvocacy").removeAttr("onclick");
+        $("#AddGuardianshipAndAdvocacy").removeClass("editRow");
+    }
+    showRecordSaved("Record deleted successfully.");
+    clearGuardianshipAndAdvocacy();
+    return false;
+
 }
 
 
