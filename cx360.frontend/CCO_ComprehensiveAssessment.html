@@ -6923,7 +6923,6 @@
                                                                     </div>
                                                                 </div>                                                              
 
-                                                               
                                                                     <div class="tableGrid">
                                                                         <div class="table-responsive">
                                                                             <table class="table caTable" id="activeDiagnosis">
@@ -6942,8 +6941,7 @@
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
-                                                                    </div>
-                                                                   
+                                                                    </div>                                                                  
                                                                </div>                                                                                                                                                                               
                                                             
 
@@ -11305,230 +11303,24 @@
                                                     <div>
                                                         <div class="row">
                                                             <div class="col-md-12 Medications margin-bottom-10">
-                                                                <table id="MedicationsTable" class="display" cellspacing="0" width="100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Medication List ID</th>
-                                                                            <th>Medication Brand Name</th>
-                                                                            <th>Medication Generic Name</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody></tbody>
-                                                                </table>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <label class="labelAlign lineHeightAligh">
-                                                                    <span class="red">*</span>PRN Medication?
-                                                                </label>
-                                                                <div class="form-group">
-                                                                    <ul class="hasListing1">
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Yes
-                                                                                <input type="radio" value="1"
-                                                                                       name="RadioPRNMedication"
-                                                                                       id="RadioPRNMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                No
-                                                                                <input type="radio" value="2"
-                                                                                       name="RadioPRNMedication"
-                                                                                       id="RadioPRNMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                    </ul>
-                                                                    <div class="col-md-6 col-sm-12">
-                                                                        <span class="errorMessage hidden">
-                                                                            This field is
-                                                                            required<i class="fa fa-times close"
-                                                                                       aria-hidden="true"></i>
-                                                                        </span>
+                                                                <div class="tableGrid">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table caTable" id="madicationsTable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Medication List ID</th>
+                                                                                    <th>Medication Brand Name</th>
+                                                                                    <th>Medication Generic Name</th>                                                                                   
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr></tr>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <label class="labelAlign lineHeightAligh">
-                                                                    <span class="red">*</span>Medication Monitoring
-                                                                    Plan?
-                                                                </label>
-                                                                <div class="form-group">
-                                                                    <ul class="hasListing1">
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Yes
-                                                                                <input type="radio" value="1"
-                                                                                       name="RadioMedicationMonitoringPlan"
-                                                                                       id="RadioMedicationMonitoringPlan"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                No
-                                                                                <input type="radio" value="2"
-                                                                                       name="RadioMedicationMonitoringPlan"
-                                                                                       id="RadioMedicationMonitoringPlan"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-
-                                                                    </ul>
-                                                                    <div class="col-md-6 col-sm-12">
-                                                                        <span class="errorMessage hidden">
-                                                                            This field is
-                                                                            required<i class="fa fa-times close"
-                                                                                       aria-hidden="true"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <label class="labelAlign lineHeightAligh">
-                                                                    <span class="red">*</span>Pain Management
-                                                                    Medication?
-                                                                </label>
-                                                                <div class="form-group">
-                                                                    <ul class="hasListing1">
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Yes
-                                                                                <input type="radio" value="1"
-                                                                                       name="RadioPainManagementMedication"
-                                                                                       id="RadioPainManagementMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                No
-                                                                                <input type="radio" value="2"
-                                                                                       name="RadioPainManagementMedication"
-                                                                                       id="RadioPainManagementMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-
-                                                                    </ul>
-                                                                    <div class="col-md-6 col-sm-12">
-                                                                        <span class="errorMessage hidden">
-                                                                            This field is
-                                                                            required<i class="fa fa-times close"
-                                                                                       aria-hidden="true"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <label class="labelAlign lineHeightAligh">
-                                                                    <span class="red">*</span>Does the member and/or
-                                                                    family
-                                                                    understand the use of each medication?
-                                                                </label>
-                                                                <div class="form-group">
-                                                                    <ul class="hasListing1">
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Yes
-                                                                                <input type="radio" value="1"
-                                                                                       name="RadioMemUnderstandMedication"
-                                                                                       id="RadioMemUnderstandMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                No
-                                                                                <input type="radio" value="2"
-                                                                                       name="RadioMemUnderstandMedication"
-                                                                                       id="RadioMemUnderstandMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Unknown
-                                                                                <input type="radio" value="3"
-                                                                                       name="RadioMemUnderstandMedication"
-                                                                                       id="RadioMemUnderstandMedication"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-
-                                                                    </ul>
-                                                                    <div class="col-md-6 col-sm-12">
-                                                                        <span class="errorMessage hidden">
-                                                                            This field is
-                                                                            required<i class="fa fa-times close"
-                                                                                       aria-hidden="true"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 col-sm-12">
-                                                                <label class="labelAlign lineHeightAligh">
-                                                                    <span class="red">*</span>Does the individual and/or
-                                                                    family
-                                                                    feel that the medication is effective at treating
-                                                                    its
-                                                                    intended condition/illness?
-                                                                </label>
-                                                                <div class="form-group mb-0">
-                                                                    <ul class="hasListing1">
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Yes
-                                                                                <input type="radio" value="1"
-                                                                                       name="RadioMemFeelMedicationEffective"
-                                                                                       id="RadioMemFeelMedicationEffective"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                No
-                                                                                <input type="radio" value="2"
-                                                                                       name="RadioMemFeelMedicationEffective"
-                                                                                       id="RadioMemFeelMedicationEffective"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-                                                                        <li>
-                                                                            <label class="checkboxField">
-                                                                                Unknown
-                                                                                <input type="radio" value="3"
-                                                                                       name="RadioMemFeelMedicationEffective"
-                                                                                       id="RadioMemFeelMedicationEffective"
-                                                                                       class="req_feild form-control medication" />
-                                                                                <span class="checkmark"></span>
-                                                                            </label>
-                                                                        </li>
-
-                                                                    </ul>
-                                                                    <div class="col-md-6 col-sm-12">
-                                                                        <span class="errorMessage hidden">
-                                                                            This field is
-                                                                            required<i class="fa fa-times close"
-                                                                                       aria-hidden="true"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                                </div>                                                                  
+                                                           </div>                                                                   
+    
                                                             <div class="col-md-12 col-sm-12 mt-4">
                                                                 <div class="form-group text-center formSmBtn">
                                                                     <button type="button"
