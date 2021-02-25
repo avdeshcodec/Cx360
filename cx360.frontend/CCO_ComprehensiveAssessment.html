@@ -27,7 +27,7 @@
     <script src="Assessts/js/CCO_ComprehensiveAssessment.js" type="text/javascript"></script>
     <script src="Vendors/jquery/datatables.min.js"></script>
     <script type="text/javascript">
-        _token = '3F3QilhwWj/BHfV3kJycxgVnM29TELoNo2uS44ZhXq0W4dqdtI6xlONSsVaW2VnQjU1TC8BlAJ1vw/sXL/reJw==';
+        _token = 'R0P/z5A0ehlfAjZW1UF3faDXJ+h66VNxEMc4f04BT7a7XVTIaRjGJRWvm06F5bnL4mE/tsBMiUzisXfAt1h/GQ==';
         _userId = 452;
         if (isEmpty(_token)) GetTokenFromLocalStorage();
     </script>
@@ -1040,7 +1040,7 @@
                                                         </div>
 
                                                     </div>
-                                                </div>
+                                                
                                                 <div class="col-md-6 col-sm-12 hidden">
                                                     <label>Hidden Id</label>
                                                     <div class="form-group">
@@ -1068,6 +1068,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         </div>
                                     </div>
                                     <!--Member Providers-->
@@ -6920,33 +6921,12 @@
                                                                                        aria-hidden="true"></i>
                                                                         </span>
                                                                     </div>
-                                                                </div>
-                                                                <!-- <table id="activeDiagnosis" class="display nowrap cell-border" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Diagnosis Date</th>
-                                            <th>Code</th>
-                                            <th>Description</th>
-                                            <th>Type</th>
-                                            <th>Diagnosed By</th>
-                                            <th>Expiration Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="6">
+                                                                </div>                                                              
 
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                </table> -->
-
-                                                                <div class="col-md-12">
+                                                               
                                                                     <div class="tableGrid">
                                                                         <div class="table-responsive">
-                                                                            <table class="table table-hover caTable singleHide" id="activeDiagnosis">
+                                                                            <table class="table caTable" id="activeDiagnosis">
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th>Diagnosis Date</th>
@@ -6963,24 +6943,27 @@
                                                                             </table>
                                                                         </div>
                                                                     </div>
+                                                                   
+                                                               </div>                                                                                                                                                                               
+                                                            
+
+                                                            <div class="col-md-12 col-sm-12">
+                                                                <div class="card-header-1 lptMainCaption mb-2 mt-4">
+                                                                    <h2 class="mb-0 mt-0">Allergies</h2>
                                                                 </div>
                                                             </div>
+
+                                                          <div class="col-md-12 col-sm-12">
+                                                            <label class='labelAlign lineHeightAligh mt-4'>
+                                                                List all of the
+                                                                member's relevant allergies and/or sensitivities
+                                                            </label>
+                                                            <div class='form-group mb-0'>
+                                                                --List of the member's current diagnoses--
+                                                            </div>
+                                                          </div>
 
                                                             <div class='col-sm-12 mt-4'>
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="meetingHistoryLabel">Allergies</h5>
-                                                                </div>
-                                                                <label class='labelAlign lineHeightAligh mt-4'>
-                                                                    List all of the
-                                                                    member's relevant allergies and/or sensitivities
-                                                                </label>
-                                                                <div class='form-group mb-0'>
-                                                                    --List of the member's current diagnoses--
-                                                                </div>
-
-                                                            </div>
-
-                                                            <div class='col-md-6 col-sm-12 mt-4'>
                                                                 <label class='labelAlign lineHeightAligh'>
                                                                     Idenfity the alleries
                                                                     and sensitivities (medication, food, environment,
@@ -6999,7 +6982,7 @@
 
                                                                 </div>
                                                             </div>
-
+                                                            <div class='col-sm-12 mt-4'>
                                                             <table id="expiredDiagnosis" class="display dataTable no-footer" cellspacing="0">
                                                                 <thead>
                                                                     <tr>
@@ -7018,7 +7001,8 @@
 
                                                                 </tbody>
                                                             </table>
-
+                                                            </div>
+                                                        </div>
 
                                                             <div class="col-md-12 col-sm-12 mt-4">
                                                                 <div class="form-group text-center formSmBtn">

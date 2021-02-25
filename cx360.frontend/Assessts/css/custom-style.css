@@ -2049,3 +2049,28 @@ html.borderradius #scrollgrabber {
 .circleSupport {
     width: 100%;
 }
+
+
+/*--25 feb--*/
+.mainLayout{
+border:1px solid #ddd;
+padding:15px;
+border-radius:5px;
+}
+.rowData {
+    margin: 0 0 30px 0;
+    position: relative;
+}
+.rowData .form-group {
+    margin: 0;
+}.rowData label {
+    font-size: 14px;
+    font-weight: 400;
+}
+.rowData .error {
+    position: absolute;
+    bottom: -21px;
+    font-size: 12px;
+    color: #ff0000;
+    text-transform: capitalize;
+}
