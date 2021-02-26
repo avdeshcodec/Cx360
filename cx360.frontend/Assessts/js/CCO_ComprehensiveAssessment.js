@@ -49,7 +49,6 @@ function BindDropDowns() {
 
 }
 function BindDiagnosis() {
-    debugger;
     $.ajax({
         type: "GET",
         data: { "FormName": "Diagnosis Codes", "Criteria": "1=1" },
@@ -73,9 +72,11 @@ function ActiveDiagnosis(response) {
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.innerHTML="";
-        div.innerHTML = "<div><label class='col-sm-2'>Diagnosis Date:</label><label style='font-weight:400'>26-02-2021</label></div>"+
-        "<div><label class='col-sm-2'>Code:</label><label style='font-weight:400'>"+response[i].DiagnosisCode+"</label></div><div><label class='col-sm-2'>Description:</label><label style='font-weight:400'>"+response[i].DiagnosisDescription+"</label></div>"+
-       "<div><label class='col-sm-2'>Type:</label><label style='font-weight:400'>"+response[i].DiagnosisType+"</label></div><div><label class='col-sm-2'>Diagnosed By:</label><label style='font-weight:400'>test</label></div><div><label class='col-sm-2'>Expiration Date:</label><label style='font-weight:400'>26-02-2021</label></div>"+
+        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Diagnosis Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/></div>"+
+        "<div class='col'><label>Code:</label><input type='text' class='form-control' value='" + response[i].DiagnosisCode+"'  readonly/></div><div class='col'><label>Description:</label><input type='text' class='form-control' value='" + response[i].DiagnosisDescription+"'  readonly/></div></div>"+
+       "<div class='row'><div class='col'><label>Type:</label><input type='text' class='form-control' value='" + response[i].DiagnosisType+"'  readonly/></div><div class='col'><label>Diagnosed By:</label><input type='text' class='form-control' value='test'readonly/></div>"+
+       "<div class='col'><label>Expiration Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/>"+
+       "</div></div>"+
         "";
         document.getElementById('activeDiagnosis').append(div);
 
@@ -276,7 +277,7 @@ function medicalHealthFormat() {
         "</div></div></div>"
 }
 function medicationsFormat() {
-    return "<div class='mainLayout'><div class='row'><div class='col-md-6'><div class='rowData'>" +
+    return "<div><div class='row'><div class='col-md-6'><div class='rowData'>" +
         "<label class='labelAlign lineHeightAligh'>" +
         " <span class='red'>*</span>PRN Medication?" +
         " </label>" +
@@ -517,15 +518,16 @@ function BindMedicationsTable(response) {
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.innerHTML="";
-        div.innerHTML = "<div><label class='col-sm-2'>Medication List ID:</label><label style='font-weight:400'>"+response[i]['Medication List ID']+"</label></div>"+
-        "<div><label class='col-sm-2'>Medication Brand Name:</label><label style='font-weight:400'>"+response[i]['Medication Brand Name']+"</label></div><div><label class='col-sm-2'>Medication Generic Name:</label><label style='font-weight:400'>"+response[i]['Medication Generic Name']+"</label></div>"+
+        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Medication List ID:</label><input type='text' class='form-control' value='" + response[i]['Medication List ID']+"'  readonly/> </div>" +
+                         "<div class='col'><label>Medication Brand Name:</label><input type='text' class='form-control' value='" + response[i]['Medication Brand Name']+"'  readonly/></div></div>" +
+        "<div class='row'><div class='col'> <label>Medication Generic Name:</label><input type='text' class='form-control' value='" + response[i]['Medication Brand Name']+"'  readonly/></div></div><hr />" + medicationsFormat()+"</div>"+
         "";
         document.getElementById('allMadications').append(div);
 
-        const div1 = document.createElement('div');
-        div1.innerHTML="";
-        div1.innerHTML=medicationsFormat();   
-        document.getElementById('allMadications').appendChild(div1);
+        //const div1 = document.createElement('div');
+        //div1.innerHTML="";
+        //div1.innerHTML=medicationsFormat();   
+        //document.getElementById('allMadications').appendChild(div);
         
     }
 }
@@ -586,8 +588,18 @@ function FillClientDetails(object) {
 }
 //#region Save functions tab
 function InsertModify(sectionName, _class, tabName) {
-
-    if (!validateMasterSectionTab(sectionName)) return;
+    debugger;
+    if (sectionName =="GuardianshipAndAdvocacy") {
+        var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
+        if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
+            if (oTable.length == 0) {
+                if (!validateMasterSectionTab(sectionName)) return;
+            }
+        }
+    }
+    else {
+        if (!validateMasterSectionTab(sectionName)) return;
+    }
     className = parentClass;
     if ($("#Btn" + parentClass + "Ok").text() == "Edit") {
         $('.' + parentClass + ' .form-control').attr("disabled", false);
@@ -656,7 +668,6 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
     json.push(item);
 
     if (sectionName == 'guardianshipAndAdvocacy') {
-        json = [];
         var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
         $.each(oTable, function (index, value) {
             var itemBodyFirst = {};
@@ -672,7 +683,7 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
             itemBodyFirst["HelpSignApproveMedical"] = value[10] == undefined ? value.HelpSignApproveMedical : value[10];
             itemBodyFirst["HelpSignApproveFinancial"] = value[11] == undefined ? value.HelpSignApproveFinancial : value[11];
             itemBodyFirst["Other"] = value[12] == undefined ? value.Other : value[12];
-            itemBodyFirst["GuardianshipProof"] = value[13] == undefined ? value.GuardianshipProof : null;
+            itemBodyFirst["GuardianshipProof"] = value[13] == undefined ? value.GuardianshipProof : value[13];
             json.push(itemBodyFirst);
         });
     }
@@ -1512,6 +1523,7 @@ function DisableSaveButtonChildSection() {
     $(".bgProgress").hide();
     $(".bgInprogress").hide();
 }
+
 function CreateChildBtnWithPermission(editEvent, deleteEvent) {
     var notificationBtn = "";
     if (!isEmpty(editPermission) && !isEmpty(deletePermission)) {
@@ -1531,9 +1543,7 @@ function CreateChildBtnWithPermission(editEvent, deleteEvent) {
 
     return notificationBtn;
 }
-
 function AddGuardianshipAndAdvocacy() {
-
     //$('#GuardianshipAndAdvocacy').DataTable();
 
     $("#AddGuardianshipAndAdvocacy").on("click", function () {
@@ -1592,7 +1602,7 @@ function AddGuardianshipAndAdvocacy() {
                         "HelpSignApproveMedical": $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
                         "HelpSignApproveFinancial": $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
                         "Other": $("#CheckboxOther").prop("checked") == true ? 1 : 0,
-                        "GuardianshipProof": RadioGuardianshipProof == '' ? " " : " ",
+                        "GuardianshipProof": RadioGuardianshipProof == '' ? RadioGuardianshipProof : " ",
                     }];
                     var stringyfy = JSON.stringify(text);
                     var data = JSON.parse(stringyfy);
@@ -1814,7 +1824,3 @@ function Delete(object) {
     return false;
 
 }
-
-
-
-
