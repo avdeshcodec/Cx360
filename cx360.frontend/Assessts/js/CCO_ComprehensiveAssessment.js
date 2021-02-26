@@ -60,6 +60,7 @@ function BindDiagnosis() {
         success: function (response) {
             if (response != 'undefined') {
                 ActiveDiagnosis(response);
+               
             }
         },
         error: function (xhr) { HandleAPIError(xhr) }
@@ -68,22 +69,21 @@ function BindDiagnosis() {
 }
 function ActiveDiagnosis(response) {
 
-    var tbl = $("#activeDiagnosis tbody");
-    tbl.html("");
+    debugger;    
+    for (let i = 0; i < 10; i++) {
+        const div = document.createElement('div');
+        div.innerHTML="";
+        div.innerHTML = "<div><label class='col-sm-2'>Diagnosis Date:</label><label style='font-weight:400'>26-02-2021</label></div>"+
+        "<div><label class='col-sm-2'>Code:</label><label style='font-weight:400'>"+response[i].DiagnosisCode+"</label></div><div><label class='col-sm-2'>Description:</label><label style='font-weight:400'>"+response[i].DiagnosisDescription+"</label></div>"+
+       "<div><label class='col-sm-2'>Type:</label><label style='font-weight:400'>"+response[i].DiagnosisType+"</label></div><div><label class='col-sm-2'>Diagnosed By:</label><label style='font-weight:400'>test</label></div><div><label class='col-sm-2'>Expiration Date:</label><label style='font-weight:400'>26-02-2021</label></div>"+
+        "";
+        document.getElementById('activeDiagnosis').append(div);
 
-    for (var i = 0; i < 10; i++) {
-        let tr = $("<tr style='background-color:#f9f9f9;'>");
-        $(tr).append(createTd('25-02-2021'));
-        $(tr).append(createTd(response[i].DiagnosisCode));
-        $(tr).append(createTd(response[i].DiagnosisDescription));
-        $(tr).append(createTd(response[i].DiagnosisType));
-        $(tr).append(createTd('test'));
-        $(tr).append(createTd('25-02-2021'));
-        $(tbl).append(tr);
-
-        let tr1 = $("<tr><td colspan=6>" + medicalHealthFormat() + "");
-        $(tbl).append(tr1);
-
+        const div1 = document.createElement('div');
+        div1.innerHTML="";
+        div1.innerHTML=medicalHealthFormat();   
+        document.getElementById('activeDiagnosis').appendChild(div1);
+        
     }
 
 }
@@ -198,7 +198,7 @@ function medicalHealthFormat() {
         " </li> " +
         " <li> " +
         " <label class='checkboxField'> " +
-        " Finacial " +
+        " Financial " +
         " <input type='radio' value='2' " +
         " name='RadioMemFinacTranspOtherBarriers' " +
         " id='RadioMemFinacTranspOtherBarriers' " +
@@ -511,24 +511,22 @@ function BindMedications() {
     });
 
 }
-
 function BindMedicationsTable(response) {
 
-    var tbl = $("#madicationsTable tbody");
-    tbl.html("");
+    
+    for (let i = 0; i < 10; i++) {
+        const div = document.createElement('div');
+        div.innerHTML="";
+        div.innerHTML = "<div><label class='col-sm-2'>Medication List ID:</label><label style='font-weight:400'>"+response[i]['Medication List ID']+"</label></div>"+
+        "<div><label class='col-sm-2'>Medication Brand Name:</label><label style='font-weight:400'>"+response[i]['Medication Brand Name']+"</label></div><div><label class='col-sm-2'>Medication Generic Name:</label><label style='font-weight:400'>"+response[i]['Medication Generic Name']+"</label></div>"+
+        "";
+        document.getElementById('allMadications').append(div);
 
-    for (var i = 0; i < response.length; i++) {
-
-        let tr = $("<tr style='background-color:#f9f9f9;'>");
-
-        $(tr).append(createTd(response[i]['Medication List ID']));
-        $(tr).append(createTd(response[i]['Medication Brand Name']));
-        $(tr).append(createTd(response[i]['Medication Generic Name']));
-        $(tbl).append(tr);
-
-        let tr1 = $("<tr><td colspan=6>" + medicationsFormat() + "");
-        $(tbl).append(tr1);
-
+        const div1 = document.createElement('div');
+        div1.innerHTML="";
+        div1.innerHTML=medicationsFormat();   
+        document.getElementById('allMadications').appendChild(div1);
+        
     }
 }
 
