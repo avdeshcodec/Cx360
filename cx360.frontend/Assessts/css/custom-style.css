@@ -2056,6 +2056,7 @@ html.borderradius #scrollgrabber {
 border:1px solid #ddd;
 padding:15px;
 border-radius:5px;
+margin-bottom: 10px;
 }
 .rowData {
     margin: 0 0 30px 0;

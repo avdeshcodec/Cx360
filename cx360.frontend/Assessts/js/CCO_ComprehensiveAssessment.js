@@ -76,21 +76,21 @@ function ActiveDiagnosis(response) {
         "<div class='col'><label>Code:</label><input type='text' class='form-control' value='" + response[i].DiagnosisCode+"'  readonly/></div><div class='col'><label>Description:</label><input type='text' class='form-control' value='" + response[i].DiagnosisDescription+"'  readonly/></div></div>"+
        "<div class='row'><div class='col'><label>Type:</label><input type='text' class='form-control' value='" + response[i].DiagnosisType+"'  readonly/></div><div class='col'><label>Diagnosed By:</label><input type='text' class='form-control' value='test'readonly/></div>"+
        "<div class='col'><label>Expiration Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/>"+
-       "</div></div>"+
+       "</div></div><hr />" + medicalHealthFormat()+"</div>"+
         "";
         document.getElementById('activeDiagnosis').append(div);
 
-        const div1 = document.createElement('div');
-        div1.innerHTML="";
-        div1.innerHTML=medicalHealthFormat();   
-        document.getElementById('activeDiagnosis').appendChild(div1);
+        // const div1 = document.createElement('div');
+        // div1.innerHTML="";
+        // div1.innerHTML=medicalHealthFormat();   
+        // document.getElementById('activeDiagnosis').appendChild(div1);
         
     }
 
 }
 function medicalHealthFormat() {
 
-    return "<div class='mainLayout'><div class='row'><div class='col-sm-6'><div class='rowData'>" +
+    return "<div><div class='row'><div class='col-sm-6'><div class='rowData'>" +
         " <label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
         " Have any of the " +
         " member's symptoms gotten worse since onset of " +
@@ -561,6 +561,11 @@ function BindDropDownIndividualName(result) {
         }
 
 
+        $("#IndividualMiddleName").val(res[0].ClientMiddleName)
+        $("#TextBoxIndividualSuffix").val(res[0].ClientSuffix)
+        $("#TextBoxIndividualSuffix").val(res[0].ClientSuffix)
+        $("#TextBoxTABSId").val(res[0].TABSID)
+        $("#TextBoxMedicaidId").val(res[0].MedicaidID)
         $("#TextBoxDateofBirth").val(DBO)
         $("#TextBoxStreetAddress1").val(res[0].Address1)
         $("#TextBoxStreetAddress2").val(res[0].Address2)
