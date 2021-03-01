@@ -1,6 +1,7 @@
 ﻿var parentClass = "";
 var _age;
 var sectionStatus;
+var counter = 10;
 var dataTableGuardianshipAndAdvocacysFlg = false;
 var editPermission = "true", deletePermission = "true";
 $(document).ready(function () {
@@ -59,7 +60,7 @@ function BindDiagnosis() {
         success: function (response) {
             if (response != 'undefined') {
                 ActiveDiagnosis(response);
-               
+
             }
         },
         error: function (xhr) { HandleAPIError(xhr) }
@@ -67,29 +68,27 @@ function BindDiagnosis() {
 
 }
 function ActiveDiagnosis(response) {
-  
-    for (let i = 0; i < 10; i++) {
+ for (let i = 0; i < counter; i++) {
         const div = document.createElement('div');
-        div.innerHTML="";
-        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Diagnosis Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/></div>"+
-        "<div class='col'><label>Code:</label><input type='text' class='form-control' value='" + response[i].DiagnosisCode+"'  readonly/></div><div class='col'><label>Description:</label><input type='text' class='form-control' value='" + response[i].DiagnosisDescription+"'  readonly/></div></div>"+
-       "<div class='row'><div class='col'><label>Type:</label><input type='text' class='form-control' value='" + response[i].DiagnosisType+"'  readonly/></div><div class='col'><label>Diagnosed By:</label><input type='text' class='form-control' value='test'readonly/></div>"+
-       "<div class='col'><label>Expiration Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/>"+
-       "</div></div><hr />" + medicalHealthFormat()+"</div>"+
-        "";
+        div.innerHTML = "";
+        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Diagnosis Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/></div>" +
+            "<div class='col'><label>Code:</label><input type='text' class='form-control' value='" + response[i].DiagnosisCode + "'  readonly/></div><div class='col'><label>Description:</label><input type='text' class='form-control' value='" + response[i].DiagnosisDescription + "'  readonly/></div></div>" +
+            "<div class='row'><div class='col'><label>Type:</label><input type='text' class='form-control' value='" + response[i].DiagnosisType + "'  readonly/></div><div class='col'><label>Diagnosed By:</label><input type='text' class='form-control' value='test'readonly/></div>" +
+            "<div class='col'><label>Expiration Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/>" +
+            "</div></div><hr />" + medicalHealthFormat(i) + "</div>" +
+            "";
         document.getElementById('activeDiagnosis').append(div);
 
         // const div1 = document.createElement('div');
         // div1.innerHTML="";
         // div1.innerHTML=medicalHealthFormat();   
         // document.getElementById('activeDiagnosis').appendChild(div1);
-        
     }
 
 }
-function medicalHealthFormat() {
+function medicalHealthFormat(i) {
 
-    return "<div><div class='row'><div class='col-sm-6'><div class='rowData'>" +
+    return "<div class='medicalHalth'><div class='row'><div class='col-sm-6'><div class='rowData'>" +
         " <label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
         " Have any of the " +
         " member's symptoms gotten worse since onset of " +
@@ -101,9 +100,11 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " Yes " +
         " <input type='radio' value='1' " +
-        " name='RadioMemSymptomsGottenWorse' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" +"medicalHealth"+"'"+")"+  
+        //onkeypress="CloseErrorMeeage('memberProviders')"
+        " name='RadioMemSymptomsGottenWorse" + i +"' " +
         " id='RadioMemSymptomsGottenWorse' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
         " </label> " +
         " </li> " +
@@ -111,9 +112,10 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " No " +
         " <input type='radio' value='2' " +
-        " name='RadioMemSymptomsGottenWorse' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +  
+        " name='RadioMemSymptomsGottenWorse"+i+"' " +
         " id='RadioMemSymptomsGottenWorse' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
         " </label> " +
         " </li> " +
@@ -121,14 +123,21 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " Unknown " +
         " <input type='radio' value='3' " +
-        " name='RadioMemSymptomsGottenWorse' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +  
+        " name='RadioMemSymptomsGottenWorse" + i +"' " +
         " id='RadioMemSymptomsGottenWorse' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
+        " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
         " </label> " +
         " </li> " +
         " " +
         " </ul> " +
+        "<div class='col - md - 6 col - sm - 12'>" +
+        "<span class='errorMessage hidden' >" +
+        "This field is required" +
+        "<i class='fa fa-times close' aria - hidden='true'></i >" +
+            "</span >" +
+            "</div >" +
         "</div> " +
         "</div> " +
         "</div> " +
@@ -144,7 +153,8 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " Yes " +
         " <input type='radio' value='1' " +
-        " name='RadioMemNewSymptoms' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +  
+        " name='RadioMemNewSymptoms" + i +"' " +
         " id='RadioMemNewSymptoms' " +
         " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
@@ -154,8 +164,9 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " No " +
         " <input type='radio' value='2' " +
-        " name='RadioMemNewSymptoms' " +
-        " id='RadioMemNewSymptoms' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemNewSymptoms" + i +"'' " +
+        " id='RadioMemNewSymptoms " +
         " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
         " </label> " +
@@ -164,7 +175,8 @@ function medicalHealthFormat() {
         " <label class='checkboxField'> " +
         " Unknown " +
         " <input type='radio' value='3' " +
-        " name='RadioMemNewSymptoms' " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemNewSymptoms" + i +"' " +
         " id='RadioMemNewSymptoms' " +
         " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
@@ -172,110 +184,134 @@ function medicalHealthFormat() {
         " </li> " +
         " " +
         " </ul> " +
-        "</div> " +
-        "</div> " +
-        "</div> " +
-        "<div class='col-sm-6'><div class='rowData'>" +
-        "<label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
-        " Is the member " +
-        " experiencing financial, transportation, or other " +
-        " barriers to " +
-        " being able to follow their physician's " +
-        " recommendations for " +
-        " this condition? " +
-        "</label> " +
-        "<div class='form-group mb-0'> " +
-        " <ul class='hasListing1'> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " No Concerns at this time " +
+        "<div class='col - md - 6 col - sm - 12'>" +
+        "<span class='errorMessage hidden' >" +
+        "This field is required" +
+        "<i class='fa fa-times close' aria - hidden='true'></i >" +
+            "</span >" +
+            "</div >" +
+            "</div> " +
+            "</div> " +
+            "</div> " +
+            "<div class='col-sm-6'><div class='rowData'>" +
+            "<label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
+            " Is the member " +
+            " experiencing financial, transportation, or other " +
+            " barriers to " +
+            " being able to follow their physician's " +
+            " recommendations for " +
+            " this condition? " +
+            "</label> " +
+            "<div class='form-group mb-0'> " +
+            " <ul class='hasListing1'> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " No Concerns at this time " +
         " <input type='radio' value='1' " +
-        " name='RadioMemFinacTranspOtherBarriers' " +
-        " id='RadioMemFinacTranspOtherBarriers' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " Financial " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemFinacTranspOtherBarriers" + i +"' " +
+            " id='RadioMemFinacTranspOtherBarriers' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " Financial " +
         " <input type='radio' value='2' " +
-        " name='RadioMemFinacTranspOtherBarriers' " +
-        " id='RadioMemFinacTranspOtherBarriers' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " Transportation " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemFinacTranspOtherBarriers" + i +"' " +
+            " id='RadioMemFinacTranspOtherBarriers' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " Transportation " +
         " <input type='radio' value='3' " +
-        " name='RadioMemFinacTranspOtherBarriers' " +
-        " id='RadioMemFinacTranspOtherBarriers' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " Other " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemFinacTranspOtherBarriers" + i +"' " +
+            " id='RadioMemFinacTranspOtherBarriers' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " Other " +
         " <input type='radio' value='4' " +
-        " name='RadioMemFinacTranspOtherBarriers' " +
-        " id='RadioMemFinacTranspOtherBarriers' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " </ul> " +
-        "</div> " +
-        "</div> " +
-        "</div> " +
-        "<div class='col-sm-6'><div class='rowData'>" +
-        "<label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
-        " Does this condition " +
-        " interfere with the individual's ability to perform " +
-        " activies " +
-        " of daily living, including leisure skills or " +
-        " activities? " +
-        "</label> " +
-        "<div class='form-group mb-0'> " +
-        " <ul class='hasListing1'> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " Yes " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioMemFinacTranspOtherBarriers" + i +"' " +
+            " id='RadioMemFinacTranspOtherBarriers' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " </ul> " +
+        "<div class='col - md - 6 col - sm - 12'>" +
+        "<span class='errorMessage hidden' >" +
+        "This field is required" +
+        "<i class='fa fa-times close' aria - hidden='true'></i >" +
+            "</span >" +
+            "</div >" +
+            "</div> " +
+            "</div> " +
+            "</div> " +
+            "<div class='col-sm-6'><div class='rowData'>" +
+            "<label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
+            " Does this condition " +
+            " interfere with the individual's ability to perform " +
+            " activies " +
+            " of daily living, including leisure skills or " +
+            " activities? " +
+            "</label> " +
+            "<div class='form-group mb-0'> " +
+            " <ul class='hasListing1'> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " Yes " +
         " <input type='radio' value='1' " +
-        " name='RadioIndvAbilityToDailyLiving' " +
-        " id='RadioIndvAbilityToDailyLiving' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " No " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioIndvAbilityToDailyLiving" + i +"' " +
+            " id='RadioIndvAbilityToDailyLiving' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " No " +
         " <input type='radio' value='2' " +
-        " name='RadioIndvAbilityToDailyLiving' " +
-        " id='RadioIndvAbilityToDailyLiving' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " <li> " +
-        " <label class='checkboxField'> " +
-        " Unknown " +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioIndvAbilityToDailyLiving" + i +"' " +
+            " id='RadioIndvAbilityToDailyLiving' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+            " <li> " +
+            " <label class='checkboxField'> " +
+            " Unknown " +
         " <input type='radio' value='3' " +
-        " name='RadioIndvAbilityToDailyLiving' " +
-        " id='RadioIndvAbilityToDailyLiving' " +
-        " class='form-control memberCurrentDiagnoses medical' /> " +
-        " <span class='checkmark'></span> " +
-        " </label> " +
-        " </li> " +
-        " </ul> " +
-        "</div> " +
-        "</div> " +
-        "</div></div></div>"
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
+        " name='RadioIndvAbilityToDailyLiving" + i +"' " +
+            " id='RadioIndvAbilityToDailyLiving' " +
+            " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
+            " <span class='checkmark'></span> " +
+            " </label> " +
+            " </li> " +
+        " </ul> " + "<div class='col - md - 6 col - sm - 12'>" +
+        "<span class='errorMessage hidden' >" +
+        "This field is required" +
+        "<i class='fa fa-times close' aria - hidden='true'></i >" +
+            "</span >" +
+            "</div >" +
+            "</div> " +
+            "</div> " +
+            "</div></div></div>"
 }
-function medicationsFormat() {
+function medicationsFormat(i) {
     return "<div><div class='row'><div class='col-md-6'><div class='rowData'>" +
         "<label class='labelAlign lineHeightAligh'>" +
         " <span class='red'>*</span>PRN Medication?" +
@@ -286,7 +322,8 @@ function medicationsFormat() {
         " <label class='checkboxField'>" +
         " Yes" +
         " <input type='radio' value='1'" +
-        " name='RadioPRNMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        " name='RadioPRNMedication" + i +"'" +
         "  id='RadioPRNMedication'" +
         " class='req_feild form-control medication' />" +
         "<span class='checkmark'></span>" +
@@ -296,13 +333,14 @@ function medicationsFormat() {
         " <label class='checkboxField'>" +
         "       No" +
         " <input type='radio' value='2'" +
-        "   name='RadioPRNMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "   name='RadioPRNMedication" + i +"'" +
         "    id='RadioPRNMedication'" +
         "    class='req_feild form-control medication' />" +
         " <span class='checkmark'></span>" +
         "</label>" +
         " </li>" +
-        " </ul>" +    
+        " </ul>" +
         "<div class='col-md-6'>" +
         "<span class='errorMessage hidden'>" +
         "  This field is" +
@@ -324,7 +362,8 @@ function medicationsFormat() {
         "       <label class='checkboxField'>" +
         "       Yes" +
         " <input type='radio' value='1'" +
-        "   name='RadioMedicationMonitoringPlan'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "   name='RadioMedicationMonitoringPlan" + i +"'" +
         "    id='RadioMedicationMonitoringPlan'" +
         "    class='req_feild form-control medication' />" +
         " <span class='checkmark'></span>" +
@@ -334,7 +373,8 @@ function medicationsFormat() {
         "   <label class='checkboxField'>" +
         "       No" +
         "      <input type='radio' value='2'" +
-        "             name='RadioMedicationMonitoringPlan'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "             name='RadioMedicationMonitoringPlan" + i +"'" +
         "            id='RadioMedicationMonitoringPlan'" +
         "            class='req_feild form-control medication' />" +
         "    <span class='checkmark'></span>" +
@@ -362,7 +402,8 @@ function medicationsFormat() {
         "       <label class='checkboxField'>" +
         "         Yes" +
         "        <input type='radio' value='1'" +
-        "            name='RadioPainManagementMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "            name='RadioPainManagementMedication" + i +"'" +
         "            id='RadioPainManagementMedication'" +
         "          class='req_feild form-control medication' />" +
         "   <span class='checkmark'></span>" +
@@ -372,13 +413,14 @@ function medicationsFormat() {
         " <label class='checkboxField'>" +
         "    No" +
         "     <input type='radio' value='2'" +
-        "           name='RadioPainManagementMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "           name='RadioPainManagementMedication" + i +"'" +
         "         id='RadioPainManagementMedication'" +
         "         class='req_feild form-control medication' />" +
         "  <span class='checkmark'></span>" +
         " </label>" +
         "</li>" +
-        " </ul>" +    
+        " </ul>" +
         "<div class='col-md-6 col-sm-12'>" +
         "    <span class='errorMessage hidden'>" +
         "        This field is" +
@@ -401,7 +443,8 @@ function medicationsFormat() {
         " <label class='checkboxField'>" +
         "         Yes" +
         "    <input type='radio' value='1'" +
-        "         name='RadioMemUnderstandMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "         name='RadioMemUnderstandMedication" + i +"'" +
         "          id='RadioMemUnderstandMedication'" +
         "          class='req_feild form-control medication' />" +
         "    <span class='checkmark'></span>" +
@@ -411,7 +454,8 @@ function medicationsFormat() {
         "    <label class='checkboxField'>" +
         "       No" +
         "      <input type='radio' value='2'" +
-        "           name='RadioMemUnderstandMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "           name='RadioMemUnderstandMedication" + i +"'" +
         "        id='RadioMemUnderstandMedication'" +
         "          class='req_feild form-control medication' />" +
         "    <span class='checkmark'></span>" +
@@ -421,7 +465,8 @@ function medicationsFormat() {
         "     <label class='checkboxField'>" +
         "        Unknown" +
         "       <input type='radio' value='3'" +
-        "             name='RadioMemUnderstandMedication'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "             name='RadioMemUnderstandMedication" + i +"'" +
         "             id='RadioMemUnderstandMedication'" +
         "            class='req_feild form-control medication' />" +
         "     <span class='checkmark'></span>" +
@@ -452,7 +497,8 @@ function medicationsFormat() {
         "         <label class='checkboxField'>" +
         "           Yes" +
         "           <input type='radio' value='1'" +
-        "                name='RadioMemFeelMedicationEffective'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "                name='RadioMemFeelMedicationEffective" + i +"'" +
         "                id='RadioMemFeelMedicationEffective'" +
         "              class='req_feild form-control medication' />" +
         "       <span class='checkmark'></span>" +
@@ -462,7 +508,8 @@ function medicationsFormat() {
         "    <label class='checkboxField'>" +
         "       No" +
         "       <input type='radio' value='2'" +
-        "              name='RadioMemFeelMedicationEffective'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "              name='RadioMemFeelMedicationEffective" + i +"'" +
         "            id='RadioMemFeelMedicationEffective'" +
         "            class='req_feild form-control medication' />" +
         "      <span class='checkmark'></span>" +
@@ -472,7 +519,8 @@ function medicationsFormat() {
         " <label class='checkboxField'>" +
         "   Unknown" +
         "  <input type='radio' value='3'" +
-        "        name='RadioMemFeelMedicationEffective'" +
+        "onclick=" + "CloseErrorMeeage(" + "'" + "medications" + "'" + ")" + 
+        "        name='RadioMemFeelMedicationEffective" + i +"'" +
         "      id='RadioMemFeelMedicationEffective'" +
         "      class='req_feild form-control medication' />" +
         "<span class='checkmark'></span>" +
@@ -513,26 +561,26 @@ function BindMedications() {
 }
 function BindMedicationsTable(response) {
 
-    
+
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
-        div.innerHTML="";
-        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Medication List ID:</label><input type='text' class='form-control' value='" + response[i]['Medication List ID']+"'  readonly/> </div>" +
-                         "<div class='col'><label>Medication Brand Name:</label><input type='text' class='form-control' value='" + response[i]['Medication Brand Name']+"'  readonly/></div></div>" +
-        "<div class='row'><div class='col'> <label>Medication Generic Name:</label><input type='text' class='form-control' value='" + response[i]['Medication Brand Name']+"'  readonly/></div></div><hr />" + medicationsFormat()+"</div>"+
-        "";
+        div.innerHTML = "";
+        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Medication List ID:</label><input type='text' class='form-control' value='" + response[i]["Medication List ID"] + "'  readonly/> </div>" +
+            "<div class='col'><label>Medication Brand Name:</label><input type='text' class='form-control' value='" + response[i]["Medication Brand Name"] + "'  readonly/></div></div>" +
+            "<div class='row'><div class='col'> <label>Medication Generic Name:</label><input type='text' class='form-control' value='" + response[i]["Medication Brand Name"] + "'  readonly/></div></div><hr />" + medicationsFormat(i) + "</div>" +
+            "";
         document.getElementById('allMadications').append(div);
 
         //const div1 = document.createElement('div');
         //div1.innerHTML="";
         //div1.innerHTML=medicationsFormat();   
         //document.getElementById('allMadications').appendChild(div);
-        
+
     }
 }
 
 function BindDropDownIndividualName(result) {
-
+    debugger;
     $.each(result, function (data, value) {
         $("#DropDownClientId").append($("<option></option>").val(value.ClientID).html(value.LastName + "," + " " + value.FirstName));
     });
@@ -556,7 +604,8 @@ function BindDropDownIndividualName(result) {
         var DBO = (res[0].BirthDate);
         if (DBO != null) {
             DBO = DBO.slice(0, 10).split('-');
-            DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
+            //DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
+            DBO = DBO[0];
         }
 
 
@@ -592,8 +641,7 @@ function FillClientDetails(object) {
 }
 //#region Save functions tab
 function InsertModify(sectionName, _class, tabName) {
-    debugger;
-    if (sectionName =="guardianshipAndAdvocacy") {
+    if (sectionName == "guardianshipAndAdvocacy") {
         var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
         if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
             if (oTable.length == 0) {
@@ -632,7 +680,6 @@ function InsertModify(sectionName, _class, tabName) {
 }
 
 function InsertModifySectionTabs(sectionName, _class, tabName) {
-    debugger;
     var json = [],
         item = {},
         tag;
@@ -691,7 +738,9 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
             json.push(itemBodyFirst);
         });
     }
+    if (sectionName=='') {
 
+    }
     $.ajax({
         type: "POST",
         data: { TabName: tabName, Json: JSON.stringify(json), ReportedBy: reportedBy },
@@ -718,7 +767,6 @@ function validateMasterSectionTab(sectionName) {
 
     var checked = null; var checkBoxLength = 0;
     parentClass = sectionName;
-
     $("." + parentClass + " .req_feild").each(function () {
         console.log($(this).val());
         console.log($(this).attr("name"));
@@ -1108,7 +1156,7 @@ function ShowHideFields(current, type, hideFieldClass) {
 }
 
 function showHideFieldsBindOnStart() {
-
+    debugger;
     var hideFieldClass = 'willowbrookStatusClass';
     if ($('#TextBoxWillowbrookStatus').val() == 'True') {
         showFields(hideFieldClass);
