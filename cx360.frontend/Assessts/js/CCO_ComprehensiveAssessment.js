@@ -67,8 +67,7 @@ function BindDiagnosis() {
 
 }
 function ActiveDiagnosis(response) {
-
-    debugger;    
+  
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.innerHTML="";
@@ -594,7 +593,7 @@ function FillClientDetails(object) {
 //#region Save functions tab
 function InsertModify(sectionName, _class, tabName) {
     debugger;
-    if (sectionName =="GuardianshipAndAdvocacy") {
+    if (sectionName =="guardianshipAndAdvocacy") {
         var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
         if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
             if (oTable.length == 0) {
@@ -1645,7 +1644,7 @@ function AddGuardianshipAndAdvocacy() {
                         $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
                         $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
                         $("#CheckboxOther").prop("checked") == true ? 1 : 0,
-                        RadioGuardianshipProof === '' ? RadioGuardianshipProof : 0
+                        RadioGuardianshipProof === undefined ? ' ' : RadioGuardianshipProof
 
                     ]).draw(false);
                     showRecordSaved("Added successfully.");
@@ -1666,7 +1665,9 @@ function clearGuardianshipAndAdvocacy() {
     $(".memberMakeDecisionClass").hide();
     $("input[name=RadioGuardianshipProof]").prop('checked', false);
     $('input[name=SupportsIndividualDecisions]:checked').prop('checked', false);
-
+    if ($("#AddGuardianshipAndAdvocacy").text() == 'Edit') {
+        $("#AddGuardianshipAndAdvocacy").text('Add');
+    };
 }
 function EditGuardianshipAndAdvocacy(object) {
     var table = $('#GuardianshipAndAdvocacy').DataTable();
@@ -1825,7 +1826,9 @@ function Delete(object) {
         $("#AddGuardianshipAndAdvocacy").removeClass("editRow");
     }
     showRecordSaved("Record deleted successfully.");
+    if ($("#AddGuardianshipAndAdvocacy").text() == 'Edit') {
+        $("#AddGuardianshipAndAdvocacy").text('Add');
+    };
     clearGuardianshipAndAdvocacy();
     return false;
-
 }
