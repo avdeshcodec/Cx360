@@ -290,7 +290,7 @@ namespace IncidentManagement.Repository.Repository
             {
                 newTemplatePDf = GetAssessmentPDFTemplate(comprehensiveAssessmentRequest.TabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Comprehensive_Assessment.pdf", comprehensiveAssessmentRequest);
 
-                DataTable dataTable = new DataTable();
+                DataTable dataTable = new DataTable();  
                 dataTable.Clear();
                 dataTable.Columns.Add("FileName");
                 DataRow dataRow = dataTable.NewRow();

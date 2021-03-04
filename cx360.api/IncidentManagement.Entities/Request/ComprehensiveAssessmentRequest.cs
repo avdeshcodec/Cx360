@@ -8,6 +8,9 @@ namespace IncidentManagement.Entities.Request
 {
    public class ComprehensiveAssessmentRequest: CommonRequestParameter
     {
+        public string OfflinePDF { get; set; }
+        public string OfflinePDFType { get; set; }
+        public int ClientId { get; set; }
         public string TabName { get; set; }
         public string Json { get; set; }
         public string JsonChildFirstTable { get; set; }
@@ -18,5 +21,6 @@ namespace IncidentManagement.Entities.Request
         public string DocumentStatus { get; set; }
         public string DocumentVersion { get; set; }
         public int? PreviousComprehensiveAssessmentId { get; set; }
+       
     }
 }

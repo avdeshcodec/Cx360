@@ -25,11 +25,13 @@ namespace IncidentManagement.API.Controllers
         private ComprehensiveAssessmentDetailResponse cadResponse = null;
         private ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         CommonFunctions common = null;
+        private readonly DocumentUpload _documentUpload;
         #endregion
 
         public ComprehensiveAssessmentAPIController(IComprehensiveAssessmentService iComprehensiveAssessmentService)
         {
             _ComprehensiveAssessmentService = iComprehensiveAssessmentService;
+            _documentUpload = new DocumentUpload();
         }
 
         /// <summary>
@@ -157,6 +159,27 @@ namespace IncidentManagement.API.Controllers
                     httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                     httpResponseMessage.Content.Headers.ContentDisposition.FileName = "fileNameOfYourChoice";
                 }
+
+            }
+            catch (Exception Ex)
+            {
+                cadResponse.Success = false;
+                cadResponse.IsException = true;
+                cadResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+        [HttpPost]
+        [Route("UploadOfflinePDF")]
+        [ActionName("UploadOfflinePDF")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> UploadOfflinePDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            try
+            {
+                var filePath = _documentUpload.saveDocumentInFolder(comprehensiveAssessmentRequest.OfflinePDF,"PDF");
 
             }
             catch (Exception Ex)

@@ -5,6 +5,7 @@ var counter = 10;
 var medicationsCounter = 0;
 var dataTableGuardianshipAndAdvocacysFlg = false;
 var editPermission = "true", deletePermission = "true";
+var base64="";
 $(document).ready(function () {
     $('#GuardianshipAndAdvocacy').DataTable();
     $('#GuardianshipAndAdvocacy').DataTable({
@@ -24,9 +25,73 @@ $(document).ready(function () {
     InitalizeDateControls();
     $('.bgStart').show();
     DisableSaveButtonChildSection();
+    ValidateUploadedFile();
 
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
+      } else {
+        alert('The File APIs are not fully supported in this browser.');
+      }
 
 });
+
+function OpenOfflinePdf()
+{
+    var url="Assessts/OfflinePDF/CCO_ComprehensiveAssessment.pdf";
+    window.open(url);
+}
+function ValidateUploadedFile() {
+    $('#TextBoxUploadPdf').on('change', function () {
+        var fileExtension = 'pdf';
+        if ($(this).val().substr($(this).val().lastIndexOf('.')).toLowerCase() != ".pdf") {
+            showErrorMessage("Please select the pdf file.");
+            return false;
+        }
+        else {
+            var fileName = $('#TextBoxUploadPdf')[0].files.length ? $('#TextBoxUploadPdf')[0].files[0].name : "";
+            $("#uploadFile").val(fileName);
+            return true;
+        }
+    });
+    return true;
+}
+function handleFileSelect(evt) {
+    debugger;
+    var f = evt.target.files[0]; // FileList object
+    var reader = new FileReader();
+    // Closure to capture the file information.
+    reader.onload = (function(theFile) {
+      return function(e) {
+        var binaryData = e.target.result;
+        //Converting Binary Data to base 64
+        base64 = window.btoa(binaryData);
+      };
+    })(f);
+    reader.readAsBinaryString(f);
+}
+
+function UploadStateFormPDF() {
+    debugger;
+    if ($("#btnUploadPDf").text() == 'Edit') {
+        $('.uploadPDF .form-control').prop("disabled", false);
+        $("#btnUploadPDf").text('Ok');
+        return;
+    }
+    
+    $.ajax({
+        type: "POST",
+        data: { OfflinePDF: base64, OfflinePDFType: 'test',ClientId:clientId },
+        url: GetAPIEndPoints("UPLOADOFFLINEPDF"),       
+        headers: {
+           'TOKEN': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
+        },
+        success: function (result) {
+            
+        },
+        error: function (xhr) { HandleAPIError(xhr) }
+    });
+}
+
 function InitalizeDateControls() {
     InitCalendar($(".date"), "date controls");
     $('.time').timepicker(getTimepickerOptions());
@@ -563,7 +628,6 @@ function BindMedications() {
 }
 function BindMedicationsTable(response) {
 
-
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.innerHTML = "";
@@ -587,14 +651,14 @@ function BindDropDownIndividualName(result) {
     $("#DropDownClientId").attr("josn", JSON.stringify(result))
 
     $("#DropDownClientId").attr("onchange", "FillClientDetails(this)");
+
     $("#DropDownClientId").attr("disabled", true);
     clientId = GetParameterValues('ClientId');
 
     if (clientId != undefined) {
 
         $("select[id$=DropDownClientId]").val(clientId);
-
-
+        
         var jsonObject = $("select[id$=DropDownClientId]").attr("josn");
         var parse = jQuery.parseJSON(jsonObject);
         var res = $.grep(parse, function (IndividualNmae) {
