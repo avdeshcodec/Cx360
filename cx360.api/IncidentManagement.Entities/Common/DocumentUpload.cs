@@ -12,8 +12,7 @@ namespace IncidentManagement.Entities.Common
     {
         public string saveDocumentInFolder(string doc, string type)
         {
-            string basePath = Path.Combine(Directory.GetCurrentDirectory());
-            string basePath1 = System.IO.Directory.GetCurrentDirectory();
+            string basePath = "C:\\Project\\Cx360\\cx360.api\\IncidentManagement.API\\Upload";
         
             byte[] docBytes = Convert.FromBase64String(doc);
             MemoryStream ms = new MemoryStream(docBytes, 0, docBytes.Length);
@@ -26,7 +25,7 @@ namespace IncidentManagement.Entities.Common
                 newFile = Guid.NewGuid().ToString() + ".pdf";
             }
             
-            var FilePath = Path.Combine(basePath, "Upload");
+            var FilePath = Path.Combine(basePath);
 
             var path = Path.Combine(FilePath, newFile);
 
