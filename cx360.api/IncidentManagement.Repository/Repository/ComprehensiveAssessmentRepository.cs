@@ -50,11 +50,11 @@ namespace IncidentManagement.Repository.Repository
                             cmd.CommandType = System.Data.CommandType.StoredProcedure;
                             cmd.Parameters.Add("@json", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.Json;
                             cmd.Parameters.Add("@reportedby", SqlDbType.Int).Value = comprehensiveAssessmentRequest.ReportedBy;
-                            if (comprehensiveAssessmentRequest.JsonChildFirstTable != null)
+                            if (!string.IsNullOrEmpty(comprehensiveAssessmentRequest.JsonChildFirstTable) &&(comprehensiveAssessmentRequest.JsonChildFirstTable != "null"))
                             {
                                 cmd.Parameters.Add("@jsonchildfirsttable", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.JsonChildFirstTable;
                             }
-                            if (comprehensiveAssessmentRequest.JsonChildSecondTable != null)
+                            if (!string.IsNullOrEmpty(comprehensiveAssessmentRequest.JsonChildSecondTable) && (comprehensiveAssessmentRequest.JsonChildFirstTable != "null"))
                             {
                                 cmd.Parameters.Add("@jsonchildsecondchild", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.JsonChildSecondTable;
                             }
@@ -306,9 +306,41 @@ namespace IncidentManagement.Repository.Repository
             }
         }
 
-        private string GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest)        {            DataSet dataSet = new DataSet();            string newpdfPath = string.Empty;            try            {                string storeProcedure = CommonFunctions.GetMappedStoreProcedure(tabName);                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))                {
+        private string GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest)
+        {
+            DataSet dataSet = new DataSet();
+            string newpdfPath = string.Empty;
+            try
+            {
+                string storeProcedure = CommonFunctions.GetMappedStoreProcedure(tabName);
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
                     //Create the SqlCommand object
-                    using (SqlCommand cmd = new SqlCommand("usp_GetComprehensiveAssessmentDetails", con))                    {                        cmd.CommandType = System.Data.CommandType.StoredProcedure;                                               cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.Int).Value = fillablePDFRequest.ComprehensiveAssessmentId;                        con.Open();                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();                        sqlDataAdapter.SelectCommand = cmd;                        sqlDataAdapter.Fill(dataSet);                        con.Close();                    }                }                if (dataSet.Tables.Count > 0 && dataSet.Tables[15].Rows.Count > 0)                {                                               newpdfPath = ComprehensiveAssessmentDFTemplate(pdfPath, dataSet, fillablePDFRequest);                }            }            catch (Exception Ex)            {                throw Ex;            }            return newpdfPath;        }
+                    using (SqlCommand cmd = new SqlCommand("usp_GetComprehensiveAssessmentDetails", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                       
+                        cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.Int).Value = fillablePDFRequest.ComprehensiveAssessmentId;
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        sqlDataAdapter.Fill(dataSet);
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[15].Rows.Count > 0)
+                {
+                   
+                            newpdfPath = ComprehensiveAssessmentDFTemplate(pdfPath, dataSet, fillablePDFRequest);
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+            return newpdfPath;
+        }
         public string ComprehensiveAssessmentDFTemplate(string pdfPath, DataSet dataSetFillPDF, ComprehensiveAssessmentRequest fillablePDFRequest)
         {
             string newFile = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Completed_Comprehensive_Assessment.pdf";
@@ -2084,5 +2116,43 @@ namespace IncidentManagement.Repository.Repository
                 pdfFormFields.SetField("" + pdfId + "", status);
             }
         }
+
+        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json)
+        {
+            comprehensiveAssessmentDetailResponse = new ComprehensiveAssessmentDetailResponse();
+            comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
+            DataSet dataSet = new DataSet();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    //Create the SqlCommand object
+                    using (SqlCommand cmd = new SqlCommand("usp_UploadOfflinePDF", con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@json", SqlDbType.VarChar).Value = json;
+                        //cmd.Parameters.Add("@reportedby", SqlDbType.Int).Value = Convert.ToInt32(0);
+                        //cmd.Parameters.Add("@url", SqlDbType.VarChar).Value = ConfigurationManager.AppSettings["ReadFile"].ToString();
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                {
+                    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    comprehensiveAssessmentDetailResponse.AllTabsComprehensiveAssessment = JsonConvert.DeserializeObject<List<AllTabsComprehensiveAssessment>>(dataSetString);
+                }
+                return comprehensiveAssessmentDetailResponse;
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
     }
 }

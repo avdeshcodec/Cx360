@@ -17,6 +17,8 @@ namespace IncidentManagement.Repository.IRepository
         Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
+        Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json );
+
 
         #endregion
     }

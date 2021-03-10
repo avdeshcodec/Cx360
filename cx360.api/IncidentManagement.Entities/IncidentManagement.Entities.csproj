@@ -80,6 +80,7 @@
     <Compile Include="Common\AesEncryptionDecryption.cs" />
     <Compile Include="Common\CommonFunctions.cs" />
     <Compile Include="Common\CustomMessages.cs" />
+    <Compile Include="Common\DocumentUpload.cs" />
     <Compile Include="Common\EncodeDecodeToken.cs" />
     <Compile Include="Common\MappedStoreProcedure.cs" />
     <Compile Include="Common\XMLCommonFunctions.cs" />

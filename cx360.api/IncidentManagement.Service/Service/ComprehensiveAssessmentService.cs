@@ -39,5 +39,10 @@ namespace IncidentManagement.Service.Service
             return await _ComprehensiveAssessmentRepository.PrintAssessmentPDF(comprehensiveAssessmentRequest);
         }
 
+        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string files)
+        {
+            return await _ComprehensiveAssessmentRepository.UploadOfflinePDF(json);
+        }
+        
     }
 }

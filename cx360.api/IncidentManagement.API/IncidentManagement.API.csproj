@@ -442,6 +442,7 @@
     <Folder Include="HRACANSXML\" />
     <Folder Include="obj\Debug\TempPE\" />
     <Folder Include="TempPDF\" />
+    <Folder Include="UploadOfflinePDF\" />
     <Folder Include="Upload\" />
   </ItemGroup>
   <ItemGroup>

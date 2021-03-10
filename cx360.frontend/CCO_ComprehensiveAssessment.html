@@ -27,7 +27,7 @@
     <script src="Assessts/js/CCO_ComprehensiveAssessment.js" type="text/javascript"></script>
     <script src="Vendors/jquery/datatables.min.js"></script>
     <script type="text/javascript">
-        _token = '6fRV+WYU8Jgjn+dcECEZzV62URn1MM/tKY5rQLcs7trfh7/Kv9PqZzINDtmKFFpT89Dw8IbEOHiCNaUTMWDqhQ==';
+        _token = '7KMEYmXNvMYeWPYRtgCKFtKnn0N76jUO9VlqCfpJa1dZm6/bQl5H6vrTj0N6o1v6slp0joOkUFJhhLWkST68Yw==';
         _userId = 452;
         if (isEmpty(_token)) GetTokenFromLocalStorage();
     </script>
@@ -351,7 +351,7 @@
                                                 onclick="location.href='../MyPage/MyPage.aspx'">
                                             Cancel
                                         </button>
-                                        <button type="button" class="btn commonBtn equalWidth btnCommon"
+                                        <button type="button" class="btn commonBtn equalWidth btnCommon ComprehensiveAssessmentSaveBtn"
                                                 onclick="InsertModify('masterSection','ccocomprehensiveAssessment','CCO_ComprehensiveAssessment');"
                                                 id="ComprehensiveAssessmentSaveBtn">
                                             Ok
@@ -367,7 +367,7 @@
                             <div class="col-sm-12">
 
                                 <!-- Upload Offline PDF-->
-                                <div class="card eligibilityInformation">
+                                <div class="card uploadPDF">
                                     <div class="card-header" id="headingPdf2">
                                         <h2 class="mb-0 mt-0">
                                             <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsePdf2">
@@ -382,18 +382,31 @@
                                     <div id="collapsePdf2" class="collapse" aria-labelledby="headingPdf2" data-parent="#accordionExample">
                                         <div class="card-body">
                                             <div class="row">
-
+                                                <div class="col-md-6 col-sm-12 hidden">
+                                                    <label>Hidden Id</label>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control  ccocomprehensiveAssessment"
+                                                               name="TextBoxCCOUplaodPDFId" id="TextBoxCCOUplaodPDFId" />
+                                                        <input type="text" class="form-control  ccocomprehensiveAssessment"
+                                                               name="TextBoxCompAssessmentVersioningId" id="TextBoxCompAssessmentVersioningId" />
+                                                        
+                                                    </div>
+                                                </div>
                                                 <div class="col-md-12 col-sm-12 mt-4">
                                                     <label>Browse File </label>
                                                     <div class="form-group">
                                                         <div class="choosePdf">
                                                             Choose File
-                                                            <input type="file" name="TextBoxUploadPdf" id="TextBoxUploadPdf"class="form-control" />
+                                                            <input type="file" name="TextBoxUploadPdf" id="TextBoxUploadPdf" class="form-control" />
+                                                            <!--<span class="errorMessage hidden">
+                                                                This field is required<i class="fa fa-times close" aria-hidden="true"></i>
+                                                            </span>-->
                                                         </div>
                                                         <input id="uploadFile" placeholder="No File" disabled="disabled" />
+                                                       
                                                     </div>
                                                 </div>
-                                             
+
 
                                                 <div class="col-md-12 col-sm-12 mt-4">
                                                     <div class="form-group text-center formSmBtn">
@@ -447,7 +460,7 @@
                                                                        class="form-control  backgroundHide eligibility"
                                                                        name="TextBoxMCOEnrollmentDate"
                                                                        id="TextBoxMCOEnrollmentDate"
-                                                                       onblur="FormatDateControl(this);" value="2021-02-11" disabled />
+                                                                       onblur="FormatDateControl(this);" value="2021-02-11" readonly />
                                                                 <!--<span class="dateIcon">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </span>-->
@@ -457,7 +470,7 @@
                                                             <label>MCO Name</label>
                                                             <div class="form-group">
                                                                 <select class="form-control select2  eligibility readonly"
-                                                                        id="DropDownMCOName" name="DropDownMCOName" disabled>
+                                                                        id="DropDownMCOName" name="DropDownMCOName" readonly>
                                                                     <option value="">--Select--</option>
                                                                     <option value="1">Affinity Health Plan</option>
                                                                     <option value="2">
@@ -489,7 +502,7 @@
                                                             <div class="form-group">
                                                                 <select class="form-control select2 req_feild  eligibility readonly"
                                                                         id="DropDownOPWDDEligibility"
-                                                                        name="DropDownOPWDDEligibility" disabled>
+                                                                        name="DropDownOPWDDEligibility" readonly>
                                                                     <option value="0">--Select--</option>
                                                                     <option value="1">Dual Part B & C</option>
                                                                     <option value="2">
@@ -568,7 +581,7 @@
                                                             Cancel
                                                         </button>
                                                         <button type="button"
-                                                                class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                 onclick="InsertModify('eligibilityInformation','eligibility','CCO_EligibilityInformation'); return false;"
                                                                 id="btnMedicalSection">
                                                             Ok
@@ -622,7 +635,7 @@
                                                                             Verbal – conversational
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
                                                                                    value="1" />
                                                                             <span class="checkmark"></span>
@@ -634,7 +647,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="2" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -647,7 +660,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="3" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -658,7 +671,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="4" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -668,8 +681,8 @@
                                                                             Sign Language – less than 10 words
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
-                                                                                   id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   id="RadioMemExpressiveCommunicationSkill "
+                                                                                   class="req_feild communication form-control"
                                                                                    value="5" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -681,7 +694,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="6" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -693,7 +706,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="7" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -706,7 +719,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="8" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -718,7 +731,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemExpressiveCommunicationSkill"
                                                                                    id="RadioMemExpressiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="9" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -749,7 +762,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemReceptiveCommunicationSkill"
                                                                                    id="RadioMemReceptiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="1" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -761,7 +774,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemReceptiveCommunicationSkill"
                                                                                    id="RadioMemReceptiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="2" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -773,7 +786,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemReceptiveCommunicationSkill"
                                                                                    id="RadioMemReceptiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="3" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -786,7 +799,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemReceptiveCommunicationSkill"
                                                                                    id="RadioMemReceptiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="4" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -797,7 +810,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemReceptiveCommunicationSkill"
                                                                                    id="RadioMemReceptiveCommunicationSkill"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="5" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -842,6 +855,9 @@
                                                                     <option value="">--Select--</option>
                                                                     <option value="1">Test</option>
                                                                 </select>
+                                                                <span class="errorMessage hidden">
+                                                                    This field is required<i class="fa fa-times close" aria-hidden="true"></i>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-sm-12">
@@ -878,7 +894,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemAbleToReadPrimaryLanguage"
                                                                                    id="RadioMemAbleToReadPrimaryLanguage"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="1" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -889,7 +905,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemAbleToReadPrimaryLanguage"
                                                                                    id="RadioMemAbleToReadPrimaryLanguage"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="2" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -900,7 +916,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemAbleToReadPrimaryLanguage"
                                                                                    id="RadioMemAbleToReadPrimaryLanguage"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="3" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -929,7 +945,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemMultiLingual"
                                                                                    id="RadioMemMultiLingual"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="1"
                                                                                    onchange="ShowHideFields(this,'radio','multiLingualClass')" />
                                                                             <span class="checkmark"></span>
@@ -941,7 +957,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemMultiLingual"
                                                                                    id="RadioMemMultiLingual"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="2"
                                                                                    onchange="ShowHideFields(this,'radio','multiLingualClass')" />
                                                                             <span class="checkmark"></span>
@@ -953,7 +969,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemMultiLingual"
                                                                                    id="RadioMemMultiLingual"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="3"
                                                                                    onchange="ShowHideFields(this,'radio','multiLingualClass')" />
                                                                             <span class="checkmark"></span>
@@ -998,7 +1014,7 @@
                                                                             <input type="checkbox"
                                                                                    name="NeededMeetingsDocuments"
                                                                                    id="CheckboxInterpreter"
-                                                                                   class="req_feild communication" />
+                                                                                   class="req_feild communication form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1008,7 +1024,7 @@
                                                                             <input type="checkbox"
                                                                                    name="NeededMeetingsDocuments"
                                                                                    id="CheckboxTranslator"
-                                                                                   class="req_feild communication" />
+                                                                                   class="req_feild communication form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1018,7 +1034,7 @@
                                                                             <input type="checkbox"
                                                                                    name="NeededMeetingsDocuments"
                                                                                    id="CheckboxInterpreterAndTranslator"
-                                                                                   class="req_feild communication" />
+                                                                                   class="req_feild communication form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1028,7 +1044,7 @@
                                                                             <input type="checkbox"
                                                                                    name="NeededMeetingsDocuments"
                                                                                    id="CheckboxNotApplicable"
-                                                                                   class="req_feild communication" />
+                                                                                   class="req_feild communication form-control" />
                                                                             <span class="checkmark cmdDesign"></span>
                                                                         </label>
                                                                     </li>
@@ -1056,7 +1072,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemWantToImproveCommunicate"
                                                                                    id="RadioMemWantToImproveCommunicate"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="1" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -1067,7 +1083,7 @@
                                                                             <input type="radio"
                                                                                    name="RadioMemWantToImproveCommunicate"
                                                                                    id="RadioMemWantToImproveCommunicate"
-                                                                                   class="req_feild communication"
+                                                                                   class="req_feild communication form-control"
                                                                                    value="2" />
                                                                             <span class="checkmark"></span>
                                                                         </label>
@@ -1105,7 +1121,7 @@
                                                             Cancel
                                                         </button>
                                                         <button type="button"
-                                                                class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                 onclick="InsertModify('communicationLanguage','communication','CCO_CommunicationLanguage'); return false;"
                                                                 id="btnMentalHealth">
                                                             Ok
@@ -1255,7 +1271,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('memberProviders','member','CCO_MemberProviders'); return false;"
                                                                             id="btnMemberProviders" disabled>
                                                                         Ok
@@ -1701,7 +1717,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth  btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth  btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('guardianshipAndAdvocacy','guardianship','CCO_GuardianshipAndAdvocacy'); return false;"
                                                                             id="btnAssessmentLegal">
                                                                         Ok
@@ -1987,7 +2003,7 @@
                                                                     Cancel
                                                                 </button>
                                                                 <button type="button"
-                                                                        class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                        class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                         id="AreasSafeguardReviewSaveBtn"
                                                                         onclick="InsertModify('advancedDirectivesFuturePlanning','advanced','CCO_AdvancedDirectivesFuturePlanning'); return false;">
                                                                     Ok
@@ -6084,7 +6100,7 @@
                                                                     Cancel
                                                                 </button>
                                                                 <button type="button"
-                                                                        class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                        class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                         id="EducationalVocationalStatusSaveBtn"
                                                                         onclick="InsertModify('independentLivingSkills','independent','CCO_IndependentLivingSkills'); return false;">
                                                                     Ok
@@ -6709,7 +6725,7 @@
                                                                     Cancel
                                                                 </button>
                                                                 <button type="button"
-                                                                        class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                        class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                         id="AreasSafeguardReviewSaveBtn"
                                                                         onclick="InsertModify('socialServiceNeeds','social','CCO_SocialServiceNeed'); return false;">
                                                                     Ok
@@ -6750,11 +6766,7 @@
                                                     </div>
                                                 </h2>
                                             </div>
-                                            <div hidden>
-                                                <input type="text" class="form-control medical"
-                                                       id="TextBoxMedicalHealthId"
-                                                       name="TextBoxMedicalHealthId" />
-                                            </div>
+                                           
                                             <div id="collapseMedicalHealth" class="collapse"
                                                  aria-labelledby="headingAsr" data-parent="#accordionExample">
                                                 <div class="card-body">
@@ -6766,7 +6778,7 @@
                                                                     individual's current
                                                                     conditions. (Check all that apply):
                                                                 </label>
-                                                                <div class="form-group">
+                                                                <div class="form-group medicalHealthFields masterFields" record-type="single" record-array="json">
                                                                     <ul class="hasListing">
                                                                         <li>
                                                                             <label class="checkboxField">
@@ -6966,100 +6978,110 @@
                                                                                        aria-hidden="true"></i>
                                                                         </span>
                                                                     </div>
-                                                                </div>    
+                                                                </div>
 
-                                                               
+
+                                                                <div class="card-header-1 lptMainCaption mb-2 mt-4">
+                                                                    <h2 class="mb-0 mt-0">Active Diagnosis</h2>
+                                                                </div>
+
+
+                                                                <div id='activeDiagnosis' class="medicalHealthFields activFields" record-type="multiple" record-array="jsonChildFirstTable">
+
+                                                                </div>
+
+
+                                                                <div class="medicalHealthFields masterFields" record-type="single" record-array="json">
                                                                     <div class="card-header-1 lptMainCaption mb-2 mt-4">
-                                                                        <h2 class="mb-0 mt-0">Active Diagnosis</h2>
+                                                                        <h2 class="mb-0 mt-0">Allergies</h2>
                                                                     </div>
-                                                       
+                                                                    <div>
+                                                                        <label class='labelAlign lineHeightAligh mt-4'>
+                                                                            List all of the
+                                                                            member's relevant allergies and/or sensitivities
+                                                                        </label>
+                                                                        <div class='form-group mb-0'>
+                                                                            --List of the member's current diagnoses--
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class='mt-4'>
+                                                                        <label class='labelAlign lineHeightAligh'>
+                                                                            Idenfity the alleries
+                                                                            and sensitivities (medication, food, environment,
+                                                                            and
+                                                                            latex), and explain the reactions, if known, to the
+                                                                            allergens and sensitivities. Be sure to explain the
+                                                                            services, supports, and their expected results
+                                                                            regarding the
+                                                                            member's allergies and sensitivities
+                                                                        </label>
+                                                                        <div class='form-group'>
 
-                                                                    <div id='activeDiagnosis'>
-                                                            
-                                                                    </div>                                                                                                                                                
-                                                            
-
-                                                            
-                                                                <div class="card-header-1 lptMainCaption mb-2 mt-4">
-                                                                    <h2 class="mb-0 mt-0">Allergies</h2>
-                                                                </div>
-                                                            
-
-                                                          <div>
-                                                            <label class='labelAlign lineHeightAligh mt-4'>
-                                                                List all of the
-                                                                member's relevant allergies and/or sensitivities
-                                                            </label>
-                                                            <div class='form-group mb-0'>
-                                                                --List of the member's current diagnoses--
-                                                            </div>
-                                                          </div>
-
-                                                            <div class='mt-4'>
-                                                                <label class='labelAlign lineHeightAligh'>
-                                                                    Idenfity the alleries
-                                                                    and sensitivities (medication, food, environment,
-                                                                    and
-                                                                    latex), and explain the reactions, if known, to the
-                                                                    allergens and sensitivities. Be sure to explain the
-                                                                    services, supports, and their expected results
-                                                                    regarding the
-                                                                    member's allergies and sensitivities
-                                                                </label>
-                                                                <div class='form-group'>
-
-                                                                    <textarea class='form-control medical'
-                                                                              name='TextBoxExpAllMemAllergies '
-                                                                              id='TextBoxExpAllMemAllergies'></textarea>
-
-                                                                </div>
-                                                            </div>
-                                                          
-                                                                <div class="card-header-1 lptMainCaption mb-2 mt-4">
-                                                                    <h2 class="mb-0 mt-0">Expired Diagnosis</h2>
+                                                                            <textarea class='form-control medical'
+                                                                                      name='TextBoxExpAllMemAllergies '
+                                                                                      id='TextBoxExpAllMemAllergies'></textarea>
+                                                                            <input type="text" class="form-control medical"
+                                                                                   id="TextBoxMedicalHealthId"
+                                                                                   name="TextBoxMedicalHealthId" hidden />
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
 
-                                                            <div class='col-sm-12 mt-4'>
-                                                            <table id="expiredDiagnosis" class="display dataTable no-footer" cellspacing="0">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Diagnosis Date</th>
-                                                                        <th>Code</th>
-                                                                        <th>Description</th>
-                                                                        <th>Type</th>
-                                                                        <th>Diagnosed By</th>
-                                                                        <th>Expiration Date</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td colspan="6"></td>
-                                                                    </tr>
 
-                                                                </tbody>
-                                                            </table>
-                                                            </div>
-                                                        </div>
-                                                      
 
-                                                            <div class="col-md-12 col-sm-12 mt-4">
-                                                                <div class="form-group text-center formSmBtn">
-                                                                    <button type="button"
-                                                                            class="btn commonBtn equalWidth"
-                                                                            id="button"
-                                                                            onclick="collapseSection('medicalHealthHeader');">
-                                                                        Cancel
-                                                                    </button>
-                                                                    <button type="button"
-                                                                            class="btn commonBtn equalWidth btnDisable btnCommon"
-                                                                            id="AreasSafeguardReviewSaveBtn"
-                                                                            onclick="InsertModify('medicalHealth','medical','CCO_MedicalHealth'); return false;">
-                                                                        Ok
-                                                                    </button>
+
+
+                                                                <div class="expiredFields">
+                                                                    <div class="card-header-1 lptMainCaption mb-2 mt-4">
+                                                                        <h2 class="mb-0 mt-0">Expired Diagnosis</h2>
+                                                                    </div>
+                                                                    <div class='col-sm-12 mt-4'>
+                                                                        <table id="expiredDiagnosis" class="display dataTable no-footer" cellspacing="0">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Diagnosis Date</th>
+                                                                                    <th>Code</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Type</th>
+                                                                                    <th>Diagnosed By</th>
+                                                                                    <th>Expiration Date</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td colspan="6"></td>
+                                                                                </tr>
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                        </div>
+
+                                                                    
+
+                                                                   
+                                                                </div>
+
+
+                                                                <div class="col-md-12 col-sm-12 mt-4">
+                                                                    <div class="form-group text-center formSmBtn">
+                                                                        <button type="button"
+                                                                                class="btn commonBtn equalWidth"
+                                                                                id="button"
+                                                                                onclick="collapseSection('medicalHealthHeader');">
+                                                                            Cancel
+                                                                        </button>
+                                                                        <button type="button"
+                                                                                class="btn commonBtn equalWidth btnCommon ComprehensiveAssessmentSaveBtn"
+                                                                                id="AreasSafeguardReviewSaveBtn"
+                                                                                onclick="InsertModify('medicalHealth','medical','CCO_MedicalHealth'); return false;">
+                                                                            Ok
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -8828,7 +8850,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                            class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                             id="HealthPromotionSaveBtn"
                                                                             onclick="InsertModify('healthPromotion','health','CCO_HealthPromotion'); return false;">
                                                                         Ok
@@ -10442,7 +10464,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                            class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                             id="AreasSafeguardReviewSaveBtn"
                                                                             onclick="InsertModify('behavioralHealth','behavioral','CCO_BehavioralHealth'); return false;">
                                                                         Ok
@@ -10924,7 +10946,7 @@
                                                                     Cancel
                                                                 </button>
                                                                 <button type="button"
-                                                                        class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                        class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                         onclick="InsertModify('challengingBehaviors','challenging','CCO_ChallengingBehaviors'); return false;"
                                                                         id="btnChallengingBehaviors">
                                                                     Ok
@@ -11291,7 +11313,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('behavioralSupportPlan','behavioralSupport','CCO_BehavioralSupportPlan'); return false;"
                                                                             id="btnbehavioralSupportPlan">
                                                                         Ok
@@ -11357,7 +11379,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnDisable btnCommon"
+                                                                            class="btn commonBtn equalWidth btnDisable btnCommon ComprehensiveAssessmentSaveBtn"
                                                                             id="MedicationsSaveBtn"
                                                                             onclick="InsertModify('medications','medication','CCO_Medications'); return false;">
                                                                         Ok
@@ -11504,7 +11526,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('communitySocial','community','CCO_CommunitySocial'); return false;"
                                                                             id="btnCommunitySocial">
                                                                         Ok
@@ -12013,7 +12035,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('education','educations','CCO_Education'); return false;"
                                                                             id="btnEducation">
                                                                         Ok
@@ -12423,7 +12445,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('transitionPlanning','transition','CCO_TransitionPlanning'); return false;"
                                                                             id="btnTransitionPlanning">
                                                                         Ok
@@ -13206,7 +13228,7 @@
                                                                         Cancel
                                                                     </button>
                                                                     <button type="button"
-                                                                            class="btn commonBtn equalWidth btnCommon btnDisable"
+                                                                            class="btn commonBtn equalWidth btnCommon btnDisable ComprehensiveAssessmentSaveBtn"
                                                                             onclick="InsertModify('employment','employments','CCO_Employment')"
                                                                             id="btnEmployment">
                                                                         Ok

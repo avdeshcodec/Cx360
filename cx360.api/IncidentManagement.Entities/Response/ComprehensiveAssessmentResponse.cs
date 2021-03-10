@@ -45,6 +45,10 @@ namespace IncidentManagement.Entities.Response
         }
         public class AllTabsComprehensiveAssessment
         {
+            public int CCOUplaodPDFId { get; set; }
+            public int ClientId { get; set; }
+            public string PDFDocument { get; set; }
+
             public int ComprehensiveAssessmentId { get; set; }
             public int AssessmentVersioningId { get; set; }
             public int CompAssessmentId { get; set; }

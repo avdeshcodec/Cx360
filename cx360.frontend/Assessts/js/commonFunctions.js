@@ -194,7 +194,8 @@ function GetAPIEndPoints(key) {
         GENERATEANDIMPORTXML: "/CANSAPI/GenerateAndImportXML",
         GETCANSASSESSMENTPDFTEMPLATE: "/CANSAPI/PrintAssessmentPDF",
         HANDLEMemberRepresentative: "/LifePlanAPI/HandleMemberRepresentative",
-        HANDLEMEMBERRIGHT: "/LifePlanAPI/HandleMemberRight"
+        HANDLEMEMBERRIGHT: "/LifePlanAPI/HandleMemberRight",
+        UPLOADOFFLINEPDF: "/ComprehensiveAssessmentAPI/UploadOfflinePDF"
 
     };
     return API_URL + API_ENDPONTS[key];

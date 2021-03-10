@@ -18,8 +18,8 @@ namespace IncidentManagement.Service.IService
         Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
+        Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string files);
 
-        
         #endregion
     }
 }

@@ -13,6 +13,8 @@ using static IncidentManagement.Entities.Response.ComprehensiveAssessmentRespons
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace IncidentManagement.API.Controllers
 {
@@ -175,13 +177,74 @@ namespace IncidentManagement.API.Controllers
         [Route("UploadOfflinePDF")]
         [ActionName("UploadOfflinePDF")]
         [AuthorizeUser]
-        public async Task<HttpResponseMessage> UploadOfflinePDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<HttpResponseMessage> UploadOfflinePDF()
         {
             try
             {
-                var filePath = _documentUpload.saveDocumentInFolder(comprehensiveAssessmentRequest.OfflinePDF,"PDF");
+                httpResponseMessage = new HttpResponseMessage();
+                comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
+                string fileName = string.Empty;
 
+                if (Request.Content.IsMimeMultipartContent())
+                {
+                    var uloadPath = ConfigurationManager.AppSettings["UploadOfflinePDF"];
+                    int iUploadedCnt = 0;
+                    System.Web.HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+                    // CHECK THE FILE COUNT.
+                    for (int iCnt = 0; iCnt <= hfc.Count - 1; iCnt++)
+                    {
+                        System.Web.HttpPostedFile hpf = hfc[iCnt];
+
+                        if (hpf.ContentLength > 0)
+                        {
+                            int lastIndex = hpf.FileName.LastIndexOf(".");
+                            fileName = hpf.FileName.Substring(0, lastIndex);
+                            DateTime currentUTC = DateTime.UtcNow;
+                            string strTemp = currentUTC.ToString("yyyyMMddHHmmss");
+                            fileName = fileName + "_" + strTemp + ".pdf";
+                            // CHECK IF THE SELECTED FILE(S) ALREADY EXISTS IN FOLDER. (AVOID DUPLICATE)
+                            if (!File.Exists(uloadPath + Path.GetFileName(fileName)))
+                            {
+
+                                // SAVE THE FILES IN THE FOLDER.
+                                hpf.SaveAs(uloadPath + Path.GetFileName(fileName));
+
+                            }
+                        }
+                    }
+
+                    Dictionary<string, string> attributes = new Dictionary<string, string>();
+                    Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
+                    var provider = new MultipartMemoryStreamProvider();
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    foreach (var file in provider.Contents)
+                    {
+
+                        if (file.Headers.ContentDisposition.FileName == null)
+                        {
+                            foreach (NameValueHeaderValue p in file.Headers.ContentDisposition.Parameters)
+                            {
+                                string clientId = p.Value;
+                                if (clientId.StartsWith("\"") && clientId.EndsWith("\"")) clientId = clientId.Substring(1, clientId.Length - 2);
+                                string value = await file.ReadAsStringAsync();
+                                attributes.Add(clientId, value);
+                            }
+
+                        }
+
+
+                    }
+                    attributes.Add("PDFDocument", uloadPath + fileName);
+
+                    var json = JsonConvert.SerializeObject(attributes);
+                    var pdfFile = JsonConvert.SerializeObject(files);
+                    var data = await _ComprehensiveAssessmentService.UploadOfflinePDF(json, pdfFile);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, data);
+
+                }
             }
+
             catch (Exception Ex)
             {
                 cadResponse.Success = false;
@@ -194,3 +257,4 @@ namespace IncidentManagement.API.Controllers
         }
     }
 }
+

@@ -1,11 +1,15 @@
 ﻿var parentClass = "";
 var _age;
 var sectionStatus;
-var counter = 10;
+var counter = 2;
 var medicationsCounter = 0;
 var dataTableGuardianshipAndAdvocacysFlg = false;
 var editPermission = "true", deletePermission = "true";
-var base64="";
+var base64 = "";
+var json = [];
+var jsonChildFirstTable = [];
+var jsonChildSecondTable = [];
+var item = {};
 $(document).ready(function () {
     $('#GuardianshipAndAdvocacy').DataTable();
     $('#GuardianshipAndAdvocacy').DataTable({
@@ -29,15 +33,14 @@ $(document).ready(function () {
 
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
-      } else {
+    } else {
         alert('The File APIs are not fully supported in this browser.');
-      }
+    }
 
 });
 
-function OpenOfflinePdf()
-{
-    var url="Assessts/OfflinePDF/CCO_ComprehensiveAssessment.pdf";
+function OpenOfflinePdf() {
+    var url = "Assessts/OfflinePDF/CCO_ComprehensiveAssessment.pdf";
     window.open(url);
 }
 function ValidateUploadedFile() {
@@ -56,16 +59,15 @@ function ValidateUploadedFile() {
     return true;
 }
 function handleFileSelect(evt) {
-    debugger;
     var f = evt.target.files[0]; // FileList object
     var reader = new FileReader();
     // Closure to capture the file information.
-    reader.onload = (function(theFile) {
-      return function(e) {
-        var binaryData = e.target.result;
-        //Converting Binary Data to base 64
-        base64 = window.btoa(binaryData);
-      };
+    reader.onload = (function (theFile) {
+        return function (e) {
+            var binaryData = e.target.result;
+            //Converting Binary Data to base 64
+            base64 = window.btoa(binaryData);
+        };
     })(f);
     reader.readAsBinaryString(f);
 }
@@ -77,21 +79,60 @@ function UploadStateFormPDF() {
         $("#btnUploadPDf").text('Ok');
         return;
     }
-    
+    if (!ValidateUploadPDF()) return;
+    var json = [],
+        item = {};
+    var data = new FormData();
+    var files = $("#TextBoxUploadPdf").get(0).files;
+    if ($("#TextBoxCCOUplaodPDFId").val() != "") {
+        data.append('CCOUplaodPDFId', $("#TextBoxCCOUplaodPDFId").val());
+    }
+    if (files.length > 0) {
+        data.append("File", files[0]);
+    }
+    data.append('ReportedBy', reportedBy);
+    data.append('ClientId', GetParameterValues('ClientId'));
     $.ajax({
         type: "POST",
-        data: { OfflinePDF: base64, OfflinePDFType: 'test',ClientId:clientId },
-        url: GetAPIEndPoints("UPLOADOFFLINEPDF"),       
+        url: GetAPIEndPoints("UPLOADOFFLINEPDF"),
+        contentType: false,
+        processData: false,
+        data: data,
         headers: {
-           'TOKEN': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
+            'TOKEN': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
         },
         success: function (result) {
-            
+            DocumentUploaded(result);
         },
         error: function (xhr) { HandleAPIError(xhr) }
     });
+} function DocumentUploaded(result) {
+    //var table = $('#UploadPDF').DataTable();
+    var stringyfy = JSON.stringify(result.AllTabsComprehensiveAssessment);
+    $("#TextBoxCCOUplaodPDFId").val(result.AllTabsComprehensiveAssessment[0].CCOUplaodPDFId);
+    $('.uploadPDF .form-control').prop("disabled", true);
+    if ($("#btnUploadPDf").text() == "Ok") {
+        $("#btnUploadPDf").text("Edit");
+    }
+    showRecordSaved("PDF uploaded successfully.");
+    //$('#UploadPDF').DataTable({
+    //    "stateSave": true,
+    //    "bDestroy": true,
+    //    "paging": false,
+    //    "searching": false,
+    //    "aaData": JSON.parse(stringyfy),
+    //    "columns": [{ "data": "FormType" }, { "data": "UploadDate" }, { "data": "Version" }, { "data": "DownloadLink" }]
+    //});
 }
 
+function ValidateUploadPDF() {
+    if ($("#TextBoxUploadPdf").val() == "") {
+        $("#TextBoxUploadPdf").siblings("span.errorMessage").removeClass("hidden");
+        showErrorMessage("Please Select File");
+        return false;
+    }
+    return true;
+}
 function InitalizeDateControls() {
     InitCalendar($(".date"), "date controls");
     $('.time').timepicker(getTimepickerOptions());
@@ -125,7 +166,6 @@ function BindDiagnosis() {
         },
         success: function (response) {
             if (response != 'undefined') {
-                debugger;
                 ActiveDiagnosis(response);
 
             }
@@ -135,10 +175,11 @@ function BindDiagnosis() {
 
 }
 function ActiveDiagnosis(response) {
+    //DiagnosisID = 3
     for (let i = 0; i < counter; i++) {
         const div = document.createElement('div');
         div.innerHTML = "";
-        div.innerHTML = "<div class='parentMedictions mainLayout'><div class='row'><div class='col'><label>Diagnosis Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/></div>" +
+        div.innerHTML = "<div class='medicalHealth parentMedictions mainLayout'><div class='row'><div class='col' hidden><label>Medication List ID:</label><input type='text' name='TextBoxDiagnosisId'"+i+" id='TextBoxDiagnosisId' class='form-control medication medical' value='" + response[i].DiagnosisID + "'  readonly/></div><div class='col'><label>Diagnosis Date:</label><input type='text'  class='form-control' value='26-02-2021'readonly/></div>" +
             "<div class='col'><label>Code:</label><input type='text' class='form-control' value='" + response[i].DiagnosisCode + "'  readonly/></div><div class='col'><label>Description:</label><input type='text' class='form-control' value='" + response[i].DiagnosisDescription + "'  readonly/></div></div>" +
             "<div class='row'><div class='col'><label>Type:</label><input type='text' class='form-control' value='" + response[i].DiagnosisType + "'  readonly/></div><div class='col'><label>Diagnosed By:</label><input type='text' class='form-control' value='test'readonly/></div>" +
             "<div class='col'><label>Expiration Date:</label><input type='text' class='form-control' value='26-02-2021'readonly/>" +
@@ -155,7 +196,7 @@ function ActiveDiagnosis(response) {
 }
 function medicalHealthFormat(i) {
 
-    return "<div class='medicalHalth'><div class='row'><div class='col-sm-6'><div class='rowData'>" +
+    return "<div class=''><div class='row'><div class='col-sm-6'><div class='rowData'>" +
         " <label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
         " Have any of the " +
         " member's symptoms gotten worse since onset of " +
@@ -233,7 +274,7 @@ function medicalHealthFormat(i) {
         " <input type='radio' value='2' " +
         "onclick=" + "CloseErrorMeeage(" + "'" + "medicalHealth" + "'" + ")" +
         " name='RadioMemNewSymptoms" + i + "'' " +
-        " id='RadioMemNewSymptoms " +
+        " id='RadioMemNewSymptoms ' " +
         " class='req_feild form-control memberCurrentDiagnoses medical' /> " +
         " <span class='checkmark'></span> " +
         " </label> " +
@@ -628,6 +669,7 @@ function BindMedications() {
 }
 function BindMedicationsTable(response) {
 
+
     for (let i = 0; i < 10; i++) {
         const div = document.createElement('div');
         div.innerHTML = "";
@@ -651,26 +693,29 @@ function BindDropDownIndividualName(result) {
     $("#DropDownClientId").attr("josn", JSON.stringify(result))
 
     $("#DropDownClientId").attr("onchange", "FillClientDetails(this)");
-
     $("#DropDownClientId").attr("disabled", true);
     clientId = GetParameterValues('ClientId');
 
     if (clientId != undefined) {
 
         $("select[id$=DropDownClientId]").val(clientId);
-        
+
+
         var jsonObject = $("select[id$=DropDownClientId]").attr("josn");
         var parse = jQuery.parseJSON(jsonObject);
         var res = $.grep(parse, function (IndividualNmae) {
             return IndividualNmae.ClientID == clientId;
         });
-
-        var DBO = (res[0].BirthDate);
+        var DBO = '';
+        if (res.length!=0) { 
+            DBO = (res[0].BirthDate );
         if (DBO != null) {
             DBO = DBO.slice(0, 10).split('-');
             //DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
             DBO = DBO[0];
         }
+        }
+        
 
 
         $("#IndividualMiddleName").val(res[0].ClientMiddleName)
@@ -705,6 +750,18 @@ function FillClientDetails(object) {
 }
 //#region Save functions tab
 function InsertModify(sectionName, _class, tabName) {
+    if ($("." + sectionName+" .ComprehensiveAssessmentSaveBtn").text() == "Edit") {
+        $("." + sectionName +" .ComprehensiveAssessmentSaveBtn").text("Ok");
+        $('.'+sectionName+' .form-control').attr("disabled", false);
+        //$('#imuLifePlan input[type=radio]').prop("disabled", false);
+        $("." + sectionName +" .ComprehensiveAssessmentSaveBtn").text("Ok");
+        return;
+    }
+
+    json = [];
+     jsonChildFirstTable = [];
+     jsonChildSecondTable = [];
+     item = {};
     if (sectionName == "guardianshipAndAdvocacy") {
         var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
         if ($('#CheckboxNoActiveGuardian').prop("checked") || $('#CheckboxNotApplicableGuardian').prop("checked")) {
@@ -713,9 +770,11 @@ function InsertModify(sectionName, _class, tabName) {
             }
         }
     }
-    else {
-        if (!validateMasterSectionTab(sectionName)) return;
+    else if (!validateMasterSectionTab(sectionName)) {
+        return;
     }
+
+
     className = parentClass;
     if ($("#Btn" + parentClass + "Ok").text() == "Edit") {
         $('.' + parentClass + ' .form-control').attr("disabled", false);
@@ -743,12 +802,11 @@ function InsertModify(sectionName, _class, tabName) {
 
 }
 function InsertModifySectionTabs(sectionName, _class, tabName) {
-    var json = [],
-        item = {},
-        tag;
+ var tag;
+
     blankComprehensiveAssessmentId = $("#TextBoxCompAssessmentId").val();
     if (sectionName == 'medications') {
-        json = getmedicationsJson(sectionName, _class);
+        json = GetMedicationsJson(sectionName, _class);
     }
     else if (sectionName == 'guardianshipAndAdvocacy') {
         var oTable = $("#GuardianshipAndAdvocacy").DataTable().rows().data();
@@ -778,6 +836,10 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
                 json.push(itemBodyFirst);
             });
         }
+    }
+    else if (sectionName == 'medicalHealth') {
+        GetMedicalHealthAndDiagnosisJson(sectionName, _class);
+    
     }
     else {
         $('.' + sectionName + ' .' + _class).each(function () {
@@ -816,7 +878,12 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
     }
     $.ajax({
         type: "POST",
-        data: { TabName: tabName, Json: JSON.stringify(json), ReportedBy: reportedBy },
+        data: {
+            TabName: tabName,
+            Json: JSON.stringify(json),
+            jsonchildfirsttable: JSON.stringify(isEmptyArray(jsonChildFirstTable)),
+            ReportedBy: reportedBy
+        },
         url: GetAPIEndPoints("INSERTMODIFYCOMPREHENIVEASSESSMENTDETAIL"),
         headers: {
             'Token': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
@@ -840,11 +907,12 @@ function validateMasterSectionTab(sectionName) {
     var checked = null; var checkBoxLength = 0;
     parentClass = sectionName;
     $("." + parentClass + " .req_feild").each(function () {
-        console.log($(this).val());
-        console.log($(this).attr("name"));
+        //console.log($(this).val());
+        //console.log($(this).attr("name"));
+       
         if ($(this).is(":visible"))
             if (($(this).val() == "" || $(this).val() == "-1") && ($(this).attr("type") != "checkbox" && $(this).attr("type") != "radio")) {
-                console.log($(this));
+                //console.log($(this));
                 $(this).siblings("span.errorMessage").removeClass("hidden");
                 $(this).focus();
                 checked = false;
@@ -1279,7 +1347,12 @@ function getAge(dateString) {
     let beforeBirth = ((() => { birth.setDate(now.getDate()); birth.setMonth(now.getMonth()); return birth.getTime() })() < birth.getTime()) ? 0 : 1;
     return now.getFullYear() - birth.getFullYear() - beforeBirth;
 }
-
+function disableOnAdd(sectionName) {
+    $("." + sectionName + " .form-control").attr('disabled', true);
+    if ($("." + sectionName +" .ComprehensiveAssessmentSaveBtn").text().trim() == "Ok") {
+        $("." + sectionName +" .ComprehensiveAssessmentSaveBtn").text("Edit");
+    }
+}
 function ComprehensiveAssessmentSaved(result, sectionName) {
 
     if (result.Success == true && result.IsException == false) {
@@ -1293,20 +1366,19 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
             $("#btnSaveAsNew").addClass("hidden");
             $("#btnPublishVersion").show();
             $("#btnPrintPDf").show();
-
+          
             if (sectionName == 'masterSection') {
                 $("#TextBoxCompAssessmentId").val(result.AllTabsComprehensiveAssessment[0].CompAssessmentId);
                 $("#TextBoxCompAssessmentVersioningId").val(result.AllTabsComprehensiveAssessment[0].CompAssessmentVersioningId);
+                disableOnAdd(sectionName);
             }
 
             if (result.AllTabsComprehensiveAssessment[0].DocumentVersion != "") {
                 $("#TextBoxDocumentStatus").text(result.AllTabsComprehensiveAssessment[0].DocumentStatus);
                 $("#TextBoxDocumentVersion").text(result.AllTabsComprehensiveAssessment[0].DocumentVersion);
             }
-
-
+            
             if (result.AllTabsComprehensiveAssessment[0].EligibilityInformationId != 0) {
-
                 $("#TextBoxEligibilityInformationId").val(result.AllTabsComprehensiveAssessment[0].EligibilityInformationId);
 
                 if (result.AllTabsComprehensiveAssessment[0].Status != null) {
@@ -1323,7 +1395,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                     }
 
                 }
-
+                disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].CommunicationId != 0) {
 
@@ -1343,6 +1415,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                     }
 
                 }
+                disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].MemberProviderId != 0) {
 
@@ -1362,6 +1435,8 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                     }
 
                 }
+
+                disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].GuardianshipAndAdvocacyId != 0) {
 
@@ -1381,6 +1456,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                     }
 
                 }
+                disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].AdvancedDirectivesFuturePlanningId != 0) {
 
@@ -1400,6 +1476,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                     }
 
                 }
+                disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].IndependentLivingSkillId != 0) {
 
@@ -1418,7 +1495,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressIndependentLivingSkills").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].SocialServiceNeedId != 0) {
 
@@ -1437,10 +1514,10 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressSocialServiceNeeds").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].MedicalHealthId != 0) {
-
+                debugger;
                 $("#TextBoxMedicalHealthId").val(result.AllTabsComprehensiveAssessment[0].MedicalHealthId);
 
                 if (result.AllTabsComprehensiveAssessment[0].Status != null) {
@@ -1456,7 +1533,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressMedicalHealth").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].HealthPromotionId != 0) {
 
@@ -1475,7 +1552,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressHealthPromotion").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].BehavioralHealthId != 0) {
 
@@ -1494,7 +1571,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressBehavioralHealth").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].ChallengingBehaviorId != 0) {
 
@@ -1513,7 +1590,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressChallengingBehaviors").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].BehavioralSupportPlanId != 0) {
 
@@ -1532,7 +1609,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressBehavioralSupportPlan").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].MedicationId != 0) {
 
@@ -1551,7 +1628,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressMedications").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].CommunityParticipationId != 0) {
 
@@ -1570,7 +1647,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressCommunitySocial").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].EducationId != 0) {
 
@@ -1589,7 +1666,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressEducation").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].TransitionPlanningId != 0) {
 
@@ -1608,7 +1685,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressTransitionPlanning").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
             if (result.AllTabsComprehensiveAssessment[0].EmploymentId != 0) {
 
@@ -1627,7 +1704,7 @@ function ComprehensiveAssessmentSaved(result, sectionName) {
                         $("#statusInprogressEmployment").show();
                     }
 
-                }
+                } disableOnAdd(sectionName);
             }
         }
     }
@@ -1709,7 +1786,6 @@ function AddGuardianshipAndAdvocacy() {
 
                 }
                 else {
-                    debugger;
                     var text = [{
                         "Actions": CreateChildBtnWithPermission("EditGuardianshipAndAdvocacy", "Delete"),
                         "HelpToMakeDecisionLife": $('#DropDownWhoHelpMemberMakeDecisionInLife option:selected').text(),
@@ -1799,7 +1875,7 @@ function EditGuardianshipAndAdvocacy(object) {
     var CheckboxHelpSignApproveFinancial = table.row(currentRowGuardianshipAndAdvocacys).data()[11] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[11];
     var CheckboxOther = table.row(currentRowGuardianshipAndAdvocacys).data()[12] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GuardianshipAndAdvocacyInHome : table.row(currentRowGuardianshipAndAdvocacys).data()[12];
     var GuardianshipProof = table.row(currentRowGuardianshipAndAdvocacys).data()[13] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GeneralInfoGuardianshipAndAdvocacysId : table.row(currentRowGuardianshipAndAdvocacys).data()[13];
-    var GuardianshipAndAdvocacyId = table.row(currentRowGuardianshipAndAdvocacys).data()[5] == undefined ? table.row(currentRowGuardianshipAndAdvocacys).data().GeneralInfoGuardianshipAndAdvocacysId : table.row(currentRowGuardianshipAndAdvocacys).data()[5];
+    var GuardianshipAndAdvocacyId = table.row(currentRowGuardianshipAndAdvocacys).data()[5] == undefined ? /*table.row(currentRowGuardianshipAndAdvocacys).data().GeneralInfoGuardianshipAndAdvocacysId*/  " " : table.row(currentRowGuardianshipAndAdvocacys).data()[5];
 
 
 
@@ -1810,7 +1886,7 @@ function EditGuardianshipAndAdvocacy(object) {
     CheckboxHelpSignApproveMedical == '' ? $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveMedical']").prop('checked', true);
     CheckboxHelpSignApproveFinancial == '' ? $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', false) : $("input[id='CheckboxHelpSignApproveFinancial']").prop('checked', true);
     CheckboxOther == '' ? $("input[id='CheckboxOther']").prop('checked', false) : $("input[id='CheckboxOther']").prop('checked', true);
-    GuardianshipProof == '' ? $("input[id='RadioGuardianshipProof']").prop('checked', false) : $("input[id='RadioGuardianshipProof'][value=" + GuardianshipProof + "]").prop('checked', true);
+    GuardianshipProof == ' ' ? $("input[id='RadioGuardianshipProof']").prop('checked', false) : $("input[id='RadioGuardianshipProof'][value=" + GuardianshipProof + "]").prop('checked', true);
 
     //$("#TextBoxGuardianshipAndAdvocacyRelation").val(RelationToClient);
     //if (LivingInHome == 'Yes') {
@@ -1920,7 +1996,7 @@ function EditExistingRowGuardianshipAndAdvocacys() {
                 $("#CheckboxHelpSignApproveMedical").prop("checked") == true ? 1 : 0,
                 $("#CheckboxHelpSignApproveFinancial").prop("checked") == true ? 1 : 0,
                 $("#CheckboxOther").prop("checked") == true ? 1 : 0,
-                $("input[name='RadioGuardianshipProof']:checked").val(),
+                $("input[name='RadioGuardianshipProof']:checked").val() == undefined ? " " : $("input[name='RadioGuardianshipProof']:checked").val(),,
 
                 //GuardianshipProof,
                 $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val() == undefined ? '' : $("TextBoxGeneralInfoGuardianshipAndAdvocacysId").val(),
@@ -1950,8 +2026,7 @@ function Delete(object) {
     clearGuardianshipAndAdvocacy();
     return false;
 }
-function getmedicationsJson(sectionName, _class) {
-    debugger;
+function GetMedicationsJson(sectionName, _class) {
     var json = [],
         item = {},
         tag;
@@ -1990,4 +2065,98 @@ function getmedicationsJson(sectionName, _class) {
         json.push(item);
     }
     return json;
+}
+function GetMedicalHealthAndDiagnosisJson(sectionName, _class) {
+    var collection = $(".medicalHealthFields");
+    collection.each(function () {
+        var recordType = $(this).attr("record-type");
+        if (recordType == "single" && this.classList[2] != undefined) {
+            json = GenerateJSONData(this.classList[2]);
+        }
+        else if (recordType == "multiple") {
+            jsonChildFirstTable =GetMultipleArrayOfObjects(this.classList[1]);
+        }
+    });
+    console.log(json);
+}
+function isEmptyArray(json) {
+    var isArray = json != undefined? Array.isArray(json):"";
+    if (isArray && json.length > 0) {
+        return json;
+    }
+    else {
+        return null;
+    }
+}
+function GenerateJSONData(parentSection) {
+    var item = {};
+    var json = [];
+    var  tag;
+    $("." + parentSection + " .form-control").each(function () {
+        tag = $(this).attr('id').replace("TextBox", "").replace("Checkbox", "").replace("DropDown", "").replace("Radio", "").replace("TextBox1", "");
+        if ($(this).hasClass("required")) {
+            if ($(this).val() == "") {
+                item[tag] = $(this).val(-1);
+            }
+            else {
+                item[tag] = $(this).val();
+            }
+        }
+        else {
+            if ($(this).attr("type") == "radio") {
+                if ($(this).prop("checked") == true) item[tag] = $(this).val();
+                else { }
+            }
+            else {
+                item[tag] = jsonWrapperWithDiffCheckBox(tag, this);
+            }
+        }
+
+    });
+    item["CompAssessmentId"] = $("#TextBoxCompAssessmentId").val();
+    item["CompAssessmentVersioningId"] = $("#TextBoxCompAssessmentVersioningId").val();
+    item["Status"] = sectionStatus;
+    json.push(item);
+    return json;
+}
+function jsonWrapperWithDiffCheckBox(tag, elem) {
+    if ($(elem).hasClass('date') && $(elem).val() != '' && $(elem).val() != null) {
+        return $(elem).is(":visible") == true ? $(elem).val() + (($('#TextBox' + tag + 'Time').length != 0) ? ' ' + $('#TextBox' + tag + 'Time').val() : '') : '';
+    }
+    else if ($(elem).attr('type') == 'checkbox') {
+        return ($(elem).prop('checked') == true) ? 1 : 0;
+    }
+    else if ($(elem).attr('id').indexOf("TextBox") > -1) {
+        return ($(elem).val());
+    }
+    else {
+        if ($(elem).prop('tagName') == 'SELECT') {
+            return (($(elem).val() == null || $(elem).val() == '-1') ? '' : $(elem).val());
+        } else {
+            return (($(elem).val() == null) ? '' : $(elem).val());
+        }
+    }
+
+}
+function GetMultipleArrayOfObjects(parentClass) {
+    var jsonData = [];
+    var i = 0;
+    $("." + parentClass + " .medicalHealth").each(function (index) {
+        var item = {};
+        $(this).find(".medical").each(function () {
+            tag = $(this).attr('name').replace("TextBox", "").replace("Checkbox", "").replace("DropDown", "").replace("Radio", "").replace("TextBox1", "");
+            if ($(this).attr("type") == "radio") {
+                if ($(this).prop("checked") == true) item[tag.replace(/\d+/g, '')] = $(this).val();
+                else { }
+            }
+            else {
+                item[tag.replace(/\d+/g, '')] = jsonWrapperWithDiffCheckBox(tag, this);
+            }
+        });
+        item["CompAssessmentId"] = $("#TextBoxCompAssessmentId").val();
+        item["CompAssessmentVersioningId"] = $("#TextBoxCompAssessmentVersioningId").val();
+        item["Status"] = sectionStatus;
+        jsonData.push(item);
+    });
+    return jsonData;
 }
