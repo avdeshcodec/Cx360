@@ -10,8 +10,31 @@ var json = [];
 var jsonChildFirstTable = [];
 var jsonChildSecondTable = [];
 var item = {};
+var countUnknown=0;
+var prevElementVal="";
+var unknownCountArray=[];
+var circleOfSupport="[{\n\t\"CircleofSupportContact\": \"Contact1\",\n\"CircleofSupportContactId\":\"1\",\n\t\"ContactPhoneNumber\": \"123456789\",\n\t\"ContactAddressLine1\": \"AddressLine1\",\n\t\"ContactAddressLine2\": \"AddressLine2\",\n\t\"ContactCity\": \"ContactCity\",\n\t\"ContactState\": \"ContactState\",\n\t\"ContactZIPCode\": \"ContactZIPCode\",\n\t\"TypeofContact\": \"Professional\",\n\t\"RelationshipToMember\": \"RelationshipToMember\"\n}, {\n\t\"CircleofSupportContact\": \"Contact2\",\n\"CircleofSupportContactId\":\"2\",\n\t\"ContactPhoneNumber\": \"123456789\",\n\t\"ContactAddressLine1\": \"AddressLine12\",\n\t\"ContactAddressLine2\": \"AddressLine22\",\n\t\"ContactCity\": \"ContactCity2\",\n\t\"ContactState\": \"ContactState2\",\n\t\"ContactZIPCode\": \"ContactZIPCode\",\n\t\"TypeofContact\": \"Professional\",\n\t\"RelationshipToMember\": \"RelationshipToMember\"\n}, {\n\t\"CircleofSupportContact\": \"Contact2\",\n\"CircleofSupportContactId\":\"3\",\n\n\t\"ContactPhoneNumber\": \"123456789\",\n\t\"ContactAddressLine1\": \"AddressLine12\",\n\t\"ContactAddressLine2\": \"AddressLine22\",\n\t\"ContactCity\": \"ContactCity2\",\n\t\"ContactState\": \"ContactState2\",\n\t\"ContactZIPCode\": \"ContactZIPCode\",\n\t\"TypeofContact\": \"Other\",\n\t\"RelationshipToMember\": \"RelationshipToMember\"\n}]";
 $(document).ready(function () {
-    $('#GuardianshipAndAdvocacy').DataTable();
+    
+    IntializeDataTables();
+    BindDropDowns();
+    BindDiagnosis();
+    BindMedications();
+    BindCircleOfSupport();
+    CloseErrorMeeage();
+    InitalizeDateControls();
+    $('.bgStart').show();
+    DisableSaveButtonChildSection();
+    ValidateUploadedFile();
+
+    // if (window.File && window.FileReader && window.FileList && window.Blob) {
+    //     document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
+    // } else {
+    //     alert('The File APIs are not fully supported in this browser.');
+    // }
+
+});
+function IntializeDataTables(){
     $('#GuardianshipAndAdvocacy').DataTable({
         "stateSave": true,
         "bDestroy": true,
@@ -21,24 +44,17 @@ $(document).ready(function () {
             { 'visible': false, 'targets': [6, 7, 8, 9, 10, 11, 12, 13] }
         ]
     });
+    $('#CircleOfSupport').DataTable({
+        "stateSave": true,
+        "bDestroy": true,
+        "searching": false,
+        "autoWidth": false,
+        'columnDefs': [
+            { 'visible': false, 'targets': [1] }
+        ]
+    });
 
-    BindDropDowns();
-    BindDiagnosis();
-    BindMedications();
-    CloseErrorMeeage();
-    InitalizeDateControls();
-    $('.bgStart').show();
-    DisableSaveButtonChildSection();
-    ValidateUploadedFile();
-
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-        document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
-    } else {
-        alert('The File APIs are not fully supported in this browser.');
-    }
-
-});
-
+}
 function OpenOfflinePdf() {
     var url = "Assessts/OfflinePDF/CCO_ComprehensiveAssessment.pdf";
     window.open(url);
@@ -173,6 +189,31 @@ function BindDiagnosis() {
         error: function (xhr) { HandleAPIError(xhr) }
     });
 
+}
+function BindCircleOfSupport(){
+    var circleOfSupportJSON=JSON.parse(circleOfSupport);
+    // var actionContent="<button type='button' class='btn commonBtn btnCommon btn-font-size' onclick='ModifyProfessionaContact()'>";
+    circleOfSupportJSON.filter(function(contact){ return contact.TypeofContact=="Professional"}).
+    map(function(contact1){
+        return  contact1.Actions="<button type='button' class='btn commonBtn btnCommon btn-font-size' onclick='ModifyProfessionalContact("+contact1.CircleofSupportContactId+")'>Modify</button>"
+    });
+
+    circleOfSupportJSON.filter(function(contact){return contact.TypeofContact!="Professional"}).
+    map(function(contact){
+        return contact.Actions="";
+    });
+
+    $('#CircleOfSupport').DataTable({
+        "stateSave": true,
+        "bDestroy": true,
+        "searching": false,
+        "autoWidth": false,
+        'columnDefs': [
+            { 'visible': false, 'targets': [1] }
+        ],
+        "aaData": circleOfSupportJSON,
+        "columns": [{ "data": "Actions" }, { "data": "CircleofSupportContactId" }, { "data": "CircleofSupportContact" }, { "data": "ContactPhoneNumber" }, { "data": "ContactAddressLine1" }, { "data": "ContactAddressLine2" }, { "data": "ContactCity" }, { "data": "ContactState" }, { "data": "ContactZIPCode" }, { "data": "TypeofContact" }, { "data": "RelationshipToMember" }]
+    });
 }
 function ActiveDiagnosis(response) {
     //DiagnosisID = 3
@@ -678,12 +719,6 @@ function BindMedicationsTable(response) {
             "<div class='row'><div class='col'> <label>Medication Generic Name:</label><input type='text' class='form-control medications' value='" + response[i]["Medication Brand Name"] + "'  readonly/></div></div><hr />" + medicationsFormat(i) + "</div>" +
             "";
         document.getElementById('allMadications').append(div);
-
-        //const div1 = document.createElement('div');
-        //div1.innerHTML="";
-        //div1.innerHTML=medicationsFormat();   
-        //document.getElementById('allMadications').appendChild(div);
-
     }
 }
 function BindDropDownIndividualName(result) {
@@ -709,15 +744,12 @@ function BindDropDownIndividualName(result) {
         var DBO = '';
         if (res.length!=0) { 
             DBO = (res[0].BirthDate );
-        if (DBO != null) {
-            DBO = DBO.slice(0, 10).split('-');
-            //DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
-            DBO = DBO[0];
+            if (DBO != null) {
+                DBO = DBO.slice(0, 10).split('-');
+                //DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
+                DBO = DBO[0];
+            }
         }
-        }
-        
-
-
         $("#IndividualMiddleName").val(res[0].ClientMiddleName)
         $("#TextBoxIndividualSuffix").val(res[0].ClientSuffix)
         $("#TextBoxIndividualSuffix").val(res[0].ClientSuffix)
@@ -735,6 +767,7 @@ function BindDropDownIndividualName(result) {
         $("#TextBoxEthnicity").val(res[0].Ethnicity)
         $("#TextBoxRace").val(res[0].Race)
         $("#TextBoxWillowbrookStatus").val(res[0].WillowBrook);
+        validateUnknownAndCount(res[0].Ethnicity);
     }
     showHideFieldsBindOnStart();
 }
@@ -758,7 +791,7 @@ function InsertModify(sectionName, _class, tabName) {
         return;
     }
 
-    json = [];
+     json = [];
      jsonChildFirstTable = [];
      jsonChildSecondTable = [];
      item = {};
@@ -785,7 +818,7 @@ function InsertModify(sectionName, _class, tabName) {
         return;
     }
 
-    if (sectionName != 'masterSection') {
+    if (sectionName != 'masterSection' && sectionName != 'unknown') {
 
         doConfirm("Have you completed the section ?", function yes() {
             sectionStatus = "Completed";
@@ -891,8 +924,6 @@ function InsertModifySectionTabs(sectionName, _class, tabName) {
         success: function (result) {
             if (result.Success == true) {
                 ComprehensiveAssessmentSaved(result, sectionName);
-
-
             }
             else {
                 showErrorMessage(result.Message);
@@ -1009,6 +1040,7 @@ function uncheckedFields(hideFieldClass, check = false) {
 function ShowHideFields(current, type, hideFieldClass) {
 
     if (type == 'radio') {
+       CountNumberOfUnknowns(current);
         if ($(current).parent().text().trim() == 'Yes') {
             showFields(hideFieldClass);
             if (hideFieldClass == 'educationProgramsClass') {
@@ -1297,7 +1329,7 @@ function ShowHideFields(current, type, hideFieldClass) {
 
 function showHideFieldsBindOnStart() {
     var hideFieldClass = 'willowbrookStatusClass';
-    if ($('#TextBoxWillowbrookStatus').val() == 'True') {
+    if ($('#TextBoxWillowbrookStatus').val().toLowerCase() == 'true') {
         showFields(hideFieldClass);
     }
 
@@ -2160,3 +2192,78 @@ function GetMultipleArrayOfObjects(parentClass) {
     });
     return jsonData;
 }
+
+function CountNumberOfUnknowns(element){
+    var $currentElem=$(element),
+        elemType=$currentElem.prop('nodeName').toLowerCase(),
+        countVal="",
+        elementId=$currentElem.attr('name');
+        if(elemType=="select"){
+            countVal=$currentElem.find("option:selected").text().trim();  
+        }
+        else if(elemType=="input"){
+           var inputType= $currentElem.attr('type') 
+           switch(inputType){
+                case "text":
+                    countVal=$currentElem.val();
+                    break;
+                case "radio":
+                    countVal=$currentElem.parent().text().trim();
+                break;
+                case "checkbox":
+                    countVal=$currentElem.prop('checked') == true?$currentElem.parent().text().trim():"";
+                    break;
+                default:
+                    null;
+            }
+        }
+        validateUnknownAndCount(countVal,elementId);
+ }
+
+ function validateUnknownAndCount(value,elementId){
+
+    if(value.toLowerCase()=="unknown"){
+        countUnknown =  countUnknown+1;
+        unknownCountArray.push(elementId);
+    }
+    else if($.inArray(elementId,unknownCountArray) >-1){
+        countUnknown =countUnknown==0?0:countUnknown-1;
+        unknownCountArray.pop(elementId);
+    }
+    // prevElementVal="";
+    $("#TextBoxUnknownCount").val(countUnknown);
+ }
+function passDataToBroswer(){
+    window.external.Test('called from script code');
+}
+function ModifyProfessionalContact(circleOfSupportId){
+
+}
+function InsertModifyModalContent(parentModal,tabName){
+    if(!validateMasterSectionTab(sectionName))return;
+    var json=GenerateJSONData(parentModal);
+
+    $.ajax({
+        type: "POST",
+        data: {
+            TabName: tabName,
+            Json: JSON.stringify(json),
+            jsonchildfirsttable: JSON.stringify(isEmptyArray(jsonChildFirstTable)),
+            ReportedBy: reportedBy
+        },
+        url: GetAPIEndPoints("INSERTMODIFYCOMPREHENIVEASSESSMENTDETAIL"),
+        headers: {
+            'Token': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
+        },
+        success: function (result) {
+            if (result.Success == true) {
+                ComprehensiveAssessmentSaved(result, sectionName);
+            }
+            else {
+                showErrorMessage(result.Message);
+            }
+
+        },
+        error: function (xhr) { HandleAPIError(xhr) }
+    });
+}    
