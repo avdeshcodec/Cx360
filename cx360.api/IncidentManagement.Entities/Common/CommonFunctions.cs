@@ -439,7 +439,9 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_Employment":
                     storeProcedure = MappedStoreProcedure.CCO_Employment;
                     break;
-
+                case "CCO_UnknownCount":
+                    storeProcedure = MappedStoreProcedure.CCO_UnknownCount;
+                    break;
             }
             
             return storeProcedure;
