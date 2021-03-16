@@ -34,11 +34,12 @@ $(document).ready(function () {
     else {
         DisableSaveButtonChildSection();
 
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-        document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
-    } else {
-        alert('The File APIs are not fully supported in this browser.');
-    }
+    // if (window.File && window.FileReader && window.FileList && window.Blob) {
+    //     document.getElementById('TextBoxUploadPdf').addEventListener('change', handleFileSelect, false);
+    // } else {
+    //     alert('The File APIs are not fully supported in this browser.');
+    // 
+}
 
 });
 function IntializeDataTables(){
@@ -416,7 +417,7 @@ function medicalHealthFormat(i) {
         "</div> " +
         "<div class='col-sm-6'><div class='rowData'>" +
         "<label class='labelAlign lineHeightAligh'><span class='red'>* </span> " +
-        " Does this condition interfere with the member's ability to perform activies of daily living, including leisure skills or activities? " +
+        " Does this condition interfere with the individua's ability to perform activies of daily living, including leisure skills or activities? " +
         "</label> " +
         "<div class='form-group mb-0'> " +
         " <ul class='hasListing1'> " +
@@ -637,7 +638,7 @@ function medicationsFormat(i) {
         " </div>" +
         " <div class='col-md-6'><div class='rowData'>" +
         "    <label class='labelAlign lineHeightAligh'>" +
-        "     <span class='red'>*</span>Does the member and/or family feel that the medication is effective at treating its intended condition/illness?" +
+        "     <span class='red'>*</span>Does the individual and/or family feel that the medication is effective at treating its intended condition/illness?" +
         " </label>" +
         " <div class='form-group mb-0'>" +
         "  <ul class='hasListing1'>" +
@@ -2189,4 +2190,78 @@ function GetMultipleArrayOfObjects(parentClass) {
         jsonData.push(item);
     });
     return jsonData;
+}
+function CountNumberOfUnknowns(element){
+    var $currentElem=$(element),
+        elemType=$currentElem.prop('nodeName').toLowerCase(),
+        countVal="",
+        elementId=$currentElem.attr('name');
+        if(elemType=="select"){
+            countVal=$currentElem.find("option:selected").text().trim();  
+        }
+        else if(elemType=="input"){
+           var inputType= $currentElem.attr('type') 
+           switch(inputType){
+                case "text":
+                    countVal=$currentElem.val();
+                    break;
+                case "radio":
+                    countVal=$currentElem.parent().text().trim();
+                break;
+                case "checkbox":
+                    countVal=$currentElem.prop('checked') == true?$currentElem.parent().text().trim():"";
+                    break;
+                default:
+                    null;
+            }
+        }
+        validateUnknownAndCount(countVal,elementId);
+ }
+
+ function validateUnknownAndCount(value,elementId){
+
+    if(value.toLowerCase()=="unknown"){
+        countUnknown =  countUnknown+1;
+        unknownCountArray.push(elementId);
+    }
+    else if($.inArray(elementId,unknownCountArray) >-1){
+        countUnknown =countUnknown==0?0:countUnknown-1;
+        unknownCountArray.pop(elementId);
+    }
+    // prevElementVal="";
+    $("#TextBoxUnknownCount").val(countUnknown);
+ }
+function passDataToBroswer(){
+    window.external.Test('called from script code');
+}
+function ModifyProfessionalContact(circleOfSupportId){
+
+}
+function InsertModifyModalContent(parentModal,tabName){
+    if(!validateMasterSectionTab(sectionName))return;
+    var json=GenerateJSONData(parentModal);
+
+    $.ajax({
+        type: "POST",
+        data: {
+            TabName: tabName,
+            Json: JSON.stringify(json),
+            jsonchildfirsttable: JSON.stringify(isEmptyArray(jsonChildFirstTable)),
+            ReportedBy: reportedBy
+        },
+        url: GetAPIEndPoints("INSERTMODIFYCOMPREHENIVEASSESSMENTDETAIL"),
+        headers: {
+            'Token': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5",
+        },
+        success: function (result) {
+            if (result.Success == true) {
+                ComprehensiveAssessmentSaved(result, sectionName);
+            }
+            else {
+                showErrorMessage(result.Message);
+            }
+
+        },
+        error: function (xhr) { HandleAPIError(xhr) }
+    });
 }
