@@ -86,7 +86,14 @@ namespace IncidentManagement.Service.Service
         {
             return await _lifePlanRepository.InsertModifysubmissionForm(submissionFormRequest);
         }
-
+        public async Task<MemberRepresentativeResponse> HandleMemberRepresentative(LifePlanDetailRequest lpdRequest)
+        {
+            return await _lifePlanRepository.HandleMemberRepresentative(lpdRequest);
+        }
+        public async Task<MemberRightResponse> HandleMemberRight(LifePlanDetailRequest lpdRequest)
+        {
+            return await _lifePlanRepository.HandleMemberRight(lpdRequest);
+        }
 
 
     }

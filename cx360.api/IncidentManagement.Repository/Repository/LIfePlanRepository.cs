@@ -19,6 +19,8 @@ using System.Web;
 using PdfSharp.Pdf.IO;
 using System.Security.Principal;
 using System.Security.AccessControl;
+using System.Net;
+using System.Text;
 
 namespace IncidentManagement.Repository.Repository
 {
@@ -41,7 +43,8 @@ namespace IncidentManagement.Repository.Repository
 
         LifePlanPDFResponse lifePlanPDFResponse = null;
         LifePlanExportedRecordsResponse lifePlanExportedRecordsResponse = null;
-
+        MemberRepresentativeResponse MemberRepresentativeResponse = null;
+        MemberRightResponse MemberRightResponse = null;
 
         #endregion
 
@@ -492,6 +495,8 @@ namespace IncidentManagement.Repository.Repository
             string finaldoc = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "completed2_lifeplan.pdf";
             string finaldoc1 = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "completed3_lifeplan.pdf";
             iTextSharp.text.pdf.PdfReader pdfReader = new iTextSharp.text.pdf.PdfReader(pdfPath);
+            // iTextSharp.text.pdf.PdfReader pdfReader8 = new iTextSharp.text.pdf.PdfReader(ConfigurationManager.AppSettings["DocumentFile"].ToString() + "form_Requirements_Updates_Changes_ForDev.docx");
+
             DataTable dataTable = new DataTable();
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
             try
@@ -504,6 +509,10 @@ namespace IncidentManagement.Repository.Repository
                 DataTable IndividualPlanOfProtection = dataSetFillPDF.Tables[4];
                 DataTable MedicaidStatePlanAuthorizedServies = dataSetFillPDF.Tables[5];
                 DataTable FundalNaturalCommunityResources = dataSetFillPDF.Tables[6];
+                DataTable AcknowledgementAndAgreement = dataSetFillPDF.Tables[7];
+                DataTable MemberRights = dataSetFillPDF.Tables[8];
+                DataTable MemberRepresentativeApproval = dataSetFillPDF.Tables[9];
+                DataTable Documents = dataSetFillPDF.Tables[9];
 
                 AcroFields pdfFormFields = pdfStamper.AcroFields;
                 pdfFormFields.GenerateAppearances = false;
@@ -525,45 +534,99 @@ namespace IncidentManagement.Repository.Repository
                 pdfFormFields.SetField("ProviderID", row["ProviderID"].ToString());
                 pdfFormFields.SetField("Status", row["DocumentStatus"].ToString());
                 pdfFormFields.SetField("Version", row["DocumentVersion"].ToString());
+                pdfFormFields.SetField("CareManagerFirstName", row["CareManagerFirstName"].ToString());
+                pdfFormFields.SetField("CareManagerLastName", row["CareManagerLastName"].ToString());
+                pdfFormFields.SetField("IncludeDurableMediEquipment", row["IncludeDurableMediEquipment"].ToString() == "Y" ? "Yes" : "No");
+                pdfFormFields.SetField("IncludeDiagnosis", row["IncludeDiagnosis"].ToString() == "Y" ? "Yes" : "No");
+                pdfFormFields.SetField("IncludeAllergies", row["IncludeAllergies"].ToString() == "Y" ? "Yes" : "No");
+                pdfFormFields.SetField("IncludeMedications", row["IncludeMedications"].ToString() == "Y" ? "Yes" : "No");
+                pdfFormFields.SetField("LifePlanType", row["LifePlanType"].ToString());
 
-
+                //Will create pdfTable instance and will paas column numbers as parameters.
                 PdfPTable table = new PdfPTable(4);
                 PdfPTable tableOutcomes_SupportStrategies = new PdfPTable(9);
                 PdfPTable tableIndividualPlanOfProtection = new PdfPTable(8);
                 PdfPTable tableMedicaidStatePlanAuthorizedServies = new PdfPTable(5);
                 PdfPTable tableFundalNaturalCommunityResources = new PdfPTable(4);
                 PdfPTable tableAssessmentNarrativeSummary = new PdfPTable(2);
+                PdfPTable tableAcknowledgementAndAgreement = new PdfPTable(6);
+                PdfPTable tableMemberRights = new PdfPTable(1);
+                PdfPTable tableMemberRepresentativeApproval = new PdfPTable(6);
+                PdfPTable tableDocuments = new PdfPTable(2);
+                PdfPTable tableMeetingAttendance = new PdfPTable(3);
+
                 table.WidthPercentage = 100f;
                 tableOutcomes_SupportStrategies.WidthPercentage = 100f;
                 tableIndividualPlanOfProtection.WidthPercentage = 100f;
                 tableMedicaidStatePlanAuthorizedServies.WidthPercentage = 100f;
                 tableFundalNaturalCommunityResources.WidthPercentage = 100f;
                 tableAssessmentNarrativeSummary.WidthPercentage = 100f;
+                tableAcknowledgementAndAgreement.WidthPercentage = 100f;
+                tableMemberRights.WidthPercentage = 100f;
+                tableMemberRepresentativeApproval.WidthPercentage = 100f;
+                tableDocuments.WidthPercentage = 100f;
+                tableMeetingAttendance.WidthPercentage = 80f;
 
                 iTextSharp.text.Font fntTableFontHdr = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
                 iTextSharp.text.Font fntTableFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
                 iTextSharp.text.Font pageTextFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.ITALIC, BaseColor.BLACK);
-                PdfPCell cell = new PdfPCell(new Phrase("Meeting History"));
+                PdfPCell cell = new PdfPCell(new Phrase("Meeting History")) { PaddingBottom = 10 };
                 cell.Colspan = 4;
                 cell.BackgroundColor = new BaseColor(204, 204, 204);
                 cell.HorizontalAlignment = 1;
                 table.SpacingBefore = 30f;
-                table.AddCell(cell);
-                table.AddCell(new PdfPCell(new Phrase("Type Of Meeting")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                table.AddCell(new PdfPCell(new Phrase("Plan Review Date")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                table.AddCell(new PdfPCell(new Phrase("Reason For Meeting")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                table.AddCell(new PdfPCell(new Phrase("Member Attendance")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                //table.SetTotalWidth(new float[] { 25,iTextSharp.text.PageSize.A4.Rotate().Width - 25});
+
 
                 if (MeetingHistory.Rows.Count > 0)
                 {
                     for (var i = 0; i < MeetingHistory.Rows.Count; i++)
                     {
+                        table.AddCell(cell);
+                        table.AddCell(new PdfPCell(new Phrase("Note Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase("Event Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase("Subject")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase("Meeting Reason")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
                         DataRow rowMeetingHistory = MeetingHistory.Rows[i];
-                        table.AddCell(new Phrase(rowMeetingHistory["TypeOfMeeting"].ToString(), fntTableFont));
-                        table.AddCell(new Phrase(rowMeetingHistory["PlanerReviewDate"].ToString(), fntTableFont));
-                        table.AddCell(new Phrase(rowMeetingHistory["MeetingReason"].ToString(), fntTableFont));
-                        table.AddCell(new Phrase(rowMeetingHistory["MemberAttendance"].ToString(), fntTableFont));
+                        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["TypeOfMeeting"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["PlanerReviewDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["MeetingReason"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["MemberAttendance"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                        var filtered = new List<JSONData>();
+
+                        foreach (var e in fillablePDFRequest.JSONData)
+                        {
+                            if (e.meetingAttendanceId == Convert.ToInt32(rowMeetingHistory["MeetingId"]))
+                            {
+                                filtered.Add(e);
+                            }
+                        }
+                        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Member Attendance")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, PaddingBottom = 10 });
+                        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Contact Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Relationship To Member")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Method")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                        if (filtered.Count > 0)
+                        {
+                            foreach (var e in filtered)
+                            {
+                                if (e.meetingAttendanceId == Convert.ToInt32(rowMeetingHistory["MeetingId"]))
+                                {
+                                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.ContactName.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.RelationshipToMember.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.Method.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10 });
+                        }
+                        table.AddCell(new PdfPCell(tableMeetingAttendance) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10, PaddingLeft = 10, PaddingRight = 10, PaddingTop = 10 });
+                        table.AddCell(new PdfPCell(new Phrase(" ")) { Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.TOP_BORDER });
+                        filtered = null;
+                        tableMeetingAttendance.DeleteBodyRows();
                     }
                 }
                 else
@@ -577,73 +640,76 @@ namespace IncidentManagement.Repository.Repository
                     rowAssessmentNarrativeSummary = AssessmentNarrativeSummary.Rows[0];
                 }
                 tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Section I")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
-                tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("ASSESSMENT NARRATIVE SUMMARY")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER });
-                tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("This section includes relevant personal history and appropriate contextual information, as well as skills, abilities, aspirations, needs, interests, reasonable accommodations, cultural considerations, meaningful activities, challenges, etc., learned during the person - centered planning process, record review and any assessments reviewed and / or completed.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
+                tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("ASSESSMENT NARRATIVE SUMMARY")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("This section includes relevant personal history and appropriate contextual information, as well as skills, abilities, aspirations, needs, interests, reasonable accommodations, cultural considerations, meaningful activities, challenges, etc., learned during the person - centered planning process, record review and any assessments reviewed and / or completed.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
 
-                tableAssessmentNarrativeSummary.AddCell("My Home :");
                 if (AssessmentNarrativeSummary.Rows.Count > 0)
                 {
-                    tableAssessmentNarrativeSummary.AddCell(new Phrase(rowAssessmentNarrativeSummary["MyHome"].ToString(), fntTableFont));
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Introducing Me :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["IntroducingMe"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Home :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHome"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Let Me Tell You About My Day :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["TellYouAboutMyDay"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Health and My Medications :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHealthAndMedication"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Relationship :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyRelationships"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Happiness :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHappiness"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My School/ Learning :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MySchool"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+
+
                 }
                 else
                 {
-                    tableAssessmentNarrativeSummary.AddCell("");
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Introducing Me :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Home :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Let Me Tell You About My Day :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Health and My Medications :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Relationship :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Happiness :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My School/ Learning :")) { PaddingBottom = 10 });
+                    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                    //tableAssessmentNarrativeSummary.AddCell("");
                 }
-                tableAssessmentNarrativeSummary.AddCell("My Work :");
-                if (AssessmentNarrativeSummary.Rows.Count > 0)
-                {
-                    tableAssessmentNarrativeSummary.AddCell(new Phrase(rowAssessmentNarrativeSummary["MyWork"].ToString(), fntTableFont));
-                }
-                else
-                {
-                    tableAssessmentNarrativeSummary.AddCell("");
-                }
-                tableAssessmentNarrativeSummary.AddCell("My Health and My Medications :");
-                if (AssessmentNarrativeSummary.Rows.Count > 0)
-                {
-                    tableAssessmentNarrativeSummary.AddCell(new Phrase(rowAssessmentNarrativeSummary["MyHealthAndMedication"].ToString(), fntTableFont));
-                }
-                else
-                {
-                    tableAssessmentNarrativeSummary.AddCell("");
-                }
-                tableAssessmentNarrativeSummary.AddCell("My Relationship :");
-                if (AssessmentNarrativeSummary.Rows.Count > 0)
-                {
-                    tableAssessmentNarrativeSummary.AddCell(new Phrase(rowAssessmentNarrativeSummary["MyRelationships"].ToString(), fntTableFont));
-                }
-                else
-                {
-                    tableAssessmentNarrativeSummary.AddCell("");
-                }
+
 
                 tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Section II")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("OUTCOMES AND SUPPORT STRATEGIES")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("This section includes measurable/observable personal outcomes that are developed by the person and his/her IDT using person-centered planning. It describes provider goals and corresponding staff activities identified to meet the CCO goal / valued outcome.It captures the following information: goal description, valued outcomes, action steps, responsible party, service type, timeframe for action steps and Personal Outcome Measures.Evidence of achievement must be reflected in monthly notes from assigned providers.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CQL POMS Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CCO Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider / Location", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Service Type", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Frequency", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Quantity", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Time Frame", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Special Considerations", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204) });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("OUTCOMES AND SUPPORT STRATEGIES")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("This section includes measurable/observable personal outcomes that are developed by the person and his/her IDT using person-centered planning. It describes provider goals and corresponding staff activities identified to meet the CCO goal / valued outcome.It captures the following information: goal description, valued outcomes, action steps, responsible party, service type, timeframe for action steps and Personal Outcome Measures.Evidence of achievement must be reflected in monthly notes from assigned providers.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CQL POMS Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CCO Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider / Location", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Service Type", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Frequency", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Quantity", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Time Frame", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Special Considerations", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
 
                 if (Outcomes_SupportStrategies.Rows.Count > 0)
                 {
                     for (var i = 0; i < Outcomes_SupportStrategies.Rows.Count; i++)
                     {
                         DataRow rowOutcomes_SupportStrategies = Outcomes_SupportStrategies.Rows[i];
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["CqlPomsGoal"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["CcoGoal"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["ProviderAssignedGoal"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["ProviderLocation"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["ServicesType"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["Frequency"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["Quantity"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["TimeFrame"].ToString(), fntTableFont));
-                        tableOutcomes_SupportStrategies.AddCell(new Phrase(rowOutcomes_SupportStrategies["SpecialConsiderations"].ToString(), fntTableFont));
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["CqlPomsGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["CcoGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ProviderAssignedGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ProviderLocation"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ServicesType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["Frequency"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["Quantity"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["TimeFrame"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["SpecialConsiderations"].ToString(), fntTableFont)) { PaddingBottom = 10 });
                     }
                 }
                 else
@@ -654,30 +720,30 @@ namespace IncidentManagement.Repository.Repository
 
 
                 tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Section III")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Individual Safeguards/Individual Plan of Protection (IPOP)")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Compilation of all supports and services needed for a person to remain safe, healthy and comfortable across all settings (including Part 686 requirements for IPOP).This section details the provider goals and corresponding staff activities required to maintain desired personal safety")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Goal Valued Outcome")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider/Location")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Service Type")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Frequency")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Quantity")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Time Frame")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Special Considerations")) { BackgroundColor = new BaseColor(204, 204, 204) });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Individual Safeguards/Individual Plan of Protection (IPOP)")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Compilation of all supports and services needed for a person to remain safe, healthy and comfortable across all settings (including Part 686 requirements for IPOP).This section details the provider goals and corresponding staff activities required to maintain desired personal safety")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Goal Valued Outcome")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider/Location")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Service Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Frequency")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Quantity")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Time Frame")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Special Considerations")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
 
                 if (IndividualPlanOfProtection.Rows.Count > 0)
                 {
                     for (var i = 0; i < IndividualPlanOfProtection.Rows.Count; i++)
                     {
                         DataRow rowIndividualPlanOfProtection = IndividualPlanOfProtection.Rows[i];
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["GoalValuedOutcome"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["ProviderAssignedGoal"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["ProviderLocation"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["ServicesType"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["Frequency"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["Quantity"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["TimeFrame"].ToString(), fntTableFont));
-                        tableIndividualPlanOfProtection.AddCell(new Phrase(rowIndividualPlanOfProtection["SpecialConsiderations"].ToString(), fntTableFont));
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["GoalValuedOutcome"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ProviderAssignedGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ProviderLocation"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ServicesType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["Frequency"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["Quantity"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["TimeFrame"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["SpecialConsiderations"].ToString(), fntTableFont)) { PaddingBottom = 10 });
 
                     }
                 }
@@ -688,23 +754,23 @@ namespace IncidentManagement.Repository.Repository
 
 
                 tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Section IV")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("HCBS Wavier and Medicaid State Plan Authorized Services")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("This section of the Life Plan includes a listing of all HCBS Waiver and State Plan services that have been authorized for the individual. ")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Authorized Service")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Provider/Facility")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Effective Dates")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Unit")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Comments")) { BackgroundColor = new BaseColor(204, 204, 204) });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("HCBS Wavier and Medicaid State Plan Authorized Services")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("This section of the Life Plan includes a listing of all HCBS Waiver and State Plan services that have been authorized for the individual. ")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Authorized Service")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Provider")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Effective Dates")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Unit Of Measure")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Comments")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
                 if (MedicaidStatePlanAuthorizedServies.Rows.Count > 0)
                 {
                     for (var i = 0; i < MedicaidStatePlanAuthorizedServies.Rows.Count; i++)
                     {
                         DataRow rowMedicaidStatePlanAuthorizedServies = MedicaidStatePlanAuthorizedServies.Rows[i];
-                        tableMedicaidStatePlanAuthorizedServies.AddCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["AuthorizedService"].ToString(), fntTableFont));
-                        tableMedicaidStatePlanAuthorizedServies.AddCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Provider"].ToString() + ' ' + rowMedicaidStatePlanAuthorizedServies["Facility"].ToString(), fntTableFont));
-                        tableMedicaidStatePlanAuthorizedServies.AddCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["EffectiveFrom"].ToString() + ' ' + rowMedicaidStatePlanAuthorizedServies["EffectiveTo"].ToString(), fntTableFont));
-                        tableMedicaidStatePlanAuthorizedServies.AddCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["unit"].ToString(), fntTableFont));
-                        tableMedicaidStatePlanAuthorizedServies.AddCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Comments"].ToString(), fntTableFont));
+                        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["AuthorizedService"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Provider"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["EffectiveDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["UnitOfMeasure"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Comments"].ToString(), fntTableFont)) { PaddingBottom = 10 });
 
                     }
                 }
@@ -715,21 +781,21 @@ namespace IncidentManagement.Repository.Repository
 
 
                 tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Section V")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("All Suports and Services; Funded and Natural/Community Resources")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("This section identifies the services and support givers in a person’s life along with the needed contact information. Additionally, all Natural Supports and Community Resources that help the person be a valued individual of his or her community and live successfully on a day - to - day basis at home, at work, at school, or in other community locations should be listed with contact information as appropriate.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Name")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Role")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Address")) { BackgroundColor = new BaseColor(204, 204, 204) });
-                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Phone")) { BackgroundColor = new BaseColor(204, 204, 204) });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("All Suports and Services; Funded and Natural/Community Resources")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("This section identifies the services and support givers in a person’s life along with the needed contact information. Additionally, all Natural Supports and Community Resources that help the person be a valued individual of his or her community and live successfully on a day - to - day basis at home, at work, at school, or in other community locations should be listed with contact information as appropriate.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Contact Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Relationship")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Orginization")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
                 if (FundalNaturalCommunityResources.Rows.Count > 0)
                 {
                     for (var i = 0; i < FundalNaturalCommunityResources.Rows.Count; i++)
                     {
                         DataRow rowFundalNaturalCommunityResources = FundalNaturalCommunityResources.Rows[i];
-                        tableFundalNaturalCommunityResources.AddCell(new Phrase(rowFundalNaturalCommunityResources["Name"].ToString(), fntTableFont));
-                        tableFundalNaturalCommunityResources.AddCell(new Phrase(rowFundalNaturalCommunityResources["Role"].ToString(), fntTableFont));
-                        tableFundalNaturalCommunityResources.AddCell(new Phrase(rowFundalNaturalCommunityResources["address"].ToString(), fntTableFont));
-                        tableFundalNaturalCommunityResources.AddCell(new Phrase(rowFundalNaturalCommunityResources["Phone"].ToString(), fntTableFont));
+                        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["ContactType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Relationship"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Name"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Orginization"].ToString(), fntTableFont)) { PaddingBottom = 10 });
 
                     }
                 }
@@ -737,6 +803,111 @@ namespace IncidentManagement.Repository.Repository
                 {
                     tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10 });
                 }
+
+
+                DataRow rowMemberRight = null;
+                if (MemberRights.Rows.Count > 0)
+                {
+                    rowMemberRight = MemberRights.Rows[0];
+                }
+                //tableMemberRights.AddCell(new PdfPCell(new Phrase("Section VI")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                tableMemberRights.AddCell(new PdfPCell(new Phrase("Member Rights")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, PaddingBottom = 10 });
+                tableMemberRights.AddCell(new PdfPCell(new Phrase("My Care Manager has informed me of:")) { Colspan = 9, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+
+
+
+
+                if (MemberRights.Rows.Count > 0)
+                {
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase("My rights under the Americans With Disabilities Act(ADA) : " + rowMemberRight["RightsUnderAmericansDisabilitiesAct"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to obtain reasonable accommodations (my reasonable accommodations are listed in my Life Plan) : " + rowMemberRight["Provider"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase(" How to file a grievance or an appeal : " + rowMemberRight["GrievanceAppeal"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                }
+                else
+                {
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase("My rights under the Americans With Disabilities Act(ADA) : ")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to obtain reasonable accommodations (my reasonable accommodations are listed in my Life Plan) :")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to file a grievance or an appeal : ")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                }
+
+
+
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Section VII")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Representative Approval")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Representative")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Representative Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Committee Approver")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Committee Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                if (MemberRepresentativeApproval.Rows.Count > 0)
+                {
+                    for (var i = 0; i < MemberRepresentativeApproval.Rows.Count; i++)
+                    {
+                        DataRow rowMemberRepresentativeApproval = MemberRepresentativeApproval.Rows[i];
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["MemberName"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["MemberApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["Representative"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["RepresentativeApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["CommitteeApprover"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["CommitteeApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                    }
+                }
+                else
+                {
+                    tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                }
+
+
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Section VI")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Acknowledgement and Agreements")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("This section includes measurable/observable personal outcomes that are developed by the person and his/her IDT using person-centered planning. It describes provider goals and corresponding staff activities identified to meet the CCO goal / valued outcome.It captures the following information: goal description, valued outcomes, action steps, responsible party, service type, timeframe for action steps and Personal Outcome Measures.Evidence of achievement must be reflected in monthly notes from assigned providers.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Date", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Provider", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Reason", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Type", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Acknowledge and Agree Status", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Aceptance / Acknowledgement Date", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                if (AcknowledgementAndAgreement.Rows.Count > 0)
+                {
+                    for (var i = 0; i < AcknowledgementAndAgreement.Rows.Count; i++)
+                    {
+                        DataRow rowAcknowledgementAndAgreement = AcknowledgementAndAgreement.Rows[i];
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["Provider"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationReason"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationAckAgreeStatus"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["AceptanceAcknowledgementDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    }
+                }
+                else
+                {
+                    tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                }
+
+                //tableDocuments.AddCell(new PdfPCell(new Phrase("Section IX")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 2, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                tableDocuments.AddCell(new PdfPCell(new Phrase("Documents")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 2, HorizontalAlignment = 1, PaddingBottom = 10 });
+                tableDocuments.AddCell(new PdfPCell(new Phrase("Document Title", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                tableDocuments.AddCell(new PdfPCell(new Phrase("Attach Document", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                if (Documents.Rows.Count > 0)
+                {
+                    for (var i = 0; i < Documents.Rows.Count; i++)
+                    {
+                        DataRow rowDocument = Documents.Rows[i];
+                        tableDocuments.AddCell(new PdfPCell(new Phrase(rowDocument["MemberName"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                        tableDocuments.AddCell(new PdfPCell(new Phrase(rowDocument["MemberApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                    }
+                }
+                else
+                {
+                    tableDocuments.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 2, HorizontalAlignment = 1, PaddingBottom = 10 });
+                }
+
 
                 pdfStamper.FormFlattening = false;
                 pdfStamper.Dispose();
@@ -766,14 +937,27 @@ namespace IncidentManagement.Repository.Repository
                 tableIndividualPlanOfProtection.SpacingAfter = 30;
                 tableMedicaidStatePlanAuthorizedServies.SpacingAfter = 30;
                 tableOutcomes_SupportStrategies.SpacingAfter = 30;
+                tableMemberRepresentativeApproval.SpacingAfter = 30;
+                tableAcknowledgementAndAgreement.SpacingAfter = 30;
+                tableDocuments.SpacingAfter = 30;
+                tableMemberRights.SpacingAfter = 30;
+
+
+
+
+
 
                 doc.Add(table);
+                doc.Add(tableMeetingAttendance);
                 doc.Add(tableAssessmentNarrativeSummary);
                 doc.Add(tableOutcomes_SupportStrategies);
                 doc.Add(tableIndividualPlanOfProtection);
                 doc.Add(tableMedicaidStatePlanAuthorizedServies);
                 doc.Add(tableFundalNaturalCommunityResources);
-
+                doc.Add(tableMemberRights);
+                doc.Add(tableMemberRepresentativeApproval);
+                doc.Add(tableAcknowledgementAndAgreement);
+                doc.Add(tableDocuments);
                 doc.Close();
 
                 FileStream fs = new FileStream(finaldoc, FileMode.Create);
@@ -856,7 +1040,6 @@ namespace IncidentManagement.Repository.Repository
             }
 
         }
-
         private DataTable UploadPublishedPDFDocument(string finaldoc, DataTable dataTableLIfePlan, FillableLifePlanPDFRequest fillablePDFRequest)
         {
             PdfSharp.Pdf.PdfDocument originalDocument = PdfSharp.Pdf.IO.PdfReader.Open(finaldoc, PdfDocumentOpenMode.Import);
@@ -963,6 +1146,7 @@ namespace IncidentManagement.Repository.Repository
                         cmd.Parameters.Add("@lifeplanid", SqlDbType.VarChar).Value = lpdRequest.LifePlanId;
                         cmd.Parameters.Add("@documentversionid", SqlDbType.VarChar).Value = lpdRequest.DocumentVersionId;
                         cmd.Parameters.Add("@reportedby", SqlDbType.Int).Value = lpdRequest.ReportedBy;
+                        cmd.Parameters.Add("@mode", SqlDbType.VarChar).Value = lpdRequest.Mode;
 
                         con.Open();
 
@@ -976,17 +1160,17 @@ namespace IncidentManagement.Repository.Repository
                 }
                 if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
                 {
-                    if (tabName == "PublishLifePlanVersion")
-                    {
-                        dataTablePDFPath = GetLifePlanPDFTemplate(tabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Lifeplan.pdf", lpdRequest);
-                        string dataSetString = CommonFunctions.ConvertDataTableToJson(dataTablePDFPath);
-                        lpdResponse.AllTab = JsonConvert.DeserializeObject<List<AllTab>>(dataSetString);
-                    }
-                    else
-                    {
+                    //if (tabName == "PublishLifePlanVersion")
+                    //{
+                    //    dataTablePDFPath = GetLifePlanPDFTemplate(tabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Lifeplan.pdf", lpdRequest);
+                    //    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataTablePDFPath);
+                    //    lpdResponse.AllTab = JsonConvert.DeserializeObject<List<AllTab>>(dataSetString);
+                    //}
+                    //else
+                    //{
                         string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
                         lpdResponse.AllTab = JsonConvert.DeserializeObject<List<AllTab>>(dataSetString);
-                    }
+                    //}
                 }
             }
             catch (Exception Ex)
@@ -1117,6 +1301,84 @@ namespace IncidentManagement.Repository.Repository
                         cmd.Parameters.Add("@submissiondecisionformid", SqlDbType.Int).Value = submissionFormRequest.UD_SubmissionDecisionFormID;                        cmd.Parameters.Add("@formname", SqlDbType.VarChar).Value = submissionFormRequest.FormName;                        cmd.Parameters.Add("@status", SqlDbType.Int).Value = submissionFormRequest.Status;                        cmd.Parameters.Add("@clientid", SqlDbType.Int).Value = submissionFormRequest.ClientID;                        cmd.Parameters.Add("@keyfieldid", SqlDbType.Int).Value = submissionFormRequest.KeyFieldID;                        cmd.Parameters.Add("@submittedto", SqlDbType.Int).Value = submissionFormRequest.SubmittedTo;                        cmd.Parameters.Add("@submissionMessage", SqlDbType.VarChar).Value = submissionFormRequest.SubmissionMessage;                        cmd.Parameters.Add("@electronicsignature", SqlDbType.VarChar).Value = submissionFormRequest.ElectronicSignature;                        cmd.Parameters.Add("@electronicsignature_signedon", SqlDbType.DateTime).Value = submissionFormRequest.ElectronicSignature_SignedOn;                        cmd.Parameters.Add("@submittedon", SqlDbType.DateTime).Value = submissionFormRequest.SubmittedOn;                        cmd.Parameters.Add("@stafftitle", SqlDbType.VarChar).Value = submissionFormRequest.StaffTitle;
                         cmd.Parameters.Add("@staffname", SqlDbType.VarChar).Value = submissionFormRequest.StaffName;                        cmd.Parameters.Add("@tabname", SqlDbType.VarChar).Value = submissionFormRequest.TabName;                        cmd.Parameters.Add("@reportedby", SqlDbType.Int).Value = submissionFormRequest.ReportedBy;                        con.Open();                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();                        sqlDataAdapter.SelectCommand = cmd;                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));                        con.Close();                    }                }                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)                {                        string dataSetStringSubmissionForm = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
                     lpdResponse.AllTab = JsonConvert.DeserializeObject<List<AllTab>>(dataSetStringSubmissionForm);                }            }            catch (Exception Ex)            {                throw Ex;            }            return lpdResponse;        }
+
+        public async Task<MemberRepresentativeResponse> HandleMemberRepresentative(LifePlanDetailRequest lpdRequest)
+        {
+            MemberRepresentativeResponse = new MemberRepresentativeResponse();
+            string sp = CommonFunctions.GetMappedStoreProcedure(lpdRequest.TabName);
+            string resultString = Regex.Match(lpdRequest.Json, @"\d+").Value;
+            DataSet dataSet = new DataSet();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sp, con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@lifeplanid", SqlDbType.VarChar).Value = lpdRequest.LifePlanId;
+                        cmd.Parameters.Add("@mode", SqlDbType.VarChar).Value = lpdRequest.Mode;
+                        cmd.Parameters.Add("@Id", SqlDbType.Int).Value = Convert.ToInt32(resultString);
+                        cmd.Parameters.Add("@ModifiedBy", SqlDbType.VarChar).Value = lpdRequest.ReportedBy;
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                {
+                    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    MemberRepresentativeResponse.MemberRepresentativeTab = JsonConvert.DeserializeObject<List<MemberRepresentativeTab>>(dataSetString);
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+            return MemberRepresentativeResponse;
+
+        }
+
+        public async Task<MemberRightResponse> HandleMemberRight(LifePlanDetailRequest lpdRequest)
+        {
+            MemberRightResponse = new MemberRightResponse();
+            string sp = CommonFunctions.GetMappedStoreProcedure(lpdRequest.TabName);
+            string resultString = Regex.Match(lpdRequest.Json, @"\d+").Value;
+            DataSet dataSet = new DataSet();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sp, con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@lifeplanid", SqlDbType.VarChar).Value = lpdRequest.LifePlanId;
+                        cmd.Parameters.Add("@mode", SqlDbType.VarChar).Value = lpdRequest.Mode;
+                        cmd.Parameters.Add("@Id", SqlDbType.Int).Value = Convert.ToInt32(resultString);
+                        cmd.Parameters.Add("@ModifiedBy", SqlDbType.VarChar).Value = lpdRequest.ReportedBy;
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                {
+                    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    MemberRightResponse.MemberRightTab = JsonConvert.DeserializeObject<List<MemberRightTab>>(dataSetString);
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+            return MemberRightResponse;
+
+        }
 
     }
 }

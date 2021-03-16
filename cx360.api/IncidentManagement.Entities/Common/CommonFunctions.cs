@@ -442,8 +442,23 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_UnknownCount":
                     storeProcedure = MappedStoreProcedure.CCO_UnknownCount;
                     break;
+
+                    //Life plan 
+                case "InsertMemberRepresentative":
+                    storeProcedure = MappedStoreProcedure.InsertMemberRepresentative;
+                    break;
+                case "GetMemberRepresentative":
+                    storeProcedure = MappedStoreProcedure.GetMemberRepresentative;
+                    break;
+                case "InsertMemberRight":
+                    storeProcedure = MappedStoreProcedure.InsertMemberRight;
+                    break;
+                case "GetMemberRight":
+                    storeProcedure = MappedStoreProcedure.GetMemberRight;
+                    break;
+
             }
-            
+
             return storeProcedure;
         }
 
