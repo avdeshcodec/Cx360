@@ -11,6 +11,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncidentManagement.Reposito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncidentManagement.Service", "IncidentManagement.Service\IncidentManagement.Service.csproj", "{36A8AC93-186B-4A5E-B2F8-89878EE3027E}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "cx360.frontend", "..\cx360.frontend\", "{BD6CE0D9-82AE-46E4-A669-33371F5711B2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_52945"
+		Debug.AspNetCompiler.PhysicalPath = "..\cx360.frontend\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52945\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_52945"
+		Release.AspNetCompiler.PhysicalPath = "..\cx360.frontend\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_52945\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "52945"
+		SlnRelativePath = "..\cx360.frontend\"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +54,15 @@ Global
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36A8AC93-186B-4A5E-B2F8-89878EE3027E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD6CE0D9-82AE-46E4-A669-33371F5711B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD6CE0D9-82AE-46E4-A669-33371F5711B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD6CE0D9-82AE-46E4-A669-33371F5711B2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD6CE0D9-82AE-46E4-A669-33371F5711B2}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C6E54D7-6920-442A-99B6-B9CA2201F19D}
 	EndGlobalSection
 EndGlobal

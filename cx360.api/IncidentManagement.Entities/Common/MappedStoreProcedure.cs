@@ -65,6 +65,7 @@ namespace IncidentManagement.Entities.Common
         public static readonly string PublishAssessment = "usp_PublishAssessmentVersion";
         public static readonly string CreateNewVersionAssessment = "usp_CreateNewVersionAssessment";
         public static readonly string AllComprehensiveAssessmentDetails = "usp_GetComprehensiveAssessmentDetails";
+        public static readonly string AllCCO_ComprehensiveAssessmentDetails = "usp_GetCCOComprehensiveAssessmentDetails";
 
         //CANS store procedures list 
         public static readonly string TreatmentPlan = "usp_InsertModifyTreatmentPlan";

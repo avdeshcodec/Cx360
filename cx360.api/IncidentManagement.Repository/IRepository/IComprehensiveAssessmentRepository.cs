@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 using static IncidentManagement.Entities.Response.ComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.Repository.IRepository
@@ -18,6 +19,7 @@ namespace IncidentManagement.Repository.IRepository
         Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
         Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json );
+        Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest);
 
 
         #endregion

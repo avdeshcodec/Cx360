@@ -15,7 +15,7 @@ $(document).ready(function () {
     
     $("select.apply-select2").select2({ width: "100%" });
     $('.dateIcon').click(function () {
-        debugger;
+       
         $(this).datepicker("show");
     });
     $('.clockIcon').click(function () {
@@ -195,8 +195,8 @@ function GetAPIEndPoints(key) {
         GETCANSASSESSMENTPDFTEMPLATE: "/CANSAPI/PrintAssessmentPDF",
         HANDLEMemberRepresentative: "/LifePlanAPI/HandleMemberRepresentative",
         HANDLEMEMBERRIGHT: "/LifePlanAPI/HandleMemberRight",
-        UPLOADOFFLINEPDF: "/ComprehensiveAssessmentAPI/UploadOfflinePDF"
-
+        UPLOADOFFLINEPDF: "/ComprehensiveAssessmentAPI/UploadOfflinePDF",
+        GETCCOCOMPREHENIVEASSESSMENTDETAIL: "/ComprehensiveAssessmentAPI/GetCCOComprehensiveAssessmentDetail",
     };
     return API_URL + API_ENDPONTS[key];
 }

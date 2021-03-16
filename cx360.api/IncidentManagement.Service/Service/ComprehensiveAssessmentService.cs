@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 using static IncidentManagement.Entities.Response.ComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.Service.Service
@@ -43,6 +44,10 @@ namespace IncidentManagement.Service.Service
         {
             return await _ComprehensiveAssessmentRepository.UploadOfflinePDF(json);
         }
-        
+        public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            return await _ComprehensiveAssessmentRepository.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+        }
+
     }
 }

@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Configuration;
 using Newtonsoft.Json;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.API.Controllers
 {
@@ -25,6 +26,7 @@ namespace IncidentManagement.API.Controllers
         private System.Net.Http.HttpResponseMessage httpResponseMessage = null;
         private IComprehensiveAssessmentService _ComprehensiveAssessmentService = null;
         private ComprehensiveAssessmentDetailResponse cadResponse = null;
+        private CCOComprehensiveAssessmentDetailResponse ccoResponse = null;
         private ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         CommonFunctions common = null;
         private readonly DocumentUpload _documentUpload;
@@ -255,6 +257,43 @@ namespace IncidentManagement.API.Controllers
             }
             return httpResponseMessage;
         }
+
+
+        /// <summary>
+        /// Get Comprehensive Assessment
+        /// </summary>
+        /// <remarks>This API is used to Comprehensive Assessment.</remarks>
+        /// <param name="comprehensiveAssessmentRequest"> Model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("GetCCOComprehensiveAssessmentDetail")]
+        [ActionName("GetCCOComprehensiveAssessmentDetail")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            try
+            {
+                httpResponseMessage = new HttpResponseMessage();
+                cadResponse = new ComprehensiveAssessmentDetailResponse();
+                if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
+                {
+                    ccoResponse = await _ComprehensiveAssessmentService.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                cadResponse.Success = false;
+                cadResponse.IsException = true;
+                cadResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+
+
     }
 }
 
