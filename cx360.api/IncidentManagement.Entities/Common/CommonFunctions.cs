@@ -248,42 +248,8 @@ namespace IncidentManagement.Entities.Common
                 case "AssessmentLegal":
                     storeProcedure = MappedStoreProcedure.AssessmentLegal;
                     break;
-                case "AreasSafeguardReview":
-                    storeProcedure = MappedStoreProcedure.AreasSafeguardReview;
-                    break;
-                case "BehavioralSupportServices":
-                    storeProcedure = MappedStoreProcedure.BehavioralSupportServices;
-                    break;
-                case "EducationalVocationalStatus":
-                    storeProcedure = MappedStoreProcedure.EducationalVocationalStatus;
-                    break;
-                case "IndependentLivingSkills":
-                    storeProcedure = MappedStoreProcedure.IndependentLivingSkills;
-                    break;
-                case "SelfDirectedServices":
-                    storeProcedure = MappedStoreProcedure.SelfDirectedServices;
-                    break;
-                case "TransitionPlanning":
-                    storeProcedure = MappedStoreProcedure.TransitionPlanning;
-                    break;
-                case "General":
-                    storeProcedure = MappedStoreProcedure.General;
-                    break;
-                case "SafetyRisk":
-                    storeProcedure = MappedStoreProcedure.SafetyRiskAssessment;
-                    break;
-                case "DepressionScreening":
-                    storeProcedure = MappedStoreProcedure.DepressionScreening;
-                    break;
-                case "SubstanceAbuseScreening":
-                    storeProcedure = MappedStoreProcedure.SubstanceAbuseScreening;
-                    break;
-                case "SafetyPlan":
-                    storeProcedure = MappedStoreProcedure.SafetyPlan;
-                    break;
-                case "PublishAssessment":
-                    storeProcedure = MappedStoreProcedure.PublishAssessment;
-                    break;
+                case "AreasSafeguardReview":                    storeProcedure = MappedStoreProcedure.AreasSafeguardReview;                    break;                case "BehavioralSupportServices":                    storeProcedure = MappedStoreProcedure.BehavioralSupportServices;                    break;                case "EducationalVocationalStatus":                    storeProcedure = MappedStoreProcedure.EducationalVocationalStatus;                    break;                case "IndependentLivingSkills":                    storeProcedure = MappedStoreProcedure.IndependentLivingSkills;                    break;                case "SelfDirectedServices":                    storeProcedure = MappedStoreProcedure.SelfDirectedServices;                    break;                case "TransitionPlanning":                    storeProcedure = MappedStoreProcedure.TransitionPlanning;                    break;                case "General":                    storeProcedure = MappedStoreProcedure.General;                    break;                case "SafetyRisk":                    storeProcedure = MappedStoreProcedure.SafetyRiskAssessment;                    break;                case "DepressionScreening":                    storeProcedure = MappedStoreProcedure.DepressionScreening;                    break;                case "SubstanceAbuseScreening":                    storeProcedure = MappedStoreProcedure.SubstanceAbuseScreening;                    break;                case "SafetyPlan":                    storeProcedure = MappedStoreProcedure.SafetyPlan;                    break;
+                case "PublishAssessment":                    storeProcedure = MappedStoreProcedure.PublishAssessment;                    break;
                 case "AllComprehensiveAssessmentDetails":
                     storeProcedure = MappedStoreProcedure.AllComprehensiveAssessmentDetails;
                     break;
@@ -473,10 +439,9 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_Employment":
                     storeProcedure = MappedStoreProcedure.CCO_Employment;
                     break;
-                case "AllCCO_ComprehensiveAssessmentDetails":
-                    storeProcedure = MappedStoreProcedure.AllCCO_ComprehensiveAssessmentDetails;
+                case "CCO_UnknownCount":
+                    storeProcedure = MappedStoreProcedure.CCO_UnknownCount;
                     break;
-
             }
             
             return storeProcedure;
