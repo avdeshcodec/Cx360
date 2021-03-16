@@ -44,9 +44,9 @@ namespace IncidentManagement.Service.Service
         {
             return await _ComprehensiveAssessmentRepository.UploadOfflinePDF(json, companyId);
         }
-        public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest,string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+            return await _ComprehensiveAssessmentRepository.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
         }
 
     }
