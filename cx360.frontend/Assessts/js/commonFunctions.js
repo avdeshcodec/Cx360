@@ -711,3 +711,14 @@ function validateEmail(control) {
 function collapseSection(section) {
     $('.' + section).click();
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+function getAge(dateString) {
+    debugger
+    let birth = new Date(dateString);
+    let now = new Date();
+    let beforeBirth = ((() => { birth.setDate(now.getDate()); birth.setMonth(now.getMonth()); return birth.getTime() })() < birth.getTime()) ? 0 : 1;
+    return now.getFullYear() - birth.getFullYear() - beforeBirth;
+}

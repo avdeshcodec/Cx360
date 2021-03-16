@@ -2,7 +2,7 @@
 var token = "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5";
 var reportedBy;
 var token,
-    DocumentVersionId,
+    DocumentVersionId;
   
 $(document).ready(function () {
     AuthUser();

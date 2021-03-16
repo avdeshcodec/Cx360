@@ -34,7 +34,7 @@
 
     <!--Scripts-->
     <script type="text/javascript">
-        _token = 'zNZNngvVO3r3AHk7ji2nNV0yAE0j0AByv+2R04MR4b/IzV9eXEMKs+vmfz7Yp2+torv1oGJmphFrOLgc/7d3pg==';
+        _token = '9ICLvzX3Pz5wN+D7bKBLFabXwJOC2MEzRglsKEOALr+3XG0fdRZat6RhGIb1zDn0lJpCf1zrZYlMmkdsQP9cDA==';
         _userId = 452;
     </script>
 </head>
@@ -71,8 +71,12 @@
                                                     onclick="SaveDraft('major');  return false;">Major Version</button></span>
                                         <span><button type="button" id="btnPublishVersion"
                                                 class="btn blueBtn hide-lifeplan-btn"
-                                                onclick="CreatePublishVersion(); return false;">Publish
+                                                onclick="CreatePublishVersion('Finalize'); return false;">Finalize
                                                 Version</button></span>
+                                                <span><button type="button" id="btnAcknowledgeAndAgreed"
+                                                    class="btn blueBtn hide-lifeplan-btn"
+                                                    onclick="ValidateApprovedAdndAgreedSection(); return false;">Acknowledged and Agreed
+                                                    </button></span>
                                         <span><button type="button" id="btnPrintPDf" class="btn blueBtn printDoc"
                                                 onclick="DownloadPDFLifePlan();"><i class="fa fa-file-text-o"
                                                     aria-hidden="true"></i> Print Pdf</button></span>
@@ -591,11 +595,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 col-sm-12">
+                            <div class="col-md-12 col-sm-12 meetingAttendance">
                                 <h2 >Member Attendance</h2>
                                 <div class="tableGrid">
                                     <div class="table-responsive">
-                                        <table class="table table-hover meetingAttendance tblIndex" id="tblMeetingAttendance">
+                                        <table class="table table-hover meetingHistory tblIndex" id="tblMeetingAttendance">
                                             <thead>
                                                 <tr>
                                                     <th>Contact Name</th>
@@ -886,8 +890,7 @@
                                                                                                 name="DropDownProviderAssignedGoal"
                                                                                                 onchange="showOtherDescription('outcomeSourceModal','DropDownProviderAssignedGoal','ProviderAssignedGoalClass');return false;"
                                                                                                 required>
-                                                                                                <option value="">
-                                                                                                    --Select--</option>
+                                                                                                <option value="">--Select--</option>
                                                                                                
                                                                                             </select>
                                                                                             <!--  <textarea type="text" class="form-control req_feild gen-control" id="TextBoxProviderAssignedGoal" name="TextBoxProviderAssignedGoal" required></textarea> -->
@@ -927,8 +930,7 @@
                                                                                                 id="DropDownType"
                                                                                                 name="DropDownType"
                                                                                                 required>
-                                                                                                <option value="">
-                                                                                                    --Select--</option>
+                                                                                                <option value="">--Select--</option>
                                                                                                 <option value="1">Goal
                                                                                                 </option>
                                                                                                 <option value="2">
@@ -1300,7 +1302,7 @@
                                                                                             Outcome</label>
                                                                                         <div class="form-group">
                                                                                             <select
-                                                                                                class="form-control  req_feild IndividualSafe-control"
+                                                                                                class="form-control select2 req_feild IndividualSafe-control"
                                                                                                 id="DropDownGoalValuedOutcome"
                                                                                                 name="DropDownGoalValuedOutcome"
                                                                                                 onchange="showOtherDescription('exampleModa3','DropDownGoalValuedOutcome','GoalValuedOutcome1Class');return false;"
@@ -1342,7 +1344,7 @@
                                                                                             Goal</label>
                                                                                         <div class="form-group">
                                                                                             <select
-                                                                                                class="form-control  req_feild IndividualSafe-control"
+                                                                                                class="form-control select2 req_feild IndividualSafe-control"
                                                                                                 id="DropDownProviderAssignedGoal"
                                                                                                 name="DropDownProviderAssignedGoal"
                                                                                                 onchange="showOtherDescription('exampleModa3','DropDownProviderAssignedGoal','ProviderAssignedGoal1Class');return false;"
@@ -1883,7 +1885,7 @@
                                                                                                 id="TextBoxQuantity"
                                                                                                 name="TextBoxQuantity"
                                                                                                 class="form-control gen-control IntegerOnly"
-                                                                                                />
+                                                                                                maxlength="5"/>
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-6 col-sm-12">
@@ -1912,7 +1914,7 @@
                                                                                                 id="TextBoxTotalUnits"
                                                                                                 name="TextBoxTotalUnits"
                                                                                                 class="form-control gen-control req_feild IntegerOnly"
-                                                                                                 />
+                                                                                                maxlength="5" />
                                                                                                 <span
                                                                                                 class="errorMessage hidden">This
                                                                                                 field is required<i
@@ -1992,7 +1994,7 @@
                                                                                         <!-- <table
                                                                                             class="table table-hover sectionTable tblIndex"
                                                                                             id="tblProvider"> -->
-                                                                                            <table id="tblProvider" class="display table table-hover sectionTable tblIndex" cellspacing="0" width="100%">
+                                                                                            <table id="tblProvider" class="table table-hover sectionTable tblIndex" cellspacing="0" width="100%">
                                                                                             <thead>
                                                                                                 <tr>
                                                                                                     <th>Provider</th>
@@ -2230,7 +2232,7 @@
                                                     <h2 class="mb-0 mt-0">
                                                         <button type="button" class="btn btn-link collapsed"
                                                             data-toggle="collapse" data-target="#collapseMember">
-                                                            Section 6 - Member Rights
+                                                            Member Rights
                                                             <span class="collapseArrow">
                                                                 <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -2327,7 +2329,7 @@
                                                         <button type="button" class="btn btn-link collapsed"
                                                             data-toggle="collapse"
                                                             data-target="#collapseRepresentative">
-                                                            Section 7 - Member/Representative Approval
+                                                            Member/Representative Approval
                                                             <span class="collapseArrow">
                                                                 <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -2397,7 +2399,7 @@
                                                                                             Date</label>
                                                                                         <div class="form-group">
                                                                                             <input type="text"
-                                                                                                class="form-control date LifePlan-control LifePlanEnable backgroundHide gen-control"
+                                                                                                class="form-control date  backgroundHide  setMaxZoomPading gen-control"
                                                                                                 id="TextBoxMemberApprovalDate"
                                                                                                 name="TextBoxMemberApprovalDate"
                                                                                                 onblur="FormatDateControl(this);"
@@ -2423,7 +2425,7 @@
                                                                                             Date</label>
                                                                                         <div class="form-group">
                                                                                             <input type="text"
-                                                                                                class="form-control date LifePlan-control LifePlanEnable backgroundHide gen-control"
+                                                                                                class="form-control date backgroundHide setMaxZoomPading gen-control"
                                                                                                 id="TextBoxRepresentativeApprovalDate"
                                                                                                 name="TextBoxRepresentativeApprovalDate"
                                                                                                 onblur="FormatDateControl(this);"
@@ -2449,7 +2451,7 @@
                                                                                             Date</label>
                                                                                         <div class="form-group">
                                                                                             <input type="text"
-                                                                                                class="form-control date LifePlan-control LifePlanEnable backgroundHide gen-control"
+                                                                                                class="form-control date  backgroundHide setMaxZoomPading gen-control"
                                                                                                 id="TextBoxCommitteeApprovalDate"
                                                                                                 name="TextBoxCommitteeApprovalDate"
                                                                                                 onblur="FormatDateControl(this);"
@@ -2527,7 +2529,7 @@
                                                     <h2 class="mb-0 mt-0">
                                                         <button type="button" class="btn btn-link collapsed"
                                                             data-toggle="collapse" data-target="#collapseNotifications">
-                                                            Section 8 - Acknowledgements and Agreements
+                                                            Section 6 - Acknowledgements and Agreements
                                                             <span class="collapseArrow">
                                                                 <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -2676,10 +2678,10 @@
                                                                                                 name="DropDownNotificationAckAgreeStatus">
                                                                                                 <option value="">
                                                                                                     --Select--</option>
-                                                                                                <option value="1">
+                                                                                                <option value="Acknowledged and Agreed">
                                                                                                     Acknowledged and
                                                                                                     Agreed</option>
-                                                                                                <option value="2">
+                                                                                                <option value="Requested">
                                                                                                     Requested</option>
                                                                                             </select>
                                                                                         </div>
@@ -2795,7 +2797,7 @@
                                                                                     <th>Supporting Document Received
                                                                                     </th>
                                                                                     <th>Actions</th>
-                                                                                    <th hidden></th>
+                                                                                    <th></th>
                                                                                     
                                                                                 </tr>
                                                                             </thead>
@@ -2817,7 +2819,7 @@
                                                     <h2 class="mb-0 mt-0">
                                                         <button type="button" class="btn btn-link collapsed"
                                                             data-toggle="collapse" data-target="#collapseThirteen">
-                                                            Section 9 - Documents
+                                                            Documents
                                                            <span class="collapseArrow">
                                                                 <i class="fa fa-caret-up" aria-hidden="true"></i>
                                                                 <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -2996,6 +2998,21 @@
                                                                             <tbody></tbody>
                                                                         </table>
                                                                     </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12 col-sm-12">
+                                                                <div class="form-group">
+                                                                    <ul class="hasListing1">
+                                                                        <li>
+                                                                            <label class="checkboxField">
+                                                                                Print this document with Life Plan print.
+                                                                                <input type="checkbox" name="CheckboxPrintDocument"
+                                                                                    class="form-control gen-control" />
+                                                                                <span class="checkmark cmdDesign"></span>
+                                                                            </label>
+                                                                        </li>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
 
