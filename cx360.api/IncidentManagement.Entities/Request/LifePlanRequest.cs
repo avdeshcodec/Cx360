@@ -37,7 +37,15 @@ namespace IncidentManagement.Entities.Request
         public string DateOfBirth { get; set; }
         public string AddressLifePlan { get; set; }
         public string AddressCCO { get; set; }
+        public JSONData[] JSONData { get; set; }
 
+    }
+    public class JSONData
+    {
+        public int? meetingAttendanceId { get; set; }
+        public string ContactName { get; set; }
+        public string RelationshipToMember { get; set; }
+        public string Method { get; set; }
     }
     public class SubmissionFormRequest : CommonRequestParameter
     {

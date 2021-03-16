@@ -21,6 +21,8 @@ namespace IncidentManagement.Entities.Response
             public int FundalNaturalCommunityResources { get; set; }
             public int SupportStrategieId { get; set; }
             public int IndividualPlanOfProtectionId { get; set; }
+            public int MemberRepresentativeApprovalId { get; set; }
+
             public int MeetingId { get; set; }
             public string JSONData { get; set; }
             public string DocumentStatus { get; set; }
@@ -36,6 +38,7 @@ namespace IncidentManagement.Entities.Response
             public string Documentname { get; set; }
             public string DocumentFileName { get; set; }
             public string Status { get; set; }
+          
         }
 
 
@@ -71,6 +74,20 @@ namespace IncidentManagement.Entities.Response
             public int DocumentVersionId { get; set; }
             public bool? LatestVersion { get; set; }
             public string Status { get; set; }
+            public string CareManagerFirstName { get; set; }
+            public string CareManagerLastName { get; set; }
+            public string IncludeMedications { get; set; }
+            public string IncludeAllergies { get; set; }
+            public string IncludeDiagnosis { get; set; }
+            public string IncludeDurableMediEquipment { get; set; }
+
+            public string MinorVersionStatus { get; set; }
+            public string MajorVersionStatus { get; set; }
+            public decimal? MinorVersion { get; set; }
+            public decimal? MajorVersion { get; set; }
+            public int? LifePlanType { get; set; }
+            public decimal? CurrentMinorValue { get; set; }
+            public decimal? CurrentMajorValue { get; set; }
         }
 
 
@@ -91,17 +108,24 @@ namespace IncidentManagement.Entities.Response
     {
         public int MeetingId { get; set; }
         public int LifePlanId { get; set; }
-        public DateTime? PlanerReviewDate { get; set; }
+        //public DateTime? PlanerReviewDate { get; set; }
+        //public string MeetingReason { get; set; }
+        //public string MemberAttendance { get; set; }
+        //public int? MyProperty { get; set; }
+        //public int? TypeOfMeeting { get; set; }
+        //public string TypeOfMeetingText { get; set; }
+        //public string InformationDiscussed { get; set; }
+        //public string InformationPresented { get; set; }
+        public DateTime? EventDate { get; set; }
         public string MeetingReason { get; set; }
-        public string MemberAttendance { get; set; }
-        public int? MyProperty { get; set; }
-        public int? TypeOfMeeting { get; set; }
-        public string TypeOfMeetingText { get; set; }
-        public string InformationDiscussed { get; set; }
-        public string InformationPresented { get; set; }
+        public string NoteTypeText { get; set; }
+        public int? NoteType { get; set; }
+        public string Subject { get; set; }
         public char Active { get; set; }
 
         public string Actions { get; set; }
+
+
 
 
     }
@@ -128,6 +152,12 @@ namespace IncidentManagement.Entities.Response
         public char Active { get; set; }
 
         public string Actions { get; set; }
+        // added new fields
+        // public int GoalValuedOutcome { get; set; }
+        // public int ProviderAssignedGoal { get; set; }
+        public string OtherGoal { get; set; }
+        public string OtherProviderAssignedGoal { get; set; }
+        public int Type { get; set; }
 
     }
 
@@ -140,9 +170,12 @@ namespace IncidentManagement.Entities.Response
         public int AssessmentNarrativeSummaryId { get; set; }
         public int LifePlanId { get; set; }
         public string MyHome { get; set; }
-        public string MyWork { get; set; }
+        public string TellYouAboutMyDay { get; set; }
         public string MyHealthAndMedication { get; set; }
         public string MyRelationships { get; set; }
+        public string IntroducingMe { get; set; }
+        public string MyHappiness { get; set; }
+        public string MySchool { get; set; }
         public char Active { get; set; }
     }
     public class OutcomesSupportStrategiesResponse : BaseResponse
@@ -175,6 +208,14 @@ namespace IncidentManagement.Entities.Response
         public char Active { get; set; }
 
         public string Actions { get; set; }
+
+        // added new fields
+        //public int CcoGoal { get; set; }
+        //public int ProviderAssignedGoal { get; set; }
+        public string ProviderOtherCCOGoal { get; set; }
+        public string ProviderOtherProviderAssignedGoal { get; set; }
+        public int Type { get; set; }
+        public DateTime? ClientDateOfBirth { get; set; }
 
     }
     public class LifePlanExportedRecordsResponse : BaseResponse    {        public List<SuggestedOutcomesSupportStrategiesTab> suggestedOutcomesSupportStrategiesTab { get; set; }        public List<MeetingHistorySummaryTab> MeetingHistorySummaryTab { get; set; }        public int PageIndex { get; set; }        public int PageSize { get; set; }        public int RecordCount { get; set; }    }
@@ -210,19 +251,27 @@ namespace IncidentManagement.Entities.Response
     {
         public int MedicaidStatePlanAuthorizedServiesId { get; set; }
         public int LifePlanId { get; set; }
-        public string Code { get; set; }
-        public string Description { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string FacilityCode { get; set; }
-        public string FacilityName { get; set; }
+        public string AuthorizedService { get; set; }
+        public string SpecialInstructions { get; set; }
+        //public string FirstName { get; set; }
+        //public string LastName { get; set; }
+        //public string FacilityCode { get; set; }
+        public string Provider { get; set; }
         public DateTime EffectiveFrom { get; set; }
         public DateTime EffectiveTo { get; set; }
-        public int Unit { get; set; }
+        public int UnitOfMeasure { get; set; }
         public string Comments { get; set; }
         public char Active { get; set; }
         public string CombinedDate { get; set; }
         public string Actions { get; set; }
+        public string AgencyOrginizationName { get; set; }
+        public string Location { get; set; }
+        public string AuthorizationStatus { get; set; }
+        public string Quantity { get; set; }
+        public DateTime? InitialEffectiveDateOfService { get; set; }
+        public string Per { get; set; }
+        public string TotalUnits { get; set; }
+        public int? ProviderId { get; set; }
 
     }
     public class FundalNaturalCommunityResourcesResponse : BaseResponse
@@ -256,5 +305,41 @@ namespace IncidentManagement.Entities.Response
         public string FileName { get; set; }
 
         public string DownloadFile { get; set; }
+    }
+    public class MemberRepresentativeResponse : BaseResponse
+    {
+        public List<MemberRepresentativeTab> MemberRepresentativeTab { get; set; }
+    }
+
+    public class MemberRepresentativeTab
+    {
+        public int MemberRepresentativeApprovalId { get; set; }
+        public int? DocumentVersionId { get; set; }
+        public int? LifePlanId { get; set; }
+        public string MemberName { get; set; }
+        public DateTime? MemberApprovalDate { get; set; }
+        public int? Representative { get; set; }
+        public DateTime? RepresentativeApprovalDate { get; set; }
+        public string CommitteeApprover { get; set; }
+        public DateTime? CommitteeApprovalDate { get; set; }
+        public string Comments { get; set; }
+        public string Actions { get; set; }
+
+    }
+
+    public class MemberRightResponse : BaseResponse
+    {
+        public List<MemberRightTab> MemberRightTab { get; set; }
+    }
+
+    public class MemberRightTab
+    {
+        public int MemberRightID { get; set; }
+        public int? DocumentVersionId { get; set; }
+        public int? LifePlanId { get; set; }
+        public char? RightsUnderAmericansDisabilitiesAct { get; set; }
+        public char? ReasonableAccommodations { get; set; }
+        public char? GrievanceAppeal { get; set; }
+        public string Actions { get; set; }
     }
 }

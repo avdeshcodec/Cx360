@@ -30,7 +30,7 @@ namespace IncidentManagement.API.Controllers
         private ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         CommonFunctions common = null;
         private readonly DocumentUpload _documentUpload;
-        private string companyId = null;
+        private string companyId = string.Empty;
 
         #endregion
 
@@ -298,7 +298,11 @@ namespace IncidentManagement.API.Controllers
                 cadResponse = new ComprehensiveAssessmentDetailResponse();
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
-                    ccoResponse = await _ComprehensiveAssessmentService.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+                    if (Request.Headers.Contains("Source"))
+                    {
+                        companyId = Request.Headers.GetValues("Source").First();
+                    }
+                    ccoResponse = await _ComprehensiveAssessmentService.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
                 }
 

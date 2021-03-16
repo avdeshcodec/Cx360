@@ -138,5 +138,12 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_Employment = "usp_InsertModifyCCO_Employment";
         public static readonly string CCO_UnknownCount = "usp_UpdateCountUnknown";
 
+        //Life Plan
+        public static readonly string InsertMemberRepresentative = "usp_InsertMemberRepresentative";
+        public static readonly string GetMemberRepresentative = "usp_GetMemberRepresentative";
+        public static readonly string InsertMemberRight = "usp_InsertMemberRight";
+        public static readonly string GetMemberRight = "usp_GetMemberRight";
+
+
     }
 }

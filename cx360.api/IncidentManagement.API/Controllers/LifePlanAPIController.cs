@@ -38,6 +38,8 @@ namespace IncidentManagement.API.Controllers
         LifePlanExportedRecordsResponse lifePlanExportedRecordsResponse = null;
         CommonFunctions common = null;
         LifePlanPDFResponse lifePlanPDFResponse = null;
+        MemberRepresentativeResponse MemberRepresentativeResponse = null;
+        MemberRightResponse MemberRightResponse = null;
         #endregion
 
 
@@ -591,6 +593,75 @@ namespace IncidentManagement.API.Controllers
                 lpdResponse.Message = Ex.Message;
                 httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, lpdResponse);
                 CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+        /// <summary>
+        /// handle HandleMemberRepresentative details 
+        /// </summary>
+        /// <remarks>This API returns the HandleMemberRepresentative.</remarks>
+        /// <param name="lifePlanDetailRequest"> Model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("HandleMemberRepresentative")]
+        [ActionName("HandleMemberRepresentative")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> HandleMemberRepresentative(LifePlanDetailRequest lifePlanDetailRequest)
+        {
+            try
+            {
+                httpResponseMessage = new HttpResponseMessage();
+                MemberRepresentativeResponse = new MemberRepresentativeResponse();
+                if (ModelState.IsValid && lifePlanDetailRequest != null)
+                {
+                    MemberRepresentativeResponse = await _LifePlanService.HandleMemberRepresentative(lifePlanDetailRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, MemberRepresentativeResponse);
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                MemberRepresentativeResponse.Success = false;
+                MemberRepresentativeResponse.IsException = true;
+                MemberRepresentativeResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, MemberRepresentativeResponse);
+                CommonFunctions.LogError(Ex);
+
+            }
+            return httpResponseMessage;
+        }
+
+        /// <summary>
+        /// handle HandleMemberRight details 
+        /// </summary>
+        /// <remarks>This API returns the HandleMemberRight.</remarks>
+        /// <param name="lifePlanDetailRequest"> Model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("HandleMemberRight")]
+        [ActionName("HandleMemberRight")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> HandleMemberRight(LifePlanDetailRequest lifePlanDetailRequest)
+        {
+            try
+            {
+                httpResponseMessage = new HttpResponseMessage();
+                MemberRightResponse = new MemberRightResponse();
+                if (ModelState.IsValid && lifePlanDetailRequest != null)
+                {
+                    MemberRightResponse = await _LifePlanService.HandleMemberRight(lifePlanDetailRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, MemberRightResponse);
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                MemberRightResponse.Success = false;
+                MemberRightResponse.IsException = true;
+                MemberRightResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, MemberRightResponse);
+                CommonFunctions.LogError(Ex);
+
             }
             return httpResponseMessage;
         }

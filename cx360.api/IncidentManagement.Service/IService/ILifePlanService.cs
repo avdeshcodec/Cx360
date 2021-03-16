@@ -36,8 +36,10 @@ namespace IncidentManagement.Service.IService
         Task<LifePlanDetailTabResponse> GetChildAuditRecords(LifePlanDetailRequest lpdRequest);
         Task<LifePlanExportedRecordsResponse> LifePlanEXportedRecords(LifePlanDetailRequest lpdRequest);
         Task<LifePlanDetailTabResponse> InsertModifysubmissionForm(SubmissionFormRequest submissionFormRequest);
+        Task<MemberRepresentativeResponse> HandleMemberRepresentative(LifePlanDetailRequest lpdRequest);
+        Task<MemberRightResponse> HandleMemberRight(LifePlanDetailRequest lpdRequest);
 
-        
+
         #endregion
     }
 }

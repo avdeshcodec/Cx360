@@ -37,6 +37,8 @@ namespace IncidentManagement.Repository.IRepository
         Task<LifePlanExportedRecordsResponse> LifePlanEXportedRecords(LifePlanDetailRequest lpdRequest);
 
         Task<LifePlanDetailTabResponse> InsertModifysubmissionForm(SubmissionFormRequest submissionFormRequest);
+        Task<MemberRepresentativeResponse> HandleMemberRepresentative(LifePlanDetailRequest lifePlanDetailRequest);
+        Task<MemberRightResponse> HandleMemberRight(LifePlanDetailRequest lpdRequest);
 
         #endregion
     }

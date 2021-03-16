@@ -19,6 +19,8 @@ namespace IncidentManagement.Entities.Request
     public class CommonRequestParameter 
     {
         public int? ReportedBy { get; set; }
+        public string Mode { get; set; }
+
 
     }
 
