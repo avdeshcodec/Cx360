@@ -2075,3 +2075,10 @@ margin-bottom: 10px;
     color: #ff0000;
     text-transform: capitalize;
 }
+#tblProvider tbody tr.selected:before,#tblProvider tbody tr.selected:after,#tblMeetingHistory tbody tr.selected:before,#tblMeetingHistory tbody tr.selected:after{
+    display:none;
+}
+
+#tblMeetingHistory.table-hover tbody tr.selected:hover,#tblProvider.table-hover tbody tr.selected:hover{
+    background-color: #B0BED9 !important;
+}

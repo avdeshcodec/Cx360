@@ -1,5 +1,6 @@
 ﻿var token, reportedBy = "", ccoResult, LifePlanId, zipCode, QueryStringLifeplanId, clientId, blankLifePlanId, emptyLifePlan = false,
     approvalStatus, age;
+
 $(document).ready(function () {
     console.log(_token);
     $(window).resize(function () {
@@ -21,45 +22,12 @@ $(document).ready(function () {
     $("#btnModelFundalNaturalCommunity").hide();
     $("#btnModelNotifications").hide();
     $('.addModal-3').click(function () {
-            $('.collapse').removeClass('show');
+        $('.collapse').removeClass('show');
     });
     bindDropdownFromJson();
    
-    // $('.section3 .addModal-3').click(function () {
-    //         $('.collapse').removeClass('show');
-    //     }
-
-    // });
-    // $('#tblDocument tbody').on( 'click', 'tr', function () {
-    //     $(this).toggleClass('selected');
-    // } );
     EpinSignatureValidation();
-    // $('.section4 .addModal-3').click(function () {
-    //     if ($('html').hasClass('collapse')) {
-    //         $('#collapseNine,#collapseTen,#collapseSS,#collapsetwelve').removeClass('show');
-    //     } else {
-    //         $('.collapse').removeClass('show');
-    //     }
-    // });
 
-    // $('.section9 .addModal-3').click(function () {
-    //         $('.collapse').removeClass('show');
-    // });
-
-    // $('.section5 .addModal-3').click(function () {
-    //     if ($('html').hasClass('collapse')) {
-    //         $('#collapseNine,#collapseTen,#collapseEleven,#collapsetwelve').removeClass('show');
-    //     } else {
-    //         $('.collapse').removeClass('show');
-    //     }
-    // });
-    // $('.section6 .addModal-3').click(function () {
-    //     if ($('html').hasClass('collapse')) {
-    //         $('#collapseNine,#collapseTen,#collapseEleven,#collapseSS').removeClass('show');
-    //     } else {
-    //         $('.collapse').removeClass('show');
-    //     }
-    // });
     $("input[name='select_all']").click(function () {
 
         if ($("input[name='select_all']:checked").length > 0) {
@@ -109,7 +77,7 @@ $(document).ready(function () {
         clearsubmitReviewModal();
     });
 
-    
+    $(".meetingAttendance").hide();
 
     $('#TextBoxFundalResourcesZip').on("change", function () {
         if ($(this).val() != "") {
@@ -203,7 +171,9 @@ $(document).ready(function () {
            closeModalProvider();
 
         } );
-
+      
+   BindChildTableOFMeetingHistory();
+       
 });
 function ManageExistingLifePlan(QueryStringLifeplanId, DocumentVersionId) {
 
@@ -255,7 +225,7 @@ function BindLifePlanDropdowns() {
     BindUserDefinedCodes("#DropDownTypeOfMeeting", "NoteType");
 
     BindUserDefinedCodes("#DropDownNotificationReason", "UDO_DocumentTracker_NotificationReason");
-    BindUserDefinedCodes("#DropDownNotificationAccptAckwStatus", "UDO_DocumentTracker_FollowUPAction");
+   // BindUserDefinedCodes("#DropDownNotificationAccptAckwStatus", "UDO_DocumentTracker_FollowUPAction");
     BindUserDefinedCodes("#DropDownReviewStatus", "ISPStatus");
     BindUserDefinedCodes("#DropDownNotificationType", "ContactMethod");
     BindUserDefinedCodes("#DropDownSubmitStatus", "SubmissionStatus");
@@ -415,7 +385,7 @@ function FillLifePlanPage(response) {
         GetFundalNaturalCommunityResourcesTabDetails();
         GetLifePlanTabDetails();
 
-        ShowHideButtons(response.LifPlanDetailsData[0].DocumentStatus, response.LifPlanDetailsData[0].LatestVersion, response.LifPlanDetailsData[0].Status, $('#MinorVersionStatus').val(),$('#MajorVersionStatus').val());
+        ShowHideButtons(response.LifPlanDetailsData[0].DocumentStatus, response.LifPlanDetailsData[0].LatestVersion, response.LifPlanDetailsData[0].Status, $('#MinorVersionStatus').val(),$('#MajorVersionStatus').val(),response.LifPlanDetailsData[0].CurrentMinorValue,response.LifPlanDetailsData[0].CurrentMajorValue);
 
         GetSuggestedOutcomesStrategiesTabDetails(clientId);
         GetDefaultMeetingHistoryDetails(clientId);
@@ -437,13 +407,14 @@ function FillLifePlanPage(response) {
 }
 
 //#region Permissions methods
-function ShowHideButtons(status, version, submitStatus,minorStatus,majorStatus) {
-    if (status == "Published"&& version == true) {
-        // $("#btnSaveAsMinor").removeClass("hidden");
-        // $("#btnSaveAsMajor").removeClass("hidden");
+function ShowHideButtons(status, version, submitStatus,maxMinorVersionStatus,maxMajorVersionStatus,currentMinorValue,currentMajorValue) {
+    debugger;
+    if (status == "Finalized" && version == true) {
         $("#btnSaveAsNew").removeClass("hidden");
+       // $("#btnSaveAsMajor").removeClass("hidden");
         $("#btnPrintPDf").show();
         $("#btnPublishVersion").addClass("hidden");
+        $("#btnAcknowledgeAndAgreed").removeClass("hidden");
         $(".addModal-2").addClass('hidden');
         $(".addModal-3").addClass('hidden');
 
@@ -453,119 +424,96 @@ function ShowHideButtons(status, version, submitStatus,minorStatus,majorStatus) 
         $("#btnModelNotifications").show();
         $("#btnSubmitApproval").hide();
         $("#btnReviewApproval").hide();
-        $(".section6 .greencolor").prop("disabled", false);
-        $(".section6 .redcolor").prop("disabled", false);
+        $(".section8 .greencolor").prop("disabled", false);
+        $(".section8 .redcolor").prop("disabled", false);
         setTimeout(function () {
             $(".greencolor").prop("disabled", true);
             $(".redcolor").prop("disabled", true);
-            $(".section6 .greencolor").prop("disabled", false);
-            $(".section6 .redcolor").prop("disabled", false);
+            $(".section8 .greencolor").prop("disabled", false);
+            $(".section8 .redcolor").prop("disabled", false);
         }, 2000);
+        $(".form-control").prop("disabled", true);
+        $(".section8 .form-control").prop("disabled", false);
     }
-    else if (minorStatus == "Published"  && majorStatus=="Draft") {
-        // $("#btnSaveAsMinor").removeClass("hidden");
-        // $("#btnSaveAsMajor").removeClass("hidden");
+    else if (status == "Acknowledged and Agreed" && version == true) {
         $("#btnSaveAsNew").removeClass("hidden");
+       // $("#btnSaveAsMajor").removeClass("hidden");
         $("#btnPrintPDf").show();
         $("#btnPublishVersion").addClass("hidden");
+        $("#btnAcknowledgeAndAgreed").addClass("hidden");
         $(".addModal-2").addClass('hidden');
         $(".addModal-3").addClass('hidden');
 
 
         $(".editRecord").hide();
 
-        $("#btnModelNotifications").show();
+        $("#btnModelNotifications").hide();
         $("#btnSubmitApproval").hide();
         $("#btnReviewApproval").hide();
-        $(".section6 .greencolor").prop("disabled", false);
-        $(".section6 .redcolor").prop("disabled", false);
+        $(".section8 .greencolor").prop("disabled", false);
+        $(".section8 .redcolor").prop("disabled", false);
         setTimeout(function () {
             $(".greencolor").prop("disabled", true);
             $(".redcolor").prop("disabled", true);
-            $(".section6 .greencolor").prop("disabled", false);
-            $(".section6 .redcolor").prop("disabled", false);
+            $(".section8 .greencolor").prop("disabled", false);
+            $(".section8 .redcolor").prop("disabled", false);
         }, 2000);
     }
-    else if (minorStatus == "Published"  && majorStatus=="Published" && version==true) {
-        // $("#btnSaveAsMinor").removeClass("hidden");
-        // $("#btnSaveAsMajor").removeClass("hidden");
-        $("#btnSaveAsNew").removeClass("hidden");
+    else if (status == "Finalized" && version == false) {
+        $("#btnSaveAsNew,  #btnPublishVersion").addClass("hidden");
+        //$("#btnSaveAsMajor").addClass("hidden");
+        $("#btnAcknowledgeAndAgreed").addClass("hidden");
         $("#btnPrintPDf").show();
-        $("#btnPublishVersion").addClass("hidden");
         $(".addModal-2").addClass('hidden');
         $(".addModal-3").addClass('hidden');
-
-
         $(".editRecord").hide();
 
         $("#btnModelNotifications").show();
         $("#btnSubmitApproval").hide();
         $("#btnReviewApproval").hide();
-        $(".section6 .greencolor").prop("disabled", false);
-        $(".section6 .redcolor").prop("disabled", false);
         setTimeout(function () {
             $(".greencolor").prop("disabled", true);
             $(".redcolor").prop("disabled", true);
-            $(".section6 .greencolor").prop("disabled", false);
-            $(".section6 .redcolor").prop("disabled", false);
+            $(".section8 .greencolor").prop("disabled", false);
+            $(".section8 .redcolor").prop("disabled", false);
         }, 2000);
+        $(".form-control").prop("disabled", true);
     }
-    // else if (status == "Published" && version == false) {
-    //     // $("#btnSaveAsMinor,  #btnPublishVersion").addClass("hidden");
-    //     // $("#btnSaveAsMajor").addClass("hidden");
-    //     $("#btnPublishVersion").addClass("hidden");
-    //     $("#btnSaveAsNew").addClass("hidden");
-    //     $("#btnPrintPDf").show();
-    //     $(".addModal-2").addClass('hidden');
-    //     $(".addModal-3").addClass('hidden');
-    //     $(".editRecord").hide();
+    else if (status == "Acknowledged and Agreed" && version == false) {
+        $("#btnSaveAsNew,  #btnPublishVersion").addClass("hidden");
+        //$("#btnSaveAsMajor").addClass("hidden");
+        $("#btnAcknowledgeAndAgreed").addClass("hidden");
+        $("#btnPrintPDf").show();
+        $(".addModal-2").addClass('hidden');
+        $(".addModal-3").addClass('hidden');
+        $(".editRecord").hide();
 
-    //     $("#btnModelNotifications").show();
-    //     $("#btnSubmitApproval").hide();
-    //     $("#btnReviewApproval").hide();
-    //     setTimeout(function () {
-    //         $(".greencolor").prop("disabled", true);
-    //         $(".redcolor").prop("disabled", true);
-    //         $(".section6 .greencolor").prop("disabled", false);
-    //         $(".section6 .redcolor").prop("disabled", false);
-    //     }, 2000);
+        $("#btnModelNotifications").hide();
+        $("#btnSubmitApproval").hide();
+        $("#btnReviewApproval").hide();
+        setTimeout(function () {
+            $(".greencolor").prop("disabled", true);
+            $(".redcolor").prop("disabled", true);
+            $(".section8 .greencolor").prop("disabled", false);
+            $(".section8 .redcolor").prop("disabled", false);
+        }, 2000);
+        $(".form-control").prop("disabled", true);
+    }
 
 
-    // }
-    else if ((minorStatus == "Published" || majorStatus=="Published"||majorStatus=="Draft" ||minorStatus=="Draft") && version == false) {
-        // $("#btnSaveAsMinor,  #btnPublishVersion").addClass("hidden");
-        // $("#btnSaveAsMajor").addClass("hidden");
-        $("#btnPublishVersion").addClass("hidden");
+    else if (status == "Draft") {
         $("#btnSaveAsNew").addClass("hidden");
+        $("#btnSaveAsMajor").addClass("hidden");
         $("#btnPrintPDf").show();
-        $(".addModal-2").addClass('hidden');
-        $(".addModal-3").addClass('hidden');
-        $(".editRecord").hide();
-
-        $("#btnModelNotifications").show();
-        $("#btnSubmitApproval").hide();
-        $("#btnReviewApproval").hide();
-        setTimeout(function () {
-            $(".greencolor").prop("disabled", true);
-            $(".redcolor").prop("disabled", true);
-            $(".section6 .greencolor").prop("disabled", false);
-            $(".section6 .redcolor").prop("disabled", false);
-        }, 2000);
-
+        $("#btnPublishVersion").removeClass("hidden");
+        $("#btnAcknowledgeAndAgreed").addClass("hidden");
+        $(".editRecord").text("Edit");
+        $(".editRecord").show();
+        $(".addModal-2").show();
+        $(".addModal-3").show();
         
-    }
-    else if (minorStatus == "Draft" && version==true) {
-        // $("#btnSaveAsMinor").addClass("hidden");
-         $("#btnSaveAsMajor").addClass("hidden");
-        $("#btnSaveAsNew").addClass("hidden");
-        $("#btnPrintPDf").show();
-        $("#btnPublishVersion").removeClass("hidden");
-        $(".editRecord").text("Edit");
-        $(".editRecord").show();
-        $(".addModal-2").show();
-        $(".addModal-3").show();
-
         $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').prop("disabled", true);
+        $('#imuLifePlan .LifePlanEnable').prop("disabled", true); 
         $('#lfuMember .memberEnable').prop("disabled", true);
         $("#btnSubmitApproval").show();
         ShowHideSubmitReviewButton(submitStatus);
@@ -574,93 +522,7 @@ function ShowHideButtons(status, version, submitStatus,minorStatus,majorStatus) 
             $(".redcolor").prop("disabled", false);
         }, 2000);
     }
-    else if (majorStatus == "Draft" && version==true) {
-        // $("#btnSaveAsMinor").addClass("hidden");
-         $("#btnSaveAsMajor").addClass("hidden");
-        $("#btnSaveAsNew").addClass("hidden");
-        $("#btnPrintPDf").show();
-        $("#btnPublishVersion").removeClass("hidden");
-        $(".editRecord").text("Edit");
-        $(".editRecord").show();
-        $(".addModal-2").show();
-        $(".addModal-3").show();
-
-        $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').prop("disabled", true);
-        $('#lfuMember .memberEnable').prop("disabled", true);
-        $("#btnSubmitApproval").show();
-        ShowHideSubmitReviewButton(submitStatus);
-        setTimeout(function () {
-            $(".greencolor").prop("disabled", false);
-            $(".redcolor").prop("disabled", false);
-        }, 2000);
-    }
-
-    // else if (status == "Draft" && minorStatus == "Draft"  && majorStatus == "Draft" ) {
-    //     // $("#btnSaveAsMinor").addClass("hidden");
-    //      $("#btnSaveAsMajor").addClass("hidden");
-    //     $("#btnSaveAsNew").addClass("hidden");
-    //     $("#btnPrintPDf").show();
-    //     $("#btnPublishVersion").removeClass("hidden");
-    //     $(".editRecord").text("Edit");
-    //     $(".editRecord").show();
-    //     $(".addModal-2").show();
-    //     $(".addModal-3").show();
-
-    //     $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').prop("disabled", true);
-    //     $('#lfuMember .memberEnable').prop("disabled", true);
-    //     $("#btnSubmitApproval").show();
-    //     ShowHideSubmitReviewButton(submitStatus);
-    //     setTimeout(function () {
-    //         $(".greencolor").prop("disabled", false);
-    //         $(".redcolor").prop("disabled", false);
-    //     }, 2000);
-    // }
 }
-function ViewPermissionLifePlan() {
-    $('#imuLifePlan .LifePlan-control').attr("disabled", true);
-    $(".editRecord").hide();
-    $(".printDoc").hide();
-    $(".addModal-2").addClass('hidden');
-    $(".addModal-3").addClass('hidden');
-    $(".greenColor").attr("disabled", true);
-    $(".redColor").attr("disabled", true);
-    $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').attr("disabled", true);
-    $('#lfuMember .memberEnable').prop("disabled", true);
-}
-function EditViewPermissionLifePlan() {
-    $('#imuLifePlan .LifePlan-control').attr("disabled", true);
-    $(".editRecord").text("Edit");
-    $(".printDoc").hide();
-    $(".addModal-2").removeClass('hidden');
-    $(".addModal-3").removeClass('hidden');
-    $(".greenColor").attr("disabled", false);
-    $(".redColor").attr("disabled", false);
-    $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').attr("disabled", true);
-    $('#lfuMember .memberEnable').prop("disabled", true);
-}
-function ViewPdfPermissionLifePlan() {
-    $('#imuLifePlan .LifePlan-control').attr("disabled", true);
-    $(".editRecord").hide();
-    $(".printDoc").show();
-    $(".addModal-2").addClass('hidden');
-    $(".addModal-3").addClass('hidden');
-    $(".greenColor").attr("disabled", true);
-    $(".redColor").attr("disabled", true);
-    $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').attr("disabled", true);
-    $('#lfuMember .memberEnable').prop("disabled", true);
-}
-function AllPermissionLifePlan() {
-    $('#imuLifePlan .LifePlan-control').attr("disabled", true);
-    $(".editRecord").text("Edit");
-    $(".printDoc").show;
-    $(".addModal-2").removeClass('hidden');
-    $(".addModal-3").removeClass('hidden');
-    $(".greenColor").attr("disabled", false);
-    $(".redColor").attr("disabled", false);
-    $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').attr("disabled", true);
-    $('#lfuMember .memberEnable').prop("disabled", true);
-}
-//#endregion
 
 
 function InitalizeDateControls() {
@@ -678,12 +540,13 @@ function InitilaizeSectionDataTables() {
     var table1 = $('#tblHCBSWaiver').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], pageLength: 0, searching: true, paging: true, info: true });
     var table = $('#tblFundalNaturalCommunityResources').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], pageLength: 0, searching: true, paging: true, info: true });
     var table5 = $('#tblLifeplanNotifications').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], searching: true, paging: true, info: true });
+    
     var tableMemberRepresentative = $('#tblMemberRepresentativeApproval').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], pageLength: 0, searching: true, paging: true, info: true });
     var table = $('#tblMember').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], pageLength: 0, searching: true, paging: true, info: true });
     var tableDocument = $('#tblDocument').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], pageLength: 0, searching: true, paging: true, info: true , "columnDefs": [
         { "width": "10%", "targets": 0,"targets": 1 }
       ]});
-    var tableMemberAttendance= $('#tblMeetingAttendance').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], searching: true, paging: true, info: true });
+    //var tableMemberAttendance= $('#tblMeetingAttendance').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], searching: true, paging: true, info: true });
    //var tableProvider= $('#tblProvider').DataTable({ "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]], searching: true, paging: true, info: true });
    
     jQuery('.dataTable').wrap('<div class="dataTables_scroll" />');
@@ -707,6 +570,7 @@ function BindDropDowns() {
 
 //#region Lifeplan
 function BindDropDownIndividualName(result) {
+    debugger;
     $.each(result, function (data, value) {
         $("#DropDownClientId").append($("<option></option>").val(value.ClientID).html(value.LastName + "," + " " + value.FirstName));
 
@@ -730,7 +594,7 @@ function BindDropDownIndividualName(result) {
         var DBO = (res[0].BirthDate);
         if (DBO != null) {
             DBO = DBO.slice(0, 10).split('-');
-            DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
+           // DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
         }
 
 
@@ -770,6 +634,7 @@ function BindDropDownIndividualName(result) {
 
 }
 function FillClientDetails(object) {
+
     var selectedValue = $(object).val();
     var jsonObject = $("#DropDownClientId").attr("josn");
     var parse = jQuery.parseJSON(jsonObject);
@@ -780,7 +645,7 @@ function FillClientDetails(object) {
     if (DBO != null) {
 
         DBO = DBO.slice(0, 10).split('-');
-        DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
+     //   DBO = DBO[1] + '/' + DBO[2] + '/' + DBO[0];
     }
     var EnrollmentDate = (res[0]["Enrollment Date"]);
     if (EnrollmentDate != null) {
@@ -1281,6 +1146,7 @@ function DeleteMeetingHistoryRecords(id) {
 //#region IndividualSafety
 function InsertModifyIndividualSafe() {
     if (!validateIndividualSafeTab()) return;
+    if(!validateDropDown('section3'))return;
     var json = [],
         item = {},
         tag;
@@ -1508,8 +1374,8 @@ function DeleteIndividualSafeRecords(id) {
     });
 }
 function clearIndividualSavetext() {
-    $(".section3 #TextBoxGoalValuedOutcome").val(null).trigger('change');
-    $(".section3 #TextBoxProviderAssignedGoal").val(null).trigger('change');
+    $(".section3 #DropDownGoalValuedOutcome").val("").trigger('change');
+    $(".section3 #DropDownProviderAssignedGoal").val("").trigger('change');
     $(".section3 #IndividualProviderLocation").val(null).trigger('change');
     $(".section3 #DropDownServicesTypeIPOP").val(null).trigger('change');
     $(".section3 #DropDownFrequencyIPOP").val(null).trigger('change');
@@ -1723,10 +1589,18 @@ debugger;
             url: GetAPIEndPoints("HANDLEOUTCOMESSTRATEGIES"),
             headers: { 'Token': "6C194C7A-A3D0-4090-9B62-9EBAAA3848C5" },
             success: function (result) {
-
-
+                if( result.OutcomesSupportStrategiesTab !=null){
+                    for(i=0; i <result.OutcomesSupportStrategiesTab.length;i++) {
+                        if(result.OutcomesSupportStrategiesTab[i].CqlPomsGoal.includes('People')==true && getAge(result.OutcomesSupportStrategiesTab[0].ClientDateOfBirth) <18){
+                          var newValue=  result.OutcomesSupportStrategiesTab[i].CqlPomsGoal.replace('People','Children and their families');
+                          result.OutcomesSupportStrategiesTab[i].CqlPomsGoal=newValue;
+                        }
+                      }    
+                }
+               
                 if (result.Success == true) {
                     var jsonStringyfy = JSON.stringify(result.OutcomesSupportStrategiesTab) == "null" ? "{}" : JSON.stringify(result.OutcomesSupportStrategiesTab);
+                    
                     $('#tblOutcomesSupportStrategies').DataTable({
                         "stateSave": true,
                         "bDestroy": true,
@@ -1867,6 +1741,7 @@ function InsertModifyOutcomesStrategiesExported() {
 }
 function InsertModifyOutcomesStrategiesTab() {
     if (!validateOutcomesStrategies()) return;
+    if(!validateDropDown('section2'))return;
     var json = [],
         item = {},
         tag;
@@ -2079,7 +1954,7 @@ function EditHCBSWaiver(e, id) {
             if (result.Success == true) {
                 if (result.HCBSWaiverTab.length > 0) {
                     InitalizeDateControls();
-                    $(".section4 #DropDownAuthorizedService").select2('val', [result.HCBSWaiverTab[0].AuthorizedService]);
+                    $(".section4 #DrozpDownAuthorizedService").select2('val', [result.HCBSWaiverTab[0].AuthorizedService]);
                     $(".section4 #TextBoxUnitOfMeasure").val(result.HCBSWaiverTab[0].UnitOfMeasure);
                     // $(".section4 #TextBoxFirstName").val(result.HCBSWaiverTab[0].FirstName);
                     // $(".section4 #TextBoxLastName").val(result.HCBSWaiverTab[0].LastName);
@@ -2504,15 +2379,14 @@ function NewVersioncreated(response,mode) {
             $('#TextAreaLifePlanId').val(response.AllTab[0].LifePlanId);
             $("#TextBoxLifePlanId").val(response.AllTab[0].LifePlanId);
 
-            $("#btnSaveAsMinor").addClass("hidden");
-            $("#btnSaveAsMajor").addClass("hidden");
+            $("#btnSaveAsMinor").parent().addClass("hidden");
+            $("#btnSaveAsMajor").parent().addClass("hidden");
             if(response.AllTab[0].DocumentStatus=='Draft' && mode=='minor')
             {
                 $("#btnSaveAsMajor").show();
             }
             else{
-                $("#btnSaveAsMajor").addClass("hidden");
-                $("#btnSaveAsMajor").hide();
+                $("#btnSaveAsMajor").parent().addClass("hidden");
             }
 
             $("#btnSaveAsNew").addClass("hidden");
@@ -2527,6 +2401,7 @@ function NewVersioncreated(response,mode) {
             $(".redColor").prop("disabled", false);
             $('#lfuFromAssessmentNarrativeSummary .LifePlanEnable').attr("disabled", true);
             $('#lfuMember .memberEnable').attr("disabled", true);
+            $('#btnAcknowledgeAndAgreed').addClass('hidden');
             ShowHideSubmitReviewButton(response.AllTab[0].Status);
             GetAssessmentNarrativeSummaryTabDetails();
             GetMeetingHistoryTabDetails();
@@ -2562,7 +2437,8 @@ function ValidateDraft() {
 
 
 //#region CreatePublishVersion
-function CreatePublishVersion() {
+function CreatePublishVersion(mode) {
+    if(!validateFinalizedConditions())return;
     $.ajax({
         type: "GET",
         url: "https://staging-api.cx360.net/api/Client/GetLifePlansDocumentPath",
@@ -2571,7 +2447,7 @@ function CreatePublishVersion() {
         },
         success: function (result) {
             if (result.length > 0) {
-                PublishVersionAfterPathResponse(result);
+                PublishVersionAfterPathResponse(result,mode);
             }
             else {
                 showErrorMessage(result.Message);
@@ -2583,11 +2459,11 @@ function CreatePublishVersion() {
     });
 
 }
-function PublishVersionAfterPathResponse(result) {
+function PublishVersionAfterPathResponse(result,mode) {
     var data = {
         FilePath: result[0].FilePath, TabName: "PublishLifePlanVersion", LifePlanId: $(".lifePlanId").val(), DocumentVersionId: $("#TextBoxDocumentVersionId").val(), IndividualName: $("#DropDownClientId").find("option:selected").text(), AddressLifePlan: $('#TextBoxCity').val() + ' ' + $('#TextBoxState').val() + ' ' + $('#TextBoxZipCode').val(),
-        DateOfBirth: $("#TextBoxDateOfBirth").val(), AddressCCO: $('#TextBoxAddress2CCO').val() + ' ' + $('#DropDownCityCCO').val() + ' ' + $('#DropDownStateCCO').val() + ' ' + $('#TextBoxZipCodeCCO').val(), ReportedBy: reportedBy
-
+        DateOfBirth: $("#TextBoxDateOfBirth").val(), AddressCCO: $('#TextBoxAddress2CCO').val() + ' ' + $('#DropDownCityCCO').val() + ' ' + $('#DropDownStateCCO').val() + ' ' + $('#TextBoxZipCodeCCO').val(), ReportedBy: reportedBy,Mode:mode
+        
     };
 
     $.ajax({
@@ -2637,10 +2513,61 @@ function InsertDocumentPath(result) {
     });
 }
 function DownloadPDFLifePlan() {
+   var jsonData= [{
+        "meetingAttendanceId":248,
+        "ContactName":"Name 1",
+        "RelationshipToMember":"Relation 1",
+        "Method" : "Method 1"
+    },
+    {
+        "meetingAttendanceId":248,
+        "ContactName":"Name 2",
+        "RelationshipToMember":"Relation 2",
+        "Method" : "Method 2"
+    },{
+        "meetingAttendanceId":248,
+        "ContactName":"Name 3",
+        "RelationshipToMember":"Relation 3",
+        "Method" : "Method 3"
+    },
+    {
+        "meetingAttendanceId":249,
+        "ContactName":"Name 11",
+        "RelationshipToMember":"Relation 11",
+        "Method" : "Method 11"
+    },
+    {
+        "meetingAttendanceId":249,
+        "ContactName":"Name 22",
+        "RelationshipToMember":"Relation 22",
+        "Method" : "Method 22"
+    },{
+        "meetingAttendanceId":249,
+        "ContactName":"Name 33",
+        "RelationshipToMember":"Relation 33",
+        "Method" : "Method 33"
+    },{
+        "meetingAttendanceId":247,
+        "ContactName":"Name 111",
+        "RelationshipToMember":"Relation 111",
+        "Method" : "Method 111"
+    },
+    {
+        "meetingAttendanceId":247,
+        "ContactName":"Name 222",
+        "RelationshipToMember":"Relation 222",
+        "Method" : "Method 222"
+    },{
+        "meetingAttendanceId":247,
+        "ContactName":"Name 333",
+        "RelationshipToMember":"Relation 333",
+        "Method" : "Method 333"
+    }];
     var data = {
         TabName: "LifePlanPDF", LifePlanId: $(".lifePlanId").val(), IndividualName: $("#DropDownClientId").find("option:selected").text(), AddressLifePlan: $('#TextBoxCity').val() + ' ' + $('#TextBoxState').val() + ' ' + $('#TextBoxZipCode').val(),
-        DateOfBirth: $("#TextBoxDateOfBirth").val(), AddressCCO: $('#TextBoxAddress2CCO').val() + ' ' + $('#DropDownCityCCO').val() + ' ' + $('#DropDownStateCCO').val() + ' ' + $('#TextBoxZipCodeCCO').val()
-
+        DateOfBirth: $("#TextBoxDateOfBirth").val(), AddressCCO: $('#TextBoxAddress2CCO').val() + ' ' + $('#DropDownCityCCO').val() + ' ' + $('#DropDownStateCCO').val() + ' ' + $('#TextBoxZipCodeCCO').val(),
+        JSONData:jsonData
+   
     };
 
     fetch(GetAPIEndPoints("FILLABLELIFEPLANPDF"), {
@@ -2927,6 +2854,21 @@ function FillLifePlanNotificationTable(result) {
         "searching": true,
         "autoWidth": false,
         "lengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]],
+        "columnDefs": [
+            {
+                "targets": [ 6 ],
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 7 ],
+                "visible": false
+            },
+            {
+                "targets": [ 9 ],
+                "visible": false
+            }
+        ],
         "aaData": JSON.parse(result),
         "columns": [{ "data": "NotificationDate" }, { "data": "NotificationProvider" }, { "data": "NotificationReason" }, { "data": "NotificationType" }, { "data": "NotificationAckAgreeStatus" }, { "data": "AceptanceAcknowledgementDate" }, { "data": "AcceptanceAcknowledgementMethod" }, { "data": "SupportingDocumentReceived" }, { "data": "Actions" },{"data":"AcknowledgementAndAgreementId"}]
     });
@@ -3012,9 +2954,10 @@ function EditLifePlanNotifications(e, id) {
                     // $(".section8 #DropDownNotificationContCircSup").select2('val', [result[0].NotificationContCircSupId == "" ? null : result[0].NotificationContCircSupId]);
                     $(".section8 #DropDownNotificationReason").select2('val', [result[0].NotificationReasonId == "" ? null : result[0].NotificationReasonId]);
                     $(".section8 #DropDownNotificationType").select2('val', [result[0].NotificationTypeId == "" ? null : result[0].NotificationTypeId]);
-                    $(".section8 #DropDownNotificationAckAgreeStatus").select2('val', [result[0].NotificationAckAgreeStatusId == "" ? null : result[0].NotificationAckAgreeStatusId]);
+                    $(".section8 #DropDownNotificationAckAgreeStatus").select2('val', [result[0].NotificationAckAgreeStatus == "" ? null : result[0].NotificationAckAgreeStatus]);
+                    // $(".section8 #DropDownNotificationAckAgreeStatus").select2('val', [result[0].NotificationAckAgreeStatusId == "" ? null : result[0].NotificationAckAgreeStatusId]);
                     $(".section8 #TextBoxNotificationComments").val(result[0].NotificationComments);
-                    $(".section8 #TextBoxAcknowledgementAndAgreementId").val(result[0].LifePlanNotifiactionId);
+                    $(".section8 #TextBoxAcknowledgementAndAgreementId").val(result[0].AcknowledgementAndAgreementId);
                     $(".section8 #TextBoxAceptanceAcknowledgementDate").val(result[0].AceptanceAcknowledgementDate);
                     $(".section8 #DropDownAcceptanceAcknowledgementMethod").select2('val', [result[0].AcceptanceAcknowledgementMethod == "" ? null : result[0].AcceptanceAcknowledgementMethod]);
                     if (result[0].SupportingDocumentReceived == 'Y') {
@@ -3025,7 +2968,7 @@ function EditLifePlanNotifications(e, id) {
                     }
                     $(".section8 #TextBoxLastName").val(result[0].LastName);
                     $(".section8 #TextBoxFirstName").val(result[0].FirstName);
-                    $(".section8 #TextBoxAcknowledgementAndAgreementId").val(result[0].AcknowledgementAndAgreementId);
+                    // $(".section8 #TextBoxAcknowledgementAndAgreementId").val(result[0].AcknowledgementAndAgreementId);
                                                                       
                     
                 }
@@ -3068,6 +3011,8 @@ function BindContactControlsDropDown(result) {
 //#endregion
 //#region submit and review approval
 function OpenApproval(approval) {
+    debugger;
+    if(!validateOpenApprovalConditions())return;
     if (approval == "SubmitApproval") {
         var date = new Date();
         $('#TextBoxReviewDate').val(formatDate(date, 'MM/dd/yyyy'));
@@ -3562,11 +3507,6 @@ function GetMemberRightDetails() {
 function insertDataIntoFields(){
     var tableDocument = $('#tblDocument').DataTable();
     tableDocument.row.add( [
-        //    $("#TextBoxDate").val(),
-        //    $("#TextBoxOwner").val(),
-        //    $("#TextBoxDocumentType").val(),
-        //    $("#TextBoxDocumentValidFrom").val(),
-        //   $("#TextBoxDocumentValidTo").val(),
            $("#TextBoxDocumentTitle").val(),
           "<a href=''>"+$("#TextBoxAttachDocument").val()+"</a>",
           "<span><button class='btn btn-sm greencolor fa fa-trash-o' aria-hidden=true onclick="+DeleteOutcomesStrategiesRecord('+ CAST(oss.SupportStrategieId AS Varchar)+')+"</button></span>",
@@ -3586,24 +3526,32 @@ $('#btnSaveAsNew').hide();
 function bindDropdownFromJson(){
     $.getJSON("../../JsonDataToDropdown.json", function(data){
         debugger;
-        for(i=0;i <data[0].SectionII_CCOGoal_ValuedOutcome.length;i++){
-             $('.lfuFromOutcomesStrategies #DropDownCcoGoal').append('<option value="' + data[0].SectionII_CCOGoal_ValuedOutcome[i].Value + '">' + data[0].SectionII_CCOGoal_ValuedOutcome[i].Value + '</option>');
+        var companyName ="PCS_ACA";
+        var companyRecord = $.grep(data, function(e) {
+            return e.CompanyName === companyName;
+        });
+        if(companyRecord.length>0){
+            for(i=0;i <companyRecord[0].Data[0].SectionII_CCOGoal_ValuedOutcome.length;i++){
+                $('.lfuFromOutcomesStrategies #DropDownCcoGoal').append('<option value="' + companyRecord[0].Data[0].SectionII_CCOGoal_ValuedOutcome[i].Value + '">' +companyRecord[0].Data[0].SectionII_CCOGoal_ValuedOutcome[i].Value + '</option>');
+           }
+           for(i=0;i<companyRecord[0].Data[0].SectionII_ProviderAssignedGoal.length;i++){
+                $('.lfuFromOutcomesStrategies #DropDownProviderAssignedGoal').append('<option value="' + companyRecord[0].Data[0].SectionII_ProviderAssignedGoal[i].Value + '">' +companyRecord[0].Data[0].SectionII_ProviderAssignedGoal[i].Value + '</option>');
+           }
+           for(i=0;i<companyRecord[0].Data[0].SectionIII_Goal_Valued_Outcome.length;i++){
+                $('.imuIndividualSafe #DropDownGoalValuedOutcome').append('<option value="' + companyRecord[0].Data[0].SectionIII_Goal_Valued_Outcome[i].Value + '">' + companyRecord[0].Data[0].SectionIII_Goal_Valued_Outcome[i].Value + '</option>');
+           }
+           for(i=0;i<companyRecord[0].Data[0].SectionIII_ProviderAssignedGoal.length;i++){
+                $('.imuIndividualSafe #DropDownProviderAssignedGoal').append('<option value="' + companyRecord[0].Data[0].SectionIII_ProviderAssignedGoal[i].Value + '">' +companyRecord[0].Data[0].SectionIII_ProviderAssignedGoal[i].Value + '</option>');
+            }
         }
-        for(i=0;i<data[0].SectionII_ProviderAssignedGoal.length;i++){
-         $('.lfuFromOutcomesStrategies #DropDownProviderAssignedGoal').append('<option value="' + data[0].SectionII_ProviderAssignedGoal[i].Value + '">' + data[0].SectionII_ProviderAssignedGoal[i].Value + '</option>');
-        }
-        for(i=0;i<data[0].SectionIII_Goal_Valued_Outcome.length;i++){
-         $('.imuIndividualSafe #DropDownGoalValuedOutcome').append('<option value="' + data[0].SectionIII_Goal_Valued_Outcome[i].Value + '">' + data[0].SectionIII_Goal_Valued_Outcome[i].Value + '</option>');
-        }
-        for(i=0;i<data[0].SectionIII_ProviderAssignedGoal.length;i++){
-         $('.imuIndividualSafe #DropDownProviderAssignedGoal').append('<option value="' + data[0].SectionIII_ProviderAssignedGoal[i].Value + '">' + data[0].SectionIII_ProviderAssignedGoal[i].Value + '</option>');
-         }
+        
      }).fail(function(){
          console.log("An error has occurred.");
      }); 
 }
 
 function validateMemberApprovalSection(){
+    debugger;
     var memberName=$("#TextBoxMemberName").val();
     var memberApprovalDate=$("#TextBoxMemberApprovalDate").val();
     var representativeName= $("#DropDownRepresentative").val();
@@ -3656,8 +3604,200 @@ function closeModalProvider(){
     $("#exampleModa4").modal("show");
 }
 
-// function closeModal(){
-//     cleartextHCBSWaiver();
-//     $("#exampleModal2").modal("hide");
-//     $("#exampleModa4").modal("hide");
-// }
+function validateOpenApprovalConditions(){
+    var outcomeSupportStrategies = $('#tblOutcomesSupportStrategies').DataTable().rows().count();
+    var totalRowIndividualSafety = $('#tblIndividualSafety').DataTable().rows().count();
+    var totalRowsHCBS=$('#tblHCBSWaiver').DataTable().rows().count();
+
+    if($("input[name='CheckboxRightsUnderAmericansDisabilitiesAct']:checked").length <=0 && $("input[name='CheckboxReasonableAccommodations']:checked").length <=0 &&   $("input[name='CheckboxGrievanceAppeal']:checked").length <=0){
+        showErrorMessage("Complete the Member Rights section before submitting the Life Plan record for approval");
+        return false;
+    }
+    if(outcomeSupportStrategies < 2)
+    {
+        showErrorMessage("A minimum of 2 CQL/POMS are required before submitting the Life Plan record for approval");
+        return false;
+    }
+    if(totalRowIndividualSafety < 3)
+    {
+        showErrorMessage("A minimum of 3 Goals are required before submitting the Life Plan record for approval");
+        return false;
+    }
+    if(totalRowsHCBS < 1)
+    {
+        showErrorMessage("A minimum of 1 POM per HCBS Waiver service is required before submitting the Life Plan record for approval");
+        return false;
+    }
+    return true;
+}
+
+function validateCQLPOMSDropDown(){
+    var table=$('#tblOutcomesSupportStrategies').DataTable().columns(0).data();
+    var index=table.length;
+    for(var k=0;k<index;k++){
+        if(table[k].toLowerCase().includes($('#DropDownCqlPomsGoal').val())){
+
+        }
+    }
+    return true;
+}
+
+function validateDropDown(sectionClass){
+    debugger;
+    var rowExists=false;
+    if(sectionClass=='section3'){
+        var tableColumnValue=$('#tblIndividualSafety').DataTable().columns(0).data();
+        var tableData=$('#tblIndividualSafety').DataTable().data();
+       // var index=table.length;
+       currentRowId= $("#TextBoxIndividualPlanOfProtectionID").val();
+
+        if (tableData.length > 0) {
+            var record = $.grep(tableData, function(data) {
+                return data.IndividualPlanOfProtectionID != currentRowId;
+            });
+            if(record !=null){
+                for(var k=0;k<record.length;k++){
+                    if(record[k].GoalValuedOutcome.includes($('.section3 #DropDownGoalValuedOutcome').val())){
+                            rowExists=true;
+                            break;
+                    }
+                }
+                if(rowExists){
+                    showErrorMessage('Goal Valued Outcome option already exist in table');
+                    return false;
+                }
+            }
+           
+        }
+        
+    }
+   else  if(sectionClass=='section2'){
+    var tableColumnValue=$('#tblOutcomesSupportStrategies').DataTable().columns(0).data();
+    var tableData=$('#tblOutcomesSupportStrategies').DataTable().data();
+   // var index=table.length;
+   currentRowId= $("#TextBoxSupportStrategieId").val();
+
+   if (tableData.length > 0) {
+    var record = $.grep(tableData, function(data) {
+        return data.SupportStrategieId != currentRowId;
+    });
+    if(record !=null){
+        for(var k=0;k<record.length;k++){
+            if(record[k].CqlPomsGoal.includes($('.section2 #DropDownCqlPomsGoal :selected').text())){
+                    rowExists=true;
+                    break;
+            }
+        }
+        if(rowExists){
+            showErrorMessage('Cql Poms Goal option already exist in table');
+            return false;
+        }
+    }
+   
+}
+   
+    }
+  
+    return true;
+}
+function validateFinalizedConditions(){
+    var tableMemberRepresentativeApproval=$('#tblMemberRepresentativeApproval').DataTable().row().count();
+if(tableMemberRepresentativeApproval < 1)
+    {
+        showErrorMessage("Complete the Member/Representative Approval section before marking the Life Plan record as ‘Finalized'");
+        return false;
+    }
+    return true;
+}
+
+function ValidateApprovedAdndAgreedSection(){
+    debugger;
+    //     var tableColumnValue=$('#tblLifeplanNotifications').DataTable().columns(4).data();
+    //     var tableData=$('#tblLifeplanNotifications').DataTable().data();
+    //    // var index=table.length;
+    //    currentRowId= $("#TextBoxAcknowledgementAndAgreementId").val();
+    
+    //    if (tableData.length > 0) {
+    //     var record = $.grep(tableData, function(data) {
+    //         return data.AcknowledgementAndAgreementId != currentRowId;
+    //     });
+    //     if(record !=null){
+    //         for(var k=0;k<record.length;k++){
+    //             if(record[k].NotificationAckAgreeStatus.indexOf('Acknowledged and Agreed') <=-1){
+    //                     rowExists=true;
+    //                     break;
+    //             }
+    //         }
+    //         if(rowExists){
+    //             showErrorMessage('All records from ‘Section 6 - Acknowledgements and Agreements’ section must be ‘Acknowledged and Agreed’ before marking the Life Plan record as ‘Acknowledged and Agreed’');
+    //             return false;
+    //         }
+    //     }
+    // }
+    var table=$('#tblLifeplanNotifications').DataTable().columns(4).data();
+    var index=table.length;
+    var rowExists=false;
+    for(k=0;k<index;k++){
+        if(table[0][k].indexOf('Acknowledged and Agreed') <=-1){
+                rowExists=true;
+                break;
+        }
+    } 
+    if(rowExists){
+        showErrorMessage('All records from ‘Section 6 - Acknowledgements and Agreements’ section must be ‘Acknowledged and Agreed’ before marking the Life Plan record as ‘Acknowledged and Agreed’');
+        return false;
+    }
+    CreatePublishVersion('Acknowledged and Agreed');
+    return true;
+}
+
+function BindChildTableOFMeetingHistory(){
+    $('#tblMeetingHistory tbody').on( 'click', 'tr', function () {
+        debugger;
+        var meetingAttendanceId= $('#tblMeetingHistory').DataTable().row(this).data().MeetingId;
+        if ( $(this).hasClass('selected') ) {
+        $(this).removeClass('selected');
+        }
+        else {
+            $('#tblMeetingHistory').DataTable().$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+        }
+        $('#tblMeetingAttendance').DataTable().destroy();
+        if($('#tblMeetingHistory').DataTable().$('tr.selected').length>0){
+            $('.meetingAttendance').show();
+            $.ajax({
+                type: "GET",
+             //   data: { "meetingAttendanceId":  meetingAttendanceId},
+                url: "../../test.json",
+                dataType: "json",
+                // headers: {
+                //     'Token': token,
+                // },
+                success: function (response) {
+                    if (response.length > 0) {
+                        var memberAttendanceRecord = $.grep(response, function(memberAttendanceData) {
+                            return memberAttendanceData.meetingAttendanceId === meetingAttendanceId;
+                        });
+
+                        $('#tblMeetingAttendance').DataTable( {
+                            "aaData": memberAttendanceRecord,
+                            "columns": [
+                                { "data": "ContactName" },
+                                { "data": "RelationshipToMember" },
+                                { "data": "Method" }
+                            ]
+                          });
+                    }
+                    else {
+                        $('#tblMeetingAttendance').hide();
+                    }
+                },
+                error: function (xhr) { HandleAPIError(xhr) }
+            });
+        }
+        else {
+            $('.meetingAttendance').hide();
+        }
+       
+    } );
+}

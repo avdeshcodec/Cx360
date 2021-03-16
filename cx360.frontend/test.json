@@ -1,0 +1,59 @@
+[{
+    "meetingAttendanceId":270,
+    "ContactName":"Name 1",
+    "RelationshipToMember":"Relation 1",
+    "Method" : "Method 1"
+
+},
+{
+    "meetingAttendanceId":270,
+    "ContactName":"Name 2",
+    "RelationshipToMember":"Relation 2",
+    "Method" : "Method 2"
+
+},{
+    "meetingAttendanceId":270,
+    "ContactName":"Name 3",
+    "RelationshipToMember":"Relation 3",
+    "Method" : "Method 3"
+
+},
+{
+    "meetingAttendanceId":269,
+    "ContactName":"Name 11",
+    "RelationshipToMember":"Relation 11",
+    "Method" : "Method 11"
+
+},
+{
+    "meetingAttendanceId":269,
+    "ContactName":"Name 22",
+    "RelationshipToMember":"Relation 22",
+    "Method" : "Method 22"
+
+},{
+    "meetingAttendanceId":269,
+    "ContactName":"Name 33",
+    "RelationshipToMember":"Relation 33",
+    "Method" : "Method 33"
+
+},{
+    "meetingAttendanceId":268,
+    "ContactName":"Name 111",
+    "RelationshipToMember":"Relation 111",
+    "Method" : "Method 111"
+
+},
+{
+    "meetingAttendanceId":268,
+    "ContactName":"Name 222",
+    "RelationshipToMember":"Relation 222",
+    "Method" : "Method 222"
+
+},{
+    "meetingAttendanceId":268,
+    "ContactName":"Name 333",
+    "RelationshipToMember":"Relation 333",
+    "Method" : "Method 333"
+
+}]
