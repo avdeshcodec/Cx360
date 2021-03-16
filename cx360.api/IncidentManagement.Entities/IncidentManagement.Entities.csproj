@@ -92,7 +92,8 @@
     <Compile Include="Request\LifePlanRequest.cs" />
     <Compile Include="Response\BaseResponse.cs" />
     <Compile Include="Response\CANSResponse.cs" />
-    <Compile Include="Response\ComprehensiveAssessmentResponse.cs" />
+    <Compile Include="Response\CCOComprehensiveAssessmentResponse.cs" />
+    <Compile Include="Response\ComprehensiveAssessmentDetailResponse.cs" />
     <Compile Include="Response\IncidentManagementResponse.cs" />
     <Compile Include="Response\LifePlanResponse.cs" />
     <Compile Include="XMLGeneration\HFSXML.cs" />

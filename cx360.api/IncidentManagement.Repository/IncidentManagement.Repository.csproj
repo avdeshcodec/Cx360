@@ -188,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\APIErrorLog.cs" />
+    <Compile Include="Common\ConnectionString.cs" />
     <Compile Include="IRepository\ICANSRepository.cs" />
     <Compile Include="IRepository\IComprehensiveAssessmentRepository.cs" />
     <Compile Include="IRepository\IIncidentManagementRepository.cs" />

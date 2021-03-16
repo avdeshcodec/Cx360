@@ -17,6 +17,7 @@ using System.Globalization;
 using iTextSharp.text;
 using System.Web;
 using System.Linq;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.Repository.Repository
 {
@@ -24,17 +25,18 @@ namespace IncidentManagement.Repository.Repository
     {
         #region Private
         ComprehensiveAssessmentDetailResponse comprehensiveAssessmentDetailResponse = null;
+        CCOComprehensiveAssessmentDetailResponse cCOComprehensiveAssessmentDetailResponse = null;
         ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         #endregion
 
-        public async Task<ComprehensiveAssessmentDetailResponse> InsertModifyComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> InsertModifyComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
 
             bool checkVersion = true;
 
             if (comprehensiveAssessmentRequest.TabName == "ComprehensiveAssessment")
             {
-                checkVersion = ValidateComprehensiveAssessmentDraft(comprehensiveAssessmentRequest);
+                checkVersion =await ValidateComprehensiveAssessmentDraft(comprehensiveAssessmentRequest, companyId);
             }
             comprehensiveAssessmentDetailResponse = new ComprehensiveAssessmentDetailResponse();
             string sp = CommonFunctions.GetMappedStoreProcedure(comprehensiveAssessmentRequest.TabName);
@@ -43,7 +45,7 @@ namespace IncidentManagement.Repository.Repository
             {
                 if (checkVersion)
                 {
-                    using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                    using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                     {
                         using (SqlCommand cmd = new SqlCommand(sp, con))
                         {
@@ -59,7 +61,6 @@ namespace IncidentManagement.Repository.Repository
                                 cmd.Parameters.Add("@jsonchildsecondchild", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.JsonChildSecondTable;
                             }
                             con.Open();
-
                             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                             sqlDataAdapter.SelectCommand = cmd;
                             await Task.Run(() => sqlDataAdapter.Fill(dataSet));
@@ -95,14 +96,14 @@ namespace IncidentManagement.Repository.Repository
         }
 
 
-        public bool ValidateComprehensiveAssessmentDraft(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<bool> ValidateComprehensiveAssessmentDraft(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
             bool recordValidated = true;
 
             DataTable dataSet = new DataTable();
             try
             {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     using (SqlCommand cmd = new SqlCommand("usp_ValidateComprehensiveAssessmentDraft", con))
                     {
@@ -113,7 +114,7 @@ namespace IncidentManagement.Repository.Repository
 
                         SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                         sqlDataAdapter.SelectCommand = cmd;
-                        sqlDataAdapter.Fill(dataSet);
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
                         con.Close();
                     }
                 }
@@ -130,14 +131,14 @@ namespace IncidentManagement.Repository.Repository
             return recordValidated;
         }
 
-        public async Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
             comprehensiveAssessmentDetailResponse = new ComprehensiveAssessmentDetailResponse();
             string sp = CommonFunctions.GetMappedStoreProcedure(comprehensiveAssessmentRequest.TabName);
             DataSet dataSet = new DataSet();
             try
             {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     using (SqlCommand cmd = new SqlCommand(sp, con))
                     {
@@ -195,7 +196,7 @@ namespace IncidentManagement.Repository.Repository
 
             return comprehensiveAssessmentDetailResponse;
         }
-        public async Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
             comprehensiveAssessmentDetailResponse = new ComprehensiveAssessmentDetailResponse();
             string storeProcedure = CommonFunctions.GetMappedStoreProcedure(comprehensiveAssessmentRequest.TabName);
@@ -203,7 +204,7 @@ namespace IncidentManagement.Repository.Repository
 
             try
             {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     //Create the SqlCommand object
                     using (SqlCommand cmd = new SqlCommand(storeProcedure, con))
@@ -281,14 +282,14 @@ namespace IncidentManagement.Repository.Repository
             return comprehensiveAssessmentDetailResponse;
         }
 
-        public async Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
             comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
             string pdfTemplate = CommonFunctions.GetFillablePDFPath(comprehensiveAssessmentRequest.TabName);
             string newTemplatePDf = string.Empty;
             try
             {
-                newTemplatePDf = GetAssessmentPDFTemplate(comprehensiveAssessmentRequest.TabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Comprehensive_Assessment.pdf", comprehensiveAssessmentRequest);
+                newTemplatePDf =await GetAssessmentPDFTemplate(comprehensiveAssessmentRequest.TabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Comprehensive_Assessment.pdf", comprehensiveAssessmentRequest, companyId);
 
                 DataTable dataTable = new DataTable();  
                 dataTable.Clear();
@@ -306,14 +307,14 @@ namespace IncidentManagement.Repository.Repository
             }
         }
 
-        private string GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest)
+        private async Task<string> GetAssessmentPDFTemplate(string tabName, string pdfPath, ComprehensiveAssessmentRequest fillablePDFRequest, string companyId)
         {
             DataSet dataSet = new DataSet();
             string newpdfPath = string.Empty;
             try
             {
                 string storeProcedure = CommonFunctions.GetMappedStoreProcedure(tabName);
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     //Create the SqlCommand object
                     using (SqlCommand cmd = new SqlCommand("usp_GetComprehensiveAssessmentDetails", con))
@@ -325,7 +326,7 @@ namespace IncidentManagement.Repository.Repository
 
                         SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
                         sqlDataAdapter.SelectCommand = cmd;
-                        sqlDataAdapter.Fill(dataSet);
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
                         con.Close();
                     }
                 }
@@ -2117,14 +2118,14 @@ namespace IncidentManagement.Repository.Repository
             }
         }
 
-        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json)
+        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string companyId)
         {
             comprehensiveAssessmentDetailResponse = new ComprehensiveAssessmentDetailResponse();
             comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
             DataSet dataSet = new DataSet();
             try
             {
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     //Create the SqlCommand object
                     using (SqlCommand cmd = new SqlCommand("usp_UploadOfflinePDF", con))
@@ -2152,6 +2153,90 @@ namespace IncidentManagement.Repository.Repository
             {
                 throw Ex;
             }
+        }
+        public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            cCOComprehensiveAssessmentDetailResponse = new CCOComprehensiveAssessmentDetailResponse();
+            string storeProcedure = CommonFunctions.GetMappedStoreProcedure(comprehensiveAssessmentRequest.TabName);
+            DataSet dataSet = new DataSet();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    //Create the SqlCommand object
+                    using (SqlCommand cmd = new SqlCommand(storeProcedure, con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.ComprehensiveAssessmentId;
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0)
+                {
+                    //string AssessmentAreasSafeguardReview = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    //string AssessmentBehavioralSupportServices = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[1]);
+                    //string AssessmentDepressionScreening = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[2]);
+                    //string AssessmentDomesticViolance = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[3]);
+                    //string AssessmentEducationalVocationalStatus = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[4]);
+                    //string AssessmentFinancial = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[5]);
+                    //string AssessmentGeneral = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[6]);
+                    //string AssessmentHousing = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[7]);
+                    //string AssessmentIndependentLivingSkills = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[8]);
+                    //string AssessmentLegal = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[9]);
+                    //string AssessmentMedical = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[10]);
+                    //string AssessmentMedicalHealth = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[11]);
+                    //string AssessmentSafetyPlan = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[12]);
+                    //string AssessmentSafetyRisk = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[13]);
+                    //string AssessmentSelfDirectedServices = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[14]);
+                    //string ComprehensiveAssessment = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[15]);
+                    //string AssessmentTransitionPlanning = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[16]);
+                    //string AssessmentSubstanceAbuseScreening = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[17]);
+                    //string MedicalHealthMedications = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[18]);
+                    //string MedicalMedications = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[19]);
+                    //string MedicalDiagnosis = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[20]);
+                    //string DomesticViolanceMemberRelationship = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[21]);
+                    //string FinancialMemberNeeds = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[22]);
+                    //string FinancialMemberStatus = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[23]);
+                    //string HousingSubsidies = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[24]);
+                    //string LegalCourtDates = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[25]);
+                    //comprehensiveAssessmentDetailResponse.AreasSafeguardReviewDetails = JsonConvert.DeserializeObject<List<AreasSafeguardReviewDetails>>(AssessmentAreasSafeguardReview);
+                    //comprehensiveAssessmentDetailResponse.BehavioralSupportServicesDetails = JsonConvert.DeserializeObject<List<BehavioralSupportServicesDetails>>(AssessmentBehavioralSupportServices);
+                    //comprehensiveAssessmentDetailResponse.DepressionScreeningDetails = JsonConvert.DeserializeObject<List<DepressionScreeningDetails>>(AssessmentDepressionScreening);
+                    //comprehensiveAssessmentDetailResponse.DomesticViolanceDetails = JsonConvert.DeserializeObject<List<DomesticViolanceDetails>>(AssessmentDomesticViolance);
+                    //comprehensiveAssessmentDetailResponse.EducationalVocationalStatusDetails = JsonConvert.DeserializeObject<List<EducationalVocationalStatusDetails>>(AssessmentEducationalVocationalStatus);
+                    //comprehensiveAssessmentDetailResponse.FinancialDetails = JsonConvert.DeserializeObject<List<FinancialDetails>>(AssessmentFinancial);
+                    //comprehensiveAssessmentDetailResponse.GeneralDetails = JsonConvert.DeserializeObject<List<GeneralDetails>>(AssessmentGeneral);
+                    //comprehensiveAssessmentDetailResponse.HousingDetails = JsonConvert.DeserializeObject<List<HousingDetails>>(AssessmentHousing);
+                    //comprehensiveAssessmentDetailResponse.IndependentLivingSkillsDetails = JsonConvert.DeserializeObject<List<IndependentLivingSkillsDetails>>(AssessmentIndependentLivingSkills);
+                    //comprehensiveAssessmentDetailResponse.LegalDetails = JsonConvert.DeserializeObject<List<LegalDetails>>(AssessmentLegal);
+                    //comprehensiveAssessmentDetailResponse.MedicalDetails = JsonConvert.DeserializeObject<List<MedicalDetails>>(AssessmentMedical);
+                    //comprehensiveAssessmentDetailResponse.MedicalHelathDetails = JsonConvert.DeserializeObject<List<MedicalHelathDetails>>(AssessmentMedicalHealth);
+                    //comprehensiveAssessmentDetailResponse.SafetyPlanDetails = JsonConvert.DeserializeObject<List<SafetyPlanDetails>>(AssessmentSafetyPlan);
+                    //comprehensiveAssessmentDetailResponse.SafetyRiskDetails = JsonConvert.DeserializeObject<List<SafetyRiskDetails>>(AssessmentSafetyRisk);
+                    //comprehensiveAssessmentDetailResponse.SelfDirectedServicesDetails = JsonConvert.DeserializeObject<List<SelfDirectedServicesDetails>>(AssessmentSelfDirectedServices);
+                    //comprehensiveAssessmentDetailResponse.ComprehensiveAssessmentDetails = JsonConvert.DeserializeObject<List<ComprehensiveAssessmentDetails>>(ComprehensiveAssessment);
+                    //comprehensiveAssessmentDetailResponse.TransitionPlanningDetails = JsonConvert.DeserializeObject<List<TransitionPlanningDetails>>(AssessmentTransitionPlanning);
+                    //comprehensiveAssessmentDetailResponse.SubstanceAbuseScreeningDetails = JsonConvert.DeserializeObject<List<SubstanceAbuseScreeningDetails>>(AssessmentSubstanceAbuseScreening);
+                    //comprehensiveAssessmentDetailResponse.MedicalHealthMedicationsDetails = JsonConvert.DeserializeObject<List<MedicalHealthMedicationsDetails>>(MedicalHealthMedications);
+                    //comprehensiveAssessmentDetailResponse.MedicalMedicationDetails = JsonConvert.DeserializeObject<List<MedicalMedicationDetails>>(MedicalMedications);
+                    //comprehensiveAssessmentDetailResponse.MedicalDiagnosisDetails = JsonConvert.DeserializeObject<List<MedicalDiagnosisDetails>>(MedicalDiagnosis);
+                    //comprehensiveAssessmentDetailResponse.DomesticViolanceMemberRelationshipDetails = JsonConvert.DeserializeObject<List<DomesticViolanceMemberRelationshipDetails>>(DomesticViolanceMemberRelationship);
+                    //comprehensiveAssessmentDetailResponse.FinancialMemberNeedDetails = JsonConvert.DeserializeObject<List<FinancialMemberNeedDetails>>(FinancialMemberNeeds);
+                    //comprehensiveAssessmentDetailResponse.FinancialMemberStatusDetails = JsonConvert.DeserializeObject<List<FinancialMemberStatusDetails>>(FinancialMemberStatus);
+                    //comprehensiveAssessmentDetailResponse.HousingSubsidyDetails = JsonConvert.DeserializeObject<List<HousingSubsidyDetails>>(HousingSubsidies);
+                    //comprehensiveAssessmentDetailResponse.LegalCourtDateDetails = JsonConvert.DeserializeObject<List<LegalCourtDateDetails>>(LegalCourtDates);
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+            return cCOComprehensiveAssessmentDetailResponse;
         }
 
     }

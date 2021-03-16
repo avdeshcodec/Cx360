@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Configuration;
 using Newtonsoft.Json;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.API.Controllers
 {
@@ -25,9 +26,12 @@ namespace IncidentManagement.API.Controllers
         private System.Net.Http.HttpResponseMessage httpResponseMessage = null;
         private IComprehensiveAssessmentService _ComprehensiveAssessmentService = null;
         private ComprehensiveAssessmentDetailResponse cadResponse = null;
+        private CCOComprehensiveAssessmentDetailResponse ccoResponse = null;
         private ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         CommonFunctions common = null;
         private readonly DocumentUpload _documentUpload;
+        private string companyId = null;
+
         #endregion
 
         public ComprehensiveAssessmentAPIController(IComprehensiveAssessmentService iComprehensiveAssessmentService)
@@ -55,7 +59,11 @@ namespace IncidentManagement.API.Controllers
 
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
-                    cadResponse = await _ComprehensiveAssessmentService.InsertModifyComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+                    if (Request.Headers.Contains("Source"))
+                    {
+                        companyId = Request.Headers.GetValues("Source").First();
+                    }
+                    cadResponse = await _ComprehensiveAssessmentService.InsertModifyComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
                 }
             }
@@ -81,7 +89,11 @@ namespace IncidentManagement.API.Controllers
                 cadResponse = new ComprehensiveAssessmentDetailResponse();
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
-                    cadResponse = await _ComprehensiveAssessmentService.HandleAssessmentVersioning(comprehensiveAssessmentRequest);
+                    if (Request.Headers.Contains("Source"))
+                    {
+                        companyId = Request.Headers.GetValues("Source").First();
+                    }
+                    cadResponse = await _ComprehensiveAssessmentService.HandleAssessmentVersioning(comprehensiveAssessmentRequest, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
                 }
 
@@ -116,8 +128,11 @@ namespace IncidentManagement.API.Controllers
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
 
-
-                    cadResponse = await _ComprehensiveAssessmentService.GetComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+                    if (Request.Headers.Contains("Source"))
+                    {
+                        companyId = Request.Headers.GetValues("Source").First();
+                    }
+                    cadResponse = await _ComprehensiveAssessmentService.GetComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
                 }
 
@@ -152,8 +167,11 @@ namespace IncidentManagement.API.Controllers
                 comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
-
-                    comprehensiveAssessmentPDFResponse = await _ComprehensiveAssessmentService.PrintAssessmentPDF(comprehensiveAssessmentRequest);
+                    if (Request.Headers.Contains("Source"))
+                    {
+                        companyId = Request.Headers.GetValues("Source").First();
+                    }
+                    comprehensiveAssessmentPDFResponse = await _ComprehensiveAssessmentService.PrintAssessmentPDF(comprehensiveAssessmentRequest, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, comprehensiveAssessmentPDFResponse);
                     Stream stream = CommonFunctions.GetFilesStream(comprehensiveAssessmentPDFResponse.ComprehensiveAssessmentPDF[0].FileName);
                     httpResponseMessage.Content = new StreamContent(stream);
@@ -181,6 +199,11 @@ namespace IncidentManagement.API.Controllers
         {
             try
             {
+                if (Request.Headers.Contains("Source"))
+                {
+                    companyId = Request.Headers.GetValues("Source").First();
+                }
+
                 httpResponseMessage = new HttpResponseMessage();
                 comprehensiveAssessmentPDFResponse = new ComprehensiveAssessmentPDFResponse();
                 string fileName = string.Empty;
@@ -239,7 +262,7 @@ namespace IncidentManagement.API.Controllers
 
                     var json = JsonConvert.SerializeObject(attributes);
                     var pdfFile = JsonConvert.SerializeObject(files);
-                    var data = await _ComprehensiveAssessmentService.UploadOfflinePDF(json, pdfFile);
+                    var data = await _ComprehensiveAssessmentService.UploadOfflinePDF(json, pdfFile, companyId);
                     httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, data);
 
                 }
@@ -255,6 +278,43 @@ namespace IncidentManagement.API.Controllers
             }
             return httpResponseMessage;
         }
+
+
+        /// <summary>
+        /// Get Comprehensive Assessment
+        /// </summary>
+        /// <remarks>This API is used to Comprehensive Assessment.</remarks>
+        /// <param name="comprehensiveAssessmentRequest"> Model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("GetCCOComprehensiveAssessmentDetail")]
+        [ActionName("GetCCOComprehensiveAssessmentDetail")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            try
+            {
+                httpResponseMessage = new HttpResponseMessage();
+                cadResponse = new ComprehensiveAssessmentDetailResponse();
+                if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
+                {
+                    ccoResponse = await _ComprehensiveAssessmentService.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                cadResponse.Success = false;
+                cadResponse.IsException = true;
+                cadResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+
+
     }
 }
 

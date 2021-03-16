@@ -6237,3 +6237,118 @@ Source: .Net SqlClient Data Provider
 TargetSite: Void MoveNext()
 -----------------------------------------------------------
 
+Time: 12/03/2021 11:50:35 AM
+-----------------------------------------------------------
+Message: A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: Named Pipes Provider, error: 40 - Could not open a connection to SQL Server)
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 91
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 27
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<InsertModifyComprehensiveAssessmentDetail>d__7.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 58
+Source: .Net SqlClient Data Provider
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+
+Time: 12/03/2021 11:52:17 AM
+-----------------------------------------------------------
+Message: Cannot insert the value NULL into column 'DocumentStatus', table 'Cx360.dbo.CCO_CompAssessmentVersioning'; column does not allow nulls. INSERT fails.
+The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CCO_CompAssessment_CCO_CompAssessmentVersioning". The conflict occurred in database "Cx360", table "dbo.CCO_CompAssessmentVersioning", column 'CompAssessmentVersioningId'.
+The statement has been terminated.
+The statement has been terminated.
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 91
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 27
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<InsertModifyComprehensiveAssessmentDetail>d__7.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 58
+Source: .Net SqlClient Data Provider
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+
+Time: 12/03/2021 11:52:26 AM
+-----------------------------------------------------------
+Message: Cannot insert the value NULL into column 'DocumentStatus', table 'Cx360.dbo.CCO_CompAssessmentVersioning'; column does not allow nulls. INSERT fails.
+The MERGE statement conflicted with the FOREIGN KEY constraint "FK_CCO_CompAssessment_CCO_CompAssessmentVersioning". The conflict occurred in database "Cx360", table "dbo.CCO_CompAssessmentVersioning", column 'CompAssessmentVersioningId'.
+The statement has been terminated.
+The statement has been terminated.
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 91
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 27
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<InsertModifyComprehensiveAssessmentDetail>d__7.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 58
+Source: .Net SqlClient Data Provider
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+
+Time: 12/03/2021 12:07:51 PM
+-----------------------------------------------------------
+Message: JSON text is not properly formatted. Unexpected character '"' is found at position 93.
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 91
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<InsertModifyComprehensiveAssessmentDetail>d__2.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 27
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<InsertModifyComprehensiveAssessmentDetail>d__7.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 58
+Source: .Net SqlClient Data Provider
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+
+Time: 15/03/2021 05:21:00 PM
+-----------------------------------------------------------
+Message: Value cannot be null.
+Parameter name: dataSet
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<GetComprehensiveAssessmentDetail>d__6.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 281
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<GetComprehensiveAssessmentDetail>d__4.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<GetComprehensiveAssessmentDetail>d__10.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 132
+Source: IncidentManagement.Repository
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+
+Time: 15/03/2021 05:53:04 PM
+-----------------------------------------------------------
+Message: Procedure or function 'usp_InsertModifyCCO_Education' expects parameter '@json', which was not supplied.
+StackTrace:    at IncidentManagement.Repository.Repository.ComprehensiveAssessmentRepository.<GetComprehensiveAssessmentDetail>d__6.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Repository\Repository\ComprehensiveAssessmentRepository.cs:line 281
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.Service.Service.ComprehensiveAssessmentService.<GetComprehensiveAssessmentDetail>d__4.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.Service\Service\ComprehensiveAssessmentService.cs:line 35
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IncidentManagement.API.Controllers.ComprehensiveAssessmentAPIController.<GetComprehensiveAssessmentDetail>d__10.MoveNext() in C:\Bitbucket\Cx360_New\Cx360\cx360.api\IncidentManagement.API\Controllers\ComprehensiveAssessmentAPIController.cs:line 132
+Source: .Net SqlClient Data Provider
+TargetSite: Void MoveNext()
+-----------------------------------------------------------
+

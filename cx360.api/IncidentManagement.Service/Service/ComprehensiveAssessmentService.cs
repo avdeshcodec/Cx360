@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static IncidentManagement.Entities.Response.CCOComprehensiveAssessmentResponse;
 using static IncidentManagement.Entities.Response.ComprehensiveAssessmentResponse;
 
 namespace IncidentManagement.Service.Service
@@ -22,27 +23,31 @@ namespace IncidentManagement.Service.Service
             _ComprehensiveAssessmentRepository = IComprehensiveAssessmentRepository;
         }
 
-        public async Task<ComprehensiveAssessmentDetailResponse> InsertModifyComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> InsertModifyComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.InsertModifyComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+            return await _ComprehensiveAssessmentRepository.InsertModifyComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
         }
-        public async Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> HandleAssessmentVersioning(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.HandleAssessmentVersioning(comprehensiveAssessmentRequest);
+            return await _ComprehensiveAssessmentRepository.HandleAssessmentVersioning(comprehensiveAssessmentRequest, companyId);
         }
-        public async Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentDetailResponse> GetComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.GetComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+            return await _ComprehensiveAssessmentRepository.GetComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
         }
-        public async Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        public async Task<ComprehensiveAssessmentPDFResponse> PrintAssessmentPDF(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.PrintAssessmentPDF(comprehensiveAssessmentRequest);
+            return await _ComprehensiveAssessmentRepository.PrintAssessmentPDF(comprehensiveAssessmentRequest, companyId);
         }
 
-        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string files)
+        public async Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string files, string companyId)
         {
-            return await _ComprehensiveAssessmentRepository.UploadOfflinePDF(json);
+            return await _ComprehensiveAssessmentRepository.UploadOfflinePDF(json, companyId);
         }
-        
+        public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest)
+        {
+            return await _ComprehensiveAssessmentRepository.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest);
+        }
+
     }
 }
