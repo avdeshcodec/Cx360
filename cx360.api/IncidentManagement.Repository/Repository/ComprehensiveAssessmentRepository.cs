@@ -2157,7 +2157,7 @@ namespace IncidentManagement.Repository.Repository
         }
         public async Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
         {
-            cCOComprehensiveAssessmentDetailResponse = new CCOComprehensiveAssessmentDetailResponse();
+            cCOComprehensiveAssessmentDetailResponse = new CCOComprehensiveAssessmentDetailResponse;
             string storeProcedure = CommonFunctions.GetMappedStoreProcedure(comprehensiveAssessmentRequest.TabName);
             DataSet dataSet = new DataSet();
             try
@@ -2165,10 +2165,10 @@ namespace IncidentManagement.Repository.Repository
                 using (SqlConnection con = new SqlConnection(await ConnectionString.GetConnectionString(companyId)))
                 {
                     //Create the SqlCommand object
-                    using (SqlCommand cmd = new SqlCommand(storeProcedure, con))
+                    using (SqlCommand cmd = new SqlCommand("usp_GetCCOComprehensiveAssessmentDetails", con))
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@comprehensiveAssessmentId", SqlDbType.VarChar).Value = comprehensiveAssessmentRequest.ComprehensiveAssessmentId;
+                        cmd.Parameters.Add("@compassessmentid", SqlDbType.Int).Value = comprehensiveAssessmentRequest.CompAssessmentId;
                         con.Open();
 
                         SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
@@ -2177,9 +2177,11 @@ namespace IncidentManagement.Repository.Repository
                         con.Close();
                     }
                 }
-                if (dataSet.Tables.Count > 0)
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
                 {
-                   
+                    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    //var json = JsonConvert.DeserializeObject(dataSetString);
+                    cCOComprehensiveAssessmentDetailResponse = JsonConvert.DeserializeObject<CCOComprehensiveAssessmentDetailResponse>(dataSetString);
                 }
             }
             catch (Exception Ex)

@@ -16,7 +16,9 @@ namespace IncidentManagement.Entities.Request
         public string JsonChildFirstTable { get; set; }
         public string JsonChildSecondTable { get; set; }
 
+        public int? CompAssessmentId { get; set; }
         public int? ComprehensiveAssessmentId { get; set; }
+
         public int?AssessmentVersioningId { get; set; }
         public string DocumentStatus { get; set; }
         public string DocumentVersion { get; set; }
