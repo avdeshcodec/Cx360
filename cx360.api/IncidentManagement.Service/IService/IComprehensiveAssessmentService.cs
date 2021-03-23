@@ -22,7 +22,9 @@ namespace IncidentManagement.Service.IService
         Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string files, string companyId);
         Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId);
 
-
+        Task<CCOComprehensiveAssessmentDetailResponse> HandleCCOComprehensiveAssessmentVersioning(CCOComprehensiveAssessmentRequest cCOComprehensiveAssessmentRequest);
+        Task<CCOComprehensivePDFResponse> FillableCCOComprehensiveAssessmentPDF(FillableCCOComprehensiveAssessmentPDFRequest fillableCCOComprehensiveAssessmentPDF);
+       
         #endregion
     }
 }

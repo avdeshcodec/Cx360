@@ -28,6 +28,8 @@ namespace IncidentManagement.Repository.Repository
         ComprehensiveAssessmentDetailResponse comprehensiveAssessmentDetailResponse = null;
         CCOComprehensiveAssessmentDetailResponse cCOComprehensiveAssessmentDetailResponse = null;
         ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
+        CCOComprehensiveAssessmentResponse cCOComprehensiveAssessmentResponse = null;
+        CCOComprehensivePDFResponse CCOComprehensivePDFResponse = null;
         #endregion
 
         public async Task<ComprehensiveAssessmentDetailResponse> InsertModifyComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId)
@@ -72,6 +74,7 @@ namespace IncidentManagement.Repository.Repository
                     {
                         string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
                         comprehensiveAssessmentDetailResponse.AllTabsComprehensiveAssessment = JsonConvert.DeserializeObject<List<AllTabsComprehensiveAssessment>>(dataSetString);
+
                     }
                 }
                 else
@@ -2189,6 +2192,1556 @@ namespace IncidentManagement.Repository.Repository
                 throw Ex;
             }
             return cCOComprehensiveAssessmentDetailResponse;
+        }
+
+        public async Task<CCOComprehensiveAssessmentDetailResponse> HandleCCOComprehensiveAssessmentVersioning(CCOComprehensiveAssessmentRequest cCOComprehensiveAssessmentRequest)
+        {
+            cCOComprehensiveAssessmentDetailResponse = new CCOComprehensiveAssessmentDetailResponse();
+            string tabName = cCOComprehensiveAssessmentRequest.TabName;
+            string sp = CommonFunctions.GetMappedStoreProcedure(tabName);
+            DataSet dataSet = new DataSet();
+            try
+            {
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sp, con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@compAssessmentId", SqlDbType.VarChar).Value = cCOComprehensiveAssessmentRequest.CompAssessmentId;
+                        cmd.Parameters.Add("@documentversionid", SqlDbType.VarChar).Value = cCOComprehensiveAssessmentRequest.CompAssessmentVersioningId;
+                        cmd.Parameters.Add("@reportedby", SqlDbType.Int).Value = cCOComprehensiveAssessmentRequest.ReportedBy;
+                        cmd.Parameters.Add("@mode", SqlDbType.VarChar).Value = cCOComprehensiveAssessmentRequest.Mode;
+
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+
+                        await Task.Run(() => sqlDataAdapter.Fill(dataSet));
+
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                {
+                    //if (tabName == "PublishLifePlanVersion")
+                    //{
+                    //    dataTablePDFPath = GetLifePlanPDFTemplate(tabName, ConfigurationManager.AppSettings["FillablePDF"].ToString() + "Lifeplan.pdf", lpdRequest);
+                    //    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataTablePDFPath);
+                    //    lpdResponse.AllTab = JsonConvert.DeserializeObject<List<AllTab>>(dataSetString);
+                    //}
+                    //else
+                    //{
+                    string dataSetString = CommonFunctions.ConvertDataTableToJson(dataSet.Tables[0]);
+                    cCOComprehensiveAssessmentDetailResponse.CCOComprehensiveAssessmentResponse = JsonConvert.DeserializeObject<List<CCOComprehensiveAssessmentResponse>>(dataSetString);
+                    //}
+                }
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+
+            return cCOComprehensiveAssessmentDetailResponse;
+        }
+
+
+        
+        public async Task<CCOComprehensivePDFResponse> FillableCCOComprehensiveAssessmentPDF(FillableCCOComprehensiveAssessmentPDFRequest fillableCCOComprehensiveAssessmentPDFRequest)
+        {
+            DataSet dataSet = new DataSet();
+            string newpdfPath = string.Empty;
+            string pdfTemplate = CommonFunctions.GetFillablePDFPath(fillableCCOComprehensiveAssessmentPDFRequest.TabName);
+            DataTable dataTablePath = null;
+            try
+            {
+                string storeProcedure = CommonFunctions.GetMappedStoreProcedure(fillableCCOComprehensiveAssessmentPDFRequest.TabName);
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.AppSettings["localhost"].ToString()))
+                {
+                    //Create the SqlCommand object
+                    using (SqlCommand cmd = new SqlCommand(storeProcedure, con))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@@ccoComprehensiveAssessmentId", SqlDbType.Int).Value = fillableCCOComprehensiveAssessmentPDFRequest.CompAssessmentId;
+                        con.Open();
+
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter();
+                        sqlDataAdapter.SelectCommand = cmd;
+                        sqlDataAdapter.Fill(dataSet);
+                        con.Close();
+                    }
+                }
+                if (dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+                {
+
+                    dataTablePath = CCOComprehensiveAssessmentPDFTemplate(pdfTemplate, dataSet, fillableCCOComprehensiveAssessmentPDFRequest, fillableCCOComprehensiveAssessmentPDFRequest.TabName);
+
+                }
+                string dataSetString = CommonFunctions.ConvertDataTableToJson(dataTablePath);
+                CCOComprehensivePDFResponse.CCOComprehensiveAssessmentPDF = JsonConvert.DeserializeObject<List<CCOComprehensiveAssessmentPDF>>(dataSetString);
+                return CCOComprehensivePDFResponse;
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+
+        private DataTable CCOComprehensiveAssessmentPDFTemplate(string pdfPath, DataSet dataSetFillPDF, FillableCCOComprehensiveAssessmentPDFRequest fillablePDFRequest, string tabName)
+        {
+            string newFile = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "CCO_ComprehensiveAssessmentPDF.pdf";
+            string newFile1 = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "completed1_lifeplan.pdf";
+            string finaldoc = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "completed2_lifeplan.pdf";
+            string finaldoc1 = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "completed3_lifeplan.pdf";
+            iTextSharp.text.pdf.PdfReader pdfReader = new iTextSharp.text.pdf.PdfReader(pdfPath);
+            // iTextSharp.text.pdf.PdfReader pdfReader8 = new iTextSharp.text.pdf.PdfReader(ConfigurationManager.AppSettings["DocumentFile"].ToString() + "form_Requirements_Updates_Changes_ForDev.docx");
+
+            DataTable dataTable = new DataTable();
+            PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
+            try
+            {
+
+                DataTable CircleAndSupportTable = dataSetFillPDF.Tables[0];
+                DataTable GuardianshipAndAdvocacyTable = dataSetFillPDF.Tables[1];
+                DataTable MedicalHealthTable = dataSetFillPDF.Tables[2];
+                DataTable MedicationsTable = dataSetFillPDF.Tables[3];
+
+                //Create pdfTable instance and  paas column numbers as parameters.
+                PdfPTable tableCircleAndSupport = new PdfPTable(4);
+                PdfPTable tableGuardianshipAndAdvocacy = new PdfPTable(9);
+                PdfPTable tableMedicalHealth = new PdfPTable(8);
+                PdfPTable tableMedications = new PdfPTable(4);
+
+                tableCircleAndSupport.WidthPercentage = 100f;
+                tableGuardianshipAndAdvocacy.WidthPercentage = 100f;
+                tableMedicalHealth.WidthPercentage = 100f;
+                tableMedications.WidthPercentage = 100f;
+
+                iTextSharp.text.Font fntTableFontHdr = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+                iTextSharp.text.Font fntTableFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+                iTextSharp.text.Font pageTextFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.ITALIC, BaseColor.BLACK);
+
+                AcroFields pdfFormFields = pdfStamper.AcroFields;
+                pdfFormFields.GenerateAppearances = false;
+
+                fillCCOComprehensiveAssessmentSection(pdfFormFields, dataSetFillPDF);
+                fillEligibiltyInformationSection(pdfFormFields, dataSetFillPDF);
+                fillCommunication_LanguageSection(pdfFormFields, dataSetFillPDF);
+                fillMemberProviderSection(pdfFormFields, dataSetFillPDF);
+                //fillCircleAndSupportSection(pdfFormFields, dataSetFillPDF);
+                fillGuardianshipAndAdvocacySection(pdfFormFields, dataSetFillPDF);
+                fillAdvancedDirectivesFuturePlanningSection(pdfFormFields, dataSetFillPDF);
+                fillIndependentLivingSkillsSection(pdfFormFields, dataSetFillPDF);
+                fillSocialServiceNeedsSection(pdfFormFields, dataSetFillPDF);
+                fillMedicalHealthSection(pdfFormFields, dataSetFillPDF);
+                fillHealthPromotionSection(pdfFormFields, dataSetFillPDF);
+                fillBehavioralHealthSection(pdfFormFields, dataSetFillPDF);
+                fillChallengingBehaviorsSection(pdfFormFields, dataSetFillPDF);
+                fillBehavioralSupportPlanSection(pdfFormFields, dataSetFillPDF);
+                fillMedicationsSection(pdfFormFields, dataSetFillPDF);
+                fillCommumunitySocialParticipationSection(pdfFormFields, dataSetFillPDF);
+                fillEducationSection(pdfFormFields, dataSetFillPDF);
+                fillTransitionPlanningSection(pdfFormFields, dataSetFillPDF);
+                fillEmploymentSection(pdfFormFields, dataSetFillPDF);
+
+
+
+                //DataRow row = Lifeplan.Rows[0];
+
+                //pdfFormFields.SetField("IndividualName", fillablePDFRequest.IndividualName);
+                //pdfFormFields.SetField("DateOfBirth", fillablePDFRequest.DateOfBirth);
+                //pdfFormFields.SetField("MemberAddress", row["MemberAddress"].ToString() + ' ' + fillablePDFRequest.AddressLifePlan);
+                //pdfFormFields.SetField("Phone", row["Phone"].ToString());
+                //pdfFormFields.SetField("Medicaid", row["Medicaid"].ToString());
+                //pdfFormFields.SetField("Medicare", row["Medicare"].ToString());
+                //pdfFormFields.SetField("EffectiveFromDate", row["EffectiveFromDate"].ToString());
+                //pdfFormFields.SetField("EffectiveToDate", row["EffectiveToDate"].ToString());
+                //pdfFormFields.SetField("EnrollmentDate", row["EnrollmentDate"].ToString());
+                //pdfFormFields.SetField("WillowbookerMember", row["WillowbrookMember"].ToString());
+                //pdfFormFields.SetField("AddressCCO", row["AddressCCO"].ToString() + ' ' + fillablePDFRequest.AddressCCO);
+                //pdfFormFields.SetField("PhoneCCO", row["PhoneCCO"].ToString());
+                //pdfFormFields.SetField("Fax", row["Fax"].ToString());
+                //pdfFormFields.SetField("ProviderID", row["ProviderID"].ToString());
+                //pdfFormFields.SetField("Status", row["DocumentStatus"].ToString());
+                //pdfFormFields.SetField("Version", row["DocumentVersion"].ToString());
+                //pdfFormFields.SetField("CareManagerFirstName", row["CareManagerFirstName"].ToString());
+                //pdfFormFields.SetField("CareManagerLastName", row["CareManagerLastName"].ToString());
+                //pdfFormFields.SetField("IncludeDurableMediEquipment", row["IncludeDurableMediEquipment"].ToString() == "Y" ? "Yes" : "No");
+                //pdfFormFields.SetField("IncludeDiagnosis", row["IncludeDiagnosis"].ToString() == "Y" ? "Yes" : "No");
+                //pdfFormFields.SetField("IncludeAllergies", row["IncludeAllergies"].ToString() == "Y" ? "Yes" : "No");
+                //pdfFormFields.SetField("IncludeMedications", row["IncludeMedications"].ToString() == "Y" ? "Yes" : "No");
+                //pdfFormFields.SetField("LifePlanType", row["LifePlanType"].ToString());
+
+
+
+
+
+                //PdfPCell cell = new PdfPCell(new Phrase("Meeting History")) { PaddingBottom = 10 };
+                //cell.Colspan = 4;
+                //cell.BackgroundColor = new BaseColor(204, 204, 204);
+                //cell.HorizontalAlignment = 1;
+                //table.SpacingBefore = 30f;
+
+
+                //if (MeetingHistory.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < MeetingHistory.Rows.Count; i++)
+                //    {
+                //        table.AddCell(cell);
+                //        table.AddCell(new PdfPCell(new Phrase("Note Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase("Event Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase("Subject")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase("Meeting Reason")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //        DataRow rowMeetingHistory = MeetingHistory.Rows[i];
+                //        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["TypeOfMeeting"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["PlanerReviewDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["MeetingReason"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase(rowMeetingHistory["MemberAttendance"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                //        var filtered = new List<JSONData>();
+
+                //        foreach (var e in fillablePDFRequest.JSONData)
+                //        {
+                //            if (e.meetingAttendanceId == Convert.ToInt32(rowMeetingHistory["MeetingId"]))
+                //            {
+                //                filtered.Add(e);
+                //            }
+                //        }
+                //        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Member Attendance")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Contact Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Relationship To Member")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //        tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("Method")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //        if (filtered.Count > 0)
+                //        {
+                //            foreach (var e in filtered)
+                //            {
+                //                if (e.meetingAttendanceId == Convert.ToInt32(rowMeetingHistory["MeetingId"]))
+                //                {
+                //                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.ContactName.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.RelationshipToMember.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //                    tableMeetingAttendance.AddCell(new PdfPCell(new Phrase(e.Method.ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //                }
+                //            }
+                //        }
+                //        else
+                //        {
+                //            tableMeetingAttendance.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //        }
+                //        table.AddCell(new PdfPCell(tableMeetingAttendance) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10, PaddingLeft = 10, PaddingRight = 10, PaddingTop = 10 });
+                //        table.AddCell(new PdfPCell(new Phrase(" ")) { Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.TOP_BORDER });
+                //        filtered = null;
+                //        tableMeetingAttendance.DeleteBodyRows();
+                //    }
+                //}
+                //else
+                //{
+                //    table.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+                //DataRow rowAssessmentNarrativeSummary = null;
+                //if (AssessmentNarrativeSummary.Rows.Count > 0)
+                //{
+                //    rowAssessmentNarrativeSummary = AssessmentNarrativeSummary.Rows[0];
+                //}
+                //tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Section I")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("ASSESSMENT NARRATIVE SUMMARY")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("This section includes relevant personal history and appropriate contextual information, as well as skills, abilities, aspirations, needs, interests, reasonable accommodations, cultural considerations, meaningful activities, challenges, etc., learned during the person - centered planning process, record review and any assessments reviewed and / or completed.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+
+                //if (AssessmentNarrativeSummary.Rows.Count > 0)
+                //{
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Introducing Me :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["IntroducingMe"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Home :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHome"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Let Me Tell You About My Day :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["TellYouAboutMyDay"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Health and My Medications :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHealthAndMedication"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Relationship :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyRelationships"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Happiness :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MyHappiness"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My School/ Learning :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase(rowAssessmentNarrativeSummary["MySchool"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+
+
+                //}
+                //else
+                //{
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Introducing Me :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Home :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("Let Me Tell You About My Day :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Health and My Medications :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Relationship :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My Happiness :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("My School/ Learning :")) { PaddingBottom = 10 });
+                //    tableAssessmentNarrativeSummary.AddCell(new PdfPCell(new Phrase("", fntTableFont)) { PaddingBottom = 10 });
+                //    //tableAssessmentNarrativeSummary.AddCell("");
+                //}
+
+
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Section II")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("OUTCOMES AND SUPPORT STRATEGIES")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("This section includes measurable/observable personal outcomes that are developed by the person and his/her IDT using person-centered planning. It describes provider goals and corresponding staff activities identified to meet the CCO goal / valued outcome.It captures the following information: goal description, valued outcomes, action steps, responsible party, service type, timeframe for action steps and Personal Outcome Measures.Evidence of achievement must be reflected in monthly notes from assigned providers.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CQL POMS Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("CCO Goal/Valued OutCome", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Provider / Location", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Service Type", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Frequency", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Quantity", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Time Frame", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("Special Considerations", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //if (Outcomes_SupportStrategies.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < Outcomes_SupportStrategies.Rows.Count; i++)
+                //    {
+                //        DataRow rowOutcomes_SupportStrategies = Outcomes_SupportStrategies.Rows[i];
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["CqlPomsGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["CcoGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ProviderAssignedGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ProviderLocation"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["ServicesType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["Frequency"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["Quantity"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["TimeFrame"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase(rowOutcomes_SupportStrategies["SpecialConsiderations"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    }
+                //}
+                //else
+                //{
+                //    tableOutcomes_SupportStrategies.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 9, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Section III")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Individual Safeguards/Individual Plan of Protection (IPOP)")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Compilation of all supports and services needed for a person to remain safe, healthy and comfortable across all settings (including Part 686 requirements for IPOP).This section details the provider goals and corresponding staff activities required to maintain desired personal safety")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 8, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Goal Valued Outcome")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider Assigned Goal")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Provider/Location")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Service Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Frequency")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Quantity")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Time Frame")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("Special Considerations")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //if (IndividualPlanOfProtection.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < IndividualPlanOfProtection.Rows.Count; i++)
+                //    {
+                //        DataRow rowIndividualPlanOfProtection = IndividualPlanOfProtection.Rows[i];
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["GoalValuedOutcome"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ProviderAssignedGoal"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ProviderLocation"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["ServicesType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["Frequency"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["Quantity"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["TimeFrame"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase(rowIndividualPlanOfProtection["SpecialConsiderations"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                //    }
+                //}
+                //else
+                //{
+                //    tableIndividualPlanOfProtection.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 8, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Section IV")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("HCBS Wavier and Medicaid State Plan Authorized Services")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("This section of the Life Plan includes a listing of all HCBS Waiver and State Plan services that have been authorized for the individual. ")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 5, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Authorized Service")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Provider")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Effective Dates")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Unit Of Measure")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("Comments")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //if (MedicaidStatePlanAuthorizedServies.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < MedicaidStatePlanAuthorizedServies.Rows.Count; i++)
+                //    {
+                //        DataRow rowMedicaidStatePlanAuthorizedServies = MedicaidStatePlanAuthorizedServies.Rows[i];
+                //        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["AuthorizedService"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Provider"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["EffectiveDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["UnitOfMeasure"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase(rowMedicaidStatePlanAuthorizedServies["Comments"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                //    }
+                //}
+                //else
+                //{
+                //    tableMedicaidStatePlanAuthorizedServies.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 5, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Section V")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("All Suports and Services; Funded and Natural/Community Resources")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("This section identifies the services and support givers in a person’s life along with the needed contact information. Additionally, all Natural Supports and Community Resources that help the person be a valued individual of his or her community and live successfully on a day - to - day basis at home, at work, at school, or in other community locations should be listed with contact information as appropriate.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 4, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Contact Type")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Relationship")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("Orginization")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //if (FundalNaturalCommunityResources.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < FundalNaturalCommunityResources.Rows.Count; i++)
+                //    {
+                //        DataRow rowFundalNaturalCommunityResources = FundalNaturalCommunityResources.Rows[i];
+                //        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["ContactType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Relationship"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Name"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase(rowFundalNaturalCommunityResources["Orginization"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                //    }
+                //}
+                //else
+                //{
+                //    tableFundalNaturalCommunityResources.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 4, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+                //DataRow rowMemberRight = null;
+                //if (MemberRights.Rows.Count > 0)
+                //{
+                //    rowMemberRight = MemberRights.Rows[0];
+                //}
+                ////tableMemberRights.AddCell(new PdfPCell(new Phrase("Section VI")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableMemberRights.AddCell(new PdfPCell(new Phrase("Member Rights")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //tableMemberRights.AddCell(new PdfPCell(new Phrase("My Care Manager has informed me of:")) { Colspan = 9, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+
+
+
+
+                //if (MemberRights.Rows.Count > 0)
+                //{
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase("My rights under the Americans With Disabilities Act(ADA) : " + rowMemberRight["RightsUnderAmericansDisabilitiesAct"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to obtain reasonable accommodations (my reasonable accommodations are listed in my Life Plan) : " + rowMemberRight["Provider"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase(" How to file a grievance or an appeal : " + rowMemberRight["GrievanceAppeal"].ToString(), fntTableFont)) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //}
+                //else
+                //{
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase("My rights under the Americans With Disabilities Act(ADA) : ")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to obtain reasonable accommodations (my reasonable accommodations are listed in my Life Plan) :")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER, PaddingBottom = 10 });
+                //    tableMemberRights.AddCell(new PdfPCell(new Phrase("How to file a grievance or an appeal : ")) { Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                //}
+
+
+
+                ////tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Section VII")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Representative Approval")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Name")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Member Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Representative")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Representative Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Committee Approver")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("Committee Approval Date")) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //if (MemberRepresentativeApproval.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < MemberRepresentativeApproval.Rows.Count; i++)
+                //    {
+                //        DataRow rowMemberRepresentativeApproval = MemberRepresentativeApproval.Rows[i];
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["MemberName"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["MemberApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["Representative"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["RepresentativeApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["CommitteeApprover"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase(rowMemberRepresentativeApproval["CommitteeApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+
+                //    }
+                //}
+                //else
+                //{
+                //    tableMemberRepresentativeApproval.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Section VI")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Acknowledgement and Agreements")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 6, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER, PaddingBottom = 10 });
+                ////tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("This section includes measurable/observable personal outcomes that are developed by the person and his/her IDT using person-centered planning. It describes provider goals and corresponding staff activities identified to meet the CCO goal / valued outcome.It captures the following information: goal description, valued outcomes, action steps, responsible party, service type, timeframe for action steps and Personal Outcome Measures.Evidence of achievement must be reflected in monthly notes from assigned providers.")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 9, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.BOTTOM_BORDER });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Date", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Provider", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Reason", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Notification Type", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Acknowledge and Agree Status", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("Aceptance / Acknowledgement Date", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //if (AcknowledgementAndAgreement.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < AcknowledgementAndAgreement.Rows.Count; i++)
+                //    {
+                //        DataRow rowAcknowledgementAndAgreement = AcknowledgementAndAgreement.Rows[i];
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["Provider"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationReason"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationType"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["NotificationAckAgreeStatus"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase(rowAcknowledgementAndAgreement["AceptanceAcknowledgementDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    }
+                //}
+                //else
+                //{
+                //    tableAcknowledgementAndAgreement.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 6, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+                ////tableDocuments.AddCell(new PdfPCell(new Phrase("Section IX")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 2, HorizontalAlignment = 1, Border = Rectangle.RIGHT_BORDER | Rectangle.LEFT_BORDER | Rectangle.TOP_BORDER, PaddingBottom = 10 });
+                //tableDocuments.AddCell(new PdfPCell(new Phrase("Documents")) { BackgroundColor = new BaseColor(204, 204, 204), Colspan = 2, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //tableDocuments.AddCell(new PdfPCell(new Phrase("Document Title", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+                //tableDocuments.AddCell(new PdfPCell(new Phrase("Attach Document", fntTableFontHdr)) { BackgroundColor = new BaseColor(204, 204, 204), PaddingBottom = 10 });
+
+                //if (Documents.Rows.Count > 0)
+                //{
+                //    for (var i = 0; i < Documents.Rows.Count; i++)
+                //    {
+                //        DataRow rowDocument = Documents.Rows[i];
+                //        tableDocuments.AddCell(new PdfPCell(new Phrase(rowDocument["MemberName"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //        tableDocuments.AddCell(new PdfPCell(new Phrase(rowDocument["MemberApprovalDate"].ToString(), fntTableFont)) { PaddingBottom = 10 });
+                //    }
+                //}
+                //else
+                //{
+                //    tableDocuments.AddCell(new PdfPCell(new Phrase("No Records")) { Colspan = 2, HorizontalAlignment = 1, PaddingBottom = 10 });
+                //}
+
+
+                pdfStamper.FormFlattening = false;
+                pdfStamper.Dispose();
+                // close the pdf
+                pdfStamper.Close();
+
+                var pagesize = new iTextSharp.text.Rectangle(iTextSharp.text.PageSize.A4);
+                //Set Background color of pdf    
+                pagesize.BackgroundColor = iTextSharp.text.BaseColor.WHITE;
+                var left_margin = 15;
+                var top_margin = 25;
+                var bottom_margin = 25;
+
+
+                // create a iTextSharp.text.Document object:    
+                iTextSharp.text.Document doc = new iTextSharp.text.Document(pagesize, left_margin, 10, top_margin, bottom_margin);
+                PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(newFile, FileMode.Create));
+                iTextSharp.text.Font mainFont = new iTextSharp.text.Font();
+                iTextSharp.text.Font boldFont = new iTextSharp.text.Font();
+                mainFont = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.NORMAL);
+                boldFont = FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD);
+                doc.Open();
+
+                //table.SpacingAfter = 30;
+                //tableAssessmentNarrativeSummary.SpacingAfter = 30;
+                //tableFundalNaturalCommunityResources.SpacingAfter = 30;
+                //tableIndividualPlanOfProtection.SpacingAfter = 30;
+                //tableMedicaidStatePlanAuthorizedServies.SpacingAfter = 30;
+                //tableOutcomes_SupportStrategies.SpacingAfter = 30;
+                //tableMemberRepresentativeApproval.SpacingAfter = 30;
+                //tableAcknowledgementAndAgreement.SpacingAfter = 30;
+                //tableDocuments.SpacingAfter = 30;
+               // tableMemberRights.SpacingAfter = 30;
+
+
+
+
+
+
+                //doc.Add(table);
+                //doc.Add(tableMeetingAttendance);
+                //doc.Add(tableAssessmentNarrativeSummary);
+                //doc.Add(tableOutcomes_SupportStrategies);
+                //doc.Add(tableIndividualPlanOfProtection);
+                //doc.Add(tableMedicaidStatePlanAuthorizedServies);
+                //doc.Add(tableFundalNaturalCommunityResources);
+                //doc.Add(tableMemberRights);
+                //doc.Add(tableMemberRepresentativeApproval);
+                //doc.Add(tableAcknowledgementAndAgreement);
+                //doc.Add(tableDocuments);
+                doc.Close();
+
+                //FileStream fs = new FileStream(finaldoc, FileMode.Create);
+                //iTextSharp.text.pdf.PdfReader readerNewFile = new iTextSharp.text.pdf.PdfReader(newFile);
+                //iTextSharp.text.pdf.PdfReader readerNewFile1 = new iTextSharp.text.pdf.PdfReader(newFile1);
+
+                //using (Document document = new Document())
+                //using (PdfCopy copy = new PdfCopy(document, fs))
+                //{
+                //    document.Open();
+                //    copy.AddDocument(readerNewFile);
+                //    copy.AddDocument(readerNewFile1);
+                //    document.Close();
+                //    readerNewFile.Dispose();
+                //    readerNewFile.Dispose();
+                //    readerNewFile1.Close();
+                //    readerNewFile1.Close();
+                //    fs.Dispose();
+                //    fs.Close();
+
+                //}
+                //// for paging and date stamp
+                //FileStream fs1 = new FileStream(finaldoc1, FileMode.Create);
+                //iTextSharp.text.pdf.PdfReader reader = new iTextSharp.text.pdf.PdfReader(newFile);
+                //iTextSharp.text.pdf.PdfReader fsreader1 = new iTextSharp.text.pdf.PdfReader(newFile1);
+
+                //using (Document document1 = new Document())
+                //using (PdfCopy copy1 = new PdfCopy(document1, fs1))
+                //{
+                //    document1.Open();
+                //    copy1.AddDocument(reader);
+                //    copy1.AddDocument(fsreader1);
+                //    document1.Close();
+                //    reader.Dispose();
+                //    fsreader1.Dispose();
+                //    reader.Close();
+                //    fsreader1.Close();
+                //    fs1.Dispose();
+                //    fs1.Close();
+                //}
+                //iTextSharp.text.pdf.PdfReader pdfReader1 = new iTextSharp.text.pdf.PdfReader(finaldoc1);
+                //PdfStamper pdfStamper1 = new PdfStamper(pdfReader1, new FileStream(finaldoc, FileMode.Create));
+                //for (int i = 1; i <= pdfReader1.NumberOfPages; i++)
+                //{
+                //    ColumnText.ShowTextAligned(pdfStamper1.GetOverContent(i), Element.ALIGN_RIGHT, new Phrase("Page " + i.ToString() + " of " + pdfReader1.NumberOfPages), 568f, 15f, 0);
+                //    ColumnText.ShowTextAligned(pdfStamper1.GetOverContent(i), Element.ALIGN_LEFT, new Phrase("Printed on " + DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"), pageTextFont), 2f, 15f, 0);
+                //}
+                //pdfStamper1.FormFlattening = false;
+                //pdfStamper1.Dispose();
+                //// close the pdf
+
+                //pdfStamper1.Close();
+                //pdfReader1.Dispose();
+                //pdfReader1.Close();
+
+
+
+                if (tabName == "PublishLifePlanVersion")
+                {
+                  //  dataTable = UploadPublishedPDFDocument(finaldoc, dataSetFillPDF.Tables[0], fillablePDFRequest);
+                }
+                else
+                {
+                    dataTable.Clear();
+                    dataTable.Columns.Add("FileName");
+                    DataRow dataRow = dataTable.NewRow();
+                    dataRow["FileName"] = newFile;
+                    dataTable.Rows.Add(dataRow);
+                }
+                pdfStamper.Dispose();
+                pdfStamper.Close();
+
+                return dataTable;
+            }
+            catch (Exception Ex)
+            {
+                pdfStamper.Dispose();
+                pdfStamper.Close();
+                throw Ex;
+            }
+
+        }
+
+        private void fillCCOComprehensiveAssessmentSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableComprehensiveAssessment;
+            try
+            {
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableComprehensiveAssessment = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableComprehensiveAssessment.Rows[0];
+
+                    pdfFormFields.SetField("IndividualMiddleName", row["IndividualMiddleName"].ToString());
+                    pdfFormFields.SetField("IndividualSuffix", row["IndividualSuffix"].ToString());
+                    pdfFormFields.SetField("Nickname", row["Nickname"].ToString());
+                    pdfFormFields.SetField("TABSId", row["TABSId"].ToString());
+                    pdfFormFields.SetField("MedicaidId", row["MedicaidId"].ToString());
+                    pdfFormFields.SetField("DateofBirth", row["DateofBirth"].ToString());
+                    pdfFormFields.SetField("Gender", row["Gender"].ToString());
+                    pdfFormFields.SetField("PreferredGender", row["PreferredGender"].ToString());
+                    pdfFormFields.SetField("Race", row["Race"].ToString());
+                    pdfFormFields.SetField("Ethnicity", row["Ethnicity"].ToString());
+                    pdfFormFields.SetField("PhoneNumber", row["PhoneNumber"].ToString());
+                    pdfFormFields.SetField("StreetAddress1", row["StreetAddress1"].ToString());
+                    pdfFormFields.SetField("StreetAddress2", row["StreetAddress2"].ToString());
+                    pdfFormFields.SetField("City", row["City"].ToString());
+                    pdfFormFields.SetField("State", row["State"].ToString());
+                    pdfFormFields.SetField("ZipCode", row["ZipCode"].ToString());
+                    pdfFormFields.SetField("LivingSituation", row["LivingSituation"].ToString());
+                    pdfFormFields.SetField("WillowbrookStatus", row["WillowbrookStatus"].ToString());
+                    pdfFormFields.SetField("RepresentationStatus", row["RepresentationStatus"].ToString());
+                    pdfFormFields.SetField("CABRepContact1", row["CABRepContact1"].ToString());
+                    pdfFormFields.SetField("CABRepContact2", row["CABRepContact2"].ToString());
+                    pdfFormFields.SetField("ExpectationsforCommunityInclusion", row["ExpectationsforCommunityInclusion"].ToString());
+                    pdfFormFields.SetField("HospitalStaffingCoverage", row["HospitalStaffingCoverage"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillEligibiltyInformationSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableEligibiltyInformation;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableEligibiltyInformation = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableEligibiltyInformation.Rows[0];
+
+                    pdfFormFields.SetField("MCOEnrollmentDate", row["MCOEnrollmentDate"].ToString());
+                    pdfFormFields.SetField("MCOName", row["MCOName"].ToString());
+                    pdfFormFields.SetField("OPWDDEligibility", row["OPWDDEligibility"].ToString());
+                    pdfFormFields.SetField("ICFEligibilityDeterminationDate", row["ICFEligibilityDeterminationDate"].ToString());
+                    pdfFormFields.SetField("MedicaidExpirationDate", row["MedicaidExpirationDate"].ToString());
+                    pdfFormFields.SetField("HHConsentDate", row["HHConsentDate"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillCommunication_LanguageSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableCommunicationLanguage;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableCommunicationLanguage = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableCommunicationLanguage.Rows[0];
+
+                  
+                    pdfFormFields.SetField("MemExpressiveCommunicationSkill", row["MemExpressiveCommunicationSkill"].ToString());
+                    pdfFormFields.SetField("MemReceptiveCommunicationSkill", row["MemReceptiveCommunicationSkill"].ToString());
+                    pdfFormFields.SetField("MemPrimaryLanguage", row["MemPrimaryLanguage"].ToString());
+                    pdfFormFields.SetField("MemPrimarySpokenLanguage", row["MemPrimarySpokenLanguage"].ToString());
+                    pdfFormFields.SetField("MemPrimaryWrittenLanguage", row["MemPrimaryWrittenLanguage"].ToString());
+                    pdfFormFields.SetField("MemAbleToReadPrimaryLanguage", row["MemAbleToReadPrimaryLanguage"].ToString());
+                    pdfFormFields.SetField("MemMultiLingual", row["MemMultiLingual"].ToString());
+                    pdfFormFields.SetField("MemMultiLingualLanguages", row["MemMultiLingualLanguages"].ToString());
+                    pdfFormFields.SetField("Interpreter", row["Interpreter"].ToString());
+                    pdfFormFields.SetField("Translator", row["Translator"].ToString());
+                    pdfFormFields.SetField("NotApplicable", row["NotApplicable"].ToString());
+                    pdfFormFields.SetField("MemWantToImproveCommunicate", row["MemWantToImproveCommunicate"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillMemberProviderSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableMemberProvider;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableMemberProvider = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableMemberProvider.Rows[0];
+
+                    pdfFormFields.SetField("PrimaryCarePhysician", row["PrimaryCarePhysician"].ToString());
+                    pdfFormFields.SetField("Dentist", row["Dentist"].ToString());
+                    pdfFormFields.SetField("Psychiatrist", row["Psychiatrist"].ToString());
+                    pdfFormFields.SetField("Psychologist", row["Psychologist"].ToString());
+                    pdfFormFields.SetField("EyeDoctor", row["EyeDoctor"].ToString());
+                    pdfFormFields.SetField("Pharmacy", row["Pharmacy"].ToString());
+                    pdfFormFields.SetField("Hospital", row["Hospital"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillCircleAndSupportSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableCircleAndSupport;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableCircleAndSupport = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableCircleAndSupport.Rows[0];
+
+                    pdfFormFields.SetField("IndividualMiddleName", row["IndividualMiddleName"].ToString());
+                    pdfFormFields.SetField("IndividualSuffix", row["IndividualSuffix"].ToString());
+                    pdfFormFields.SetField("Nickname", row["Nickname"].ToString());
+                    pdfFormFields.SetField("TABSId", row["TABSId"].ToString());
+                    pdfFormFields.SetField("MedicaidId", row["MedicaidId"].ToString());
+                    pdfFormFields.SetField("DateofBirth", row["DateofBirth"].ToString());
+                    pdfFormFields.SetField("Gender", row["Gender"].ToString());
+                    pdfFormFields.SetField("PreferredGender", row["PreferredGender"].ToString());
+                    pdfFormFields.SetField("Race", row["Race"].ToString());
+                    pdfFormFields.SetField("Ethnicity", row["Ethnicity"].ToString());
+                    pdfFormFields.SetField("PhoneNumber", row["PhoneNumber"].ToString());
+                    pdfFormFields.SetField("StreetAddress1", row["StreetAddress1"].ToString());
+                    pdfFormFields.SetField("StreetAddress2", row["StreetAddress2"].ToString());
+                    pdfFormFields.SetField("City", row["City"].ToString());
+                    pdfFormFields.SetField("State", row["State"].ToString());
+                    pdfFormFields.SetField("ZipCode", row["ZipCode"].ToString());
+                    pdfFormFields.SetField("LivingSituation", row["LivingSituation"].ToString());
+                    pdfFormFields.SetField("WillowbrookStatus", row["WillowbrookStatus"].ToString());
+                    pdfFormFields.SetField("RepresentationStatus", row["RepresentationStatus"].ToString());
+                    pdfFormFields.SetField("CABRepContact1", row["CABRepContact1"].ToString());
+                    pdfFormFields.SetField("CABRepContact2", row["CABRepContact2"].ToString());
+                    pdfFormFields.SetField("ExpectationsforCommunityInclusion", row["ExpectationsforCommunityInclusion"].ToString());
+                    pdfFormFields.SetField("HospitalStaffingCoverage", row["HospitalStaffingCoverage"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillGuardianshipAndAdvocacySection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableGuardianshipAndAdvocacy;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableGuardianshipAndAdvocacy = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableGuardianshipAndAdvocacy.Rows[0];
+
+                    pdfFormFields.SetField("NoActiveGuardian", row["NoActiveGuardian"].ToString());
+                    pdfFormFields.SetField("NotApplicableGuardian", row["NotApplicableGuardian"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillAdvancedDirectivesFuturePlanningSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableAdvancedDirectivesFuturePlanning;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableAdvancedDirectivesFuturePlanning = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableAdvancedDirectivesFuturePlanning.Rows[0];
+
+                    pdfFormFields.SetField("MemHaveHealthCareProxy", row["MemHaveHealthCareProxy"].ToString());
+                    pdfFormFields.SetField("HealthCareProxyName", row["HealthCareProxyName"].ToString());
+                    pdfFormFields.SetField("MemLearnAdvancedHealthProxies", row["MemLearnAdvancedHealthProxies"].ToString());
+                    pdfFormFields.SetField("MemSurrogateDesMakingCommittee", row["MemSurrogateDesMakingCommittee"].ToString());
+                    pdfFormFields.SetField("MemUtiCommitAproveBehavioralSupportPlan", row["MemUtiCommitAproveBehavioralSupportPlan"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillIndependentLivingSkillsSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableIndependentLivingSkills;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableIndependentLivingSkills = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableIndependentLivingSkills.Rows[0];
+
+                  
+                    pdfFormFields.SetField("ExplainConsent", row["ExplainConsent"].ToString());
+                    pdfFormFields.SetField("IndvCurrentLevelOfHousingStability", row["IndvCurrentLevelOfHousingStability"].ToString());
+                    pdfFormFields.SetField("Pest", row["Pest"].ToString());
+                    pdfFormFields.SetField("Mold", row["Mold"].ToString());
+                    pdfFormFields.SetField("LeadPaint", row["LeadPaint"].ToString());
+                    pdfFormFields.SetField("LackOfHeat", row["LackOfHeat"].ToString());
+                    pdfFormFields.SetField("Oven", row["Oven"].ToString());
+                    pdfFormFields.SetField("SmokeDetectorMissing", row["SmokeDetectorMissing"].ToString());
+                    pdfFormFields.SetField("WaterLeakes", row["WaterLeakes"].ToString());
+                    pdfFormFields.SetField("NoneOfTheAbove", row["NoneOfTheAbove"].ToString());
+                    pdfFormFields.SetField("LevelOfPersonalHygiene", row["LevelOfPersonalHygiene"].ToString());
+                    pdfFormFields.SetField("ExplainPersonalHygiene", row["ExplainPersonalHygiene"].ToString());
+                    pdfFormFields.SetField("LevelOfSupportForToiletingNeed", row["LevelOfSupportForToiletingNeed"].ToString());
+                    pdfFormFields.SetField("IndvExperConstipationDiarrheaVomiting", row["IndvExperConstipationDiarrheaVomiting"].ToString());
+                    pdfFormFields.SetField("IndvExperForConstipationDiarrheaVomitingInLastMonths", row["IndvExperForConstipationDiarrheaVomitingInLastMonths"].ToString());
+                    pdfFormFields.SetField("IndvBowelObstructionReqHospitalization", row["IndvBowelObstructionReqHospitalization"].ToString());
+                    pdfFormFields.SetField("SupportForConstipationConcern", row["SupportForConstipationConcern"].ToString());
+                    pdfFormFields.SetField("ExplainSupportResultConstipationNeed", row["ExplainSupportResultConstipationNeed"].ToString());
+                    pdfFormFields.SetField("LevelOfSuppHandFaceWash", row["LevelOfSuppHandFaceWash"].ToString());
+                    pdfFormFields.SetField("ChooseAnsSupportForDentalOralCare", row["ChooseAnsSupportForDentalOralCare"].ToString());
+                    pdfFormFields.SetField("ExplainSupportResultDentalOralCare", row["ExplainSupportResultDentalOralCare"].ToString());
+                    pdfFormFields.SetField("LevelOfSuppTrimNails", row["LevelOfSuppTrimNails"].ToString());
+                    pdfFormFields.SetField("LevelOfSuppSneezeCough", row["LevelOfSuppSneezeCough"].ToString());
+                    pdfFormFields.SetField("LevelOfSuppPPEMask", row["LevelOfSuppPPEMask"].ToString());
+                    pdfFormFields.SetField("LevelOfSuppMoveSafely", row["LevelOfSuppMoveSafely"].ToString());
+                    pdfFormFields.SetField("SuppForRiskToFall", row["SuppForRiskToFall"].ToString());
+                    pdfFormFields.SetField("ExplainSuppForRiskToFall", row["ExplainSuppForRiskToFall"].ToString());
+                    pdfFormFields.SetField("FallenInLastThreeMonths", row["FallenInLastThreeMonths"].ToString());
+                    pdfFormFields.SetField("HowManyTimeMemberFallenInPast", row["HowManyTimeMemberFallenInPast"].ToString());
+                    pdfFormFields.SetField("ConcernForIndividualVision", row["ConcernForIndividualVision"].ToString());
+                    pdfFormFields.SetField("ExpConcernForIndividualVision", row["ExpConcernForIndividualVision"].ToString());
+                    pdfFormFields.SetField("ConcernForIndividualHearing", row["ConcernForIndividualHearing"].ToString());
+                    pdfFormFields.SetField("ExpConcernForIndividualHearing", row["ExpConcernForIndividualHearing"].ToString());
+                    pdfFormFields.SetField("NoConcernForSkinIntegrity", row["NoConcernForSkinIntegrity"].ToString());
+                    pdfFormFields.SetField("ReqPositioningSchedule", row["ReqPositioningSchedule"].ToString());
+                    pdfFormFields.SetField("ReqDailySkinInspection", row["ReqDailySkinInspection"].ToString());
+                    pdfFormFields.SetField("ReqAdaptiveEquipment", row["ReqAdaptiveEquipment"].ToString());
+                    pdfFormFields.SetField("ReqSkinBarrierCream", row["ReqSkinBarrierCream"].ToString());
+                    pdfFormFields.SetField("ProvideEducationWhereAppropriate", row["ProvideEducationWhereAppropriate"].ToString());
+                    pdfFormFields.SetField("ExplainSupportSkinIntegrity", row["ExplainSupportSkinIntegrity"].ToString());
+                    pdfFormFields.SetField("NoConcernForNutritionalNeed", row["NoConcernForNutritionalNeed"].ToString());
+                    pdfFormFields.SetField("ReqConsistencyFood", row["ReqConsistencyFood"].ToString());
+                    pdfFormFields.SetField("ReqConsistencyFluid", row["ReqConsistencyFluid"].ToString());
+                    pdfFormFields.SetField("ReqReduceCalorieDiet", row["ReqReduceCalorieDiet"].ToString());
+                    pdfFormFields.SetField("ReqHighCalorieDiet", row["ReqHighCalorieDiet"].ToString());
+                    pdfFormFields.SetField("ReqFiberCalciumElementToDiet", row["ReqFiberCalciumElementToDiet"].ToString());
+                    pdfFormFields.SetField("ReqSweetSaltFatElementRemove", row["ReqSweetSaltFatElementRemove"].ToString());
+                    pdfFormFields.SetField("RestrictedFluid", row["RestrictedFluid"].ToString());
+                    pdfFormFields.SetField("EnteralNutrition", row["EnteralNutrition"].ToString());
+                    pdfFormFields.SetField("ReqDietarySupplement", row["ReqDietarySupplement"].ToString());
+                    pdfFormFields.SetField("ReqAssitMealPreparation", row["ReqAssitMealPreparation"].ToString());
+                    pdfFormFields.SetField("ReqEducation", row["ReqEducation"].ToString());
+                    pdfFormFields.SetField("ReqAssitMealPlanning", row["ReqAssitMealPlanning"].ToString());
+                    pdfFormFields.SetField("ReqSupervisionDuringMeal", row["ReqSupervisionDuringMeal"].ToString());
+                    pdfFormFields.SetField("AdapEquDuringMeal", row["AdapEquDuringMeal"].ToString());
+                    pdfFormFields.SetField("IndvMaintAdequateDiet", row["IndvMaintAdequateDiet"].ToString());
+                    pdfFormFields.SetField("ExpSupptNutritionalCareNeed", row["ExpSupptNutritionalCareNeed"].ToString());
+                    pdfFormFields.SetField("RiskForChoking", row["RiskForChoking"].ToString());
+                    pdfFormFields.SetField("SupptOnChokingAspiration", row["SupptOnChokingAspiration"].ToString());
+                    pdfFormFields.SetField("ExpSupptResultChokingAspirationNeed", row["ExpSupptResultChokingAspirationNeed"].ToString());
+                    pdfFormFields.SetField("SwallowingEvaluationNeed", row["SwallowingEvaluationNeed"].ToString());
+                    pdfFormFields.SetField("SupptThatIndvNeedOnAcidReflux", row["SupptThatIndvNeedOnAcidReflux"].ToString());
+                    pdfFormFields.SetField("ExpSupptResultAcidRefluxNeed", row["ExpSupptResultAcidRefluxNeed"].ToString());
+                    pdfFormFields.SetField("SupptNeedForMealPreparation", row["SupptNeedForMealPreparation"].ToString());
+                    pdfFormFields.SetField("SupptNeedForMealPlanning", row["SupptNeedForMealPlanning"].ToString());
+                    pdfFormFields.SetField("IndvWorriedAboutFoodInPast", row["IndvWorriedAboutFoodInPast"].ToString());
+                    pdfFormFields.SetField("IndvRanOutOfFoodInPast", row["IndvRanOutOfFoodInPast"].ToString());
+                    pdfFormFields.SetField("IndvElecGasOilWaterThreatedInPast", row["IndvElecGasOilWaterThreatedInPast"].ToString());
+                    pdfFormFields.SetField("LevelOfSupptForCleaning", row["LevelOfSupptForCleaning"].ToString());
+                    pdfFormFields.SetField("MoneyManagementNeedOfMember", row["MoneyManagementNeedOfMember"].ToString());
+                    pdfFormFields.SetField("ExpAssistanceForBudgeting", row["ExpAssistanceForBudgeting"].ToString());
+                    pdfFormFields.SetField("MemLearnToManageOwnMoney", row["MemLearnToManageOwnMoney"].ToString());
+                    pdfFormFields.SetField("MedicationPrescribedByProvider", row["MedicationPrescribedByProvider"].ToString());
+                    pdfFormFields.SetField("IndvAbilityAdministerMedication", row["IndvAbilityAdministerMedication"].ToString());
+                    pdfFormFields.SetField("IndvNeedReminderForMedication", row["IndvNeedReminderForMedication"].ToString());
+                    pdfFormFields.SetField("MedicationReminderMethod", row["MedicationReminderMethod"].ToString());
+                    pdfFormFields.SetField("TakingMedicationAsPrescribed", row["TakingMedicationAsPrescribed"].ToString());
+                    pdfFormFields.SetField("IndvRefuseForMedication", row["IndvRefuseForMedication"].ToString());
+                    pdfFormFields.SetField("ExpIndvRefuseForMedication", row["ExpIndvRefuseForMedication"].ToString());
+                    pdfFormFields.SetField("ExpSupptMedicationAdministration", row["ExpSupptMedicationAdministration"].ToString());
+                    pdfFormFields.SetField("IndvAbleToAccessOwnPhone", row["IndvAbleToAccessOwnPhone"].ToString());
+                    pdfFormFields.SetField("IndvAbleToCallEmergency", row["IndvAbleToCallEmergency"].ToString());
+                    pdfFormFields.SetField("IndvAbleToAccessInternet", row["IndvAbleToAccessInternet"].ToString());
+                    pdfFormFields.SetField("IndvCallApplicableContactInPhone", row["IndvCallApplicableContactInPhone"].ToString());
+                    pdfFormFields.SetField("IndvNeedTransportation", row["IndvNeedTransportation"].ToString());
+                    pdfFormFields.SetField("ExpTransportationNeed", row["ExpTransportationNeed"].ToString());
+                    pdfFormFields.SetField("IndvLackedForTransportationInPastMonths", row["IndvLackedForTransportationInPastMonths"].ToString());
+                    pdfFormFields.SetField("IndvLearnToDrive", row["IndvLearnToDrive"].ToString());
+                    pdfFormFields.SetField("IndvWantVehicleOwnership", row["IndvWantVehicleOwnership"].ToString());
+                    pdfFormFields.SetField("IndvIndependentUsingTransportation", row["IndvIndependentUsingTransportation"].ToString());
+                    pdfFormFields.SetField("ConcernsWithBehavior", row["ConcernsWithBehavior"].ToString());
+                    pdfFormFields.SetField("HowIndvMentalHealth", row["HowIndvMentalHealth"].ToString());
+                    pdfFormFields.SetField("IndvCommunicateHealthConcern", row["IndvCommunicateHealthConcern"].ToString());
+                    pdfFormFields.SetField("ExpIndvAbilityCommHealthConcern", row["ExpIndvAbilityCommHealthConcern"].ToString());
+                    pdfFormFields.SetField("IndvAttendAllHealthService", row["IndvAttendAllHealthService"].ToString());
+                    pdfFormFields.SetField("ExpSupptIndvAttendAllHealthService", row["ExpSupptIndvAttendAllHealthService"].ToString());
+                    pdfFormFields.SetField("IndvSuppToHelpADLS", row["IndvSuppToHelpADLS"].ToString());
+                    pdfFormFields.SetField("IndvDifficultyRememberingThings", row["IndvDifficultyRememberingThings"].ToString());
+                    pdfFormFields.SetField("FollowTwoStepInstruction", row["FollowTwoStepInstruction"].ToString());
+                    pdfFormFields.SetField("SpeakInFullSentence", row["SpeakInFullSentence"].ToString());
+                    pdfFormFields.SetField("PretendPlay", row["PretendPlay"].ToString());
+                    pdfFormFields.SetField("ImitateOther", row["ImitateOther"].ToString());
+                    pdfFormFields.SetField("DrawCircle", row["DrawCircle"].ToString());
+                    pdfFormFields.SetField("RunWithoutFalling", row["RunWithoutFalling"].ToString());
+                    pdfFormFields.SetField("UpDownStepOneFootPerStep", row["UpDownStepOneFootPerStep"].ToString());
+                    pdfFormFields.SetField("IndvRecvPreschoolService", row["IndvRecvPreschoolService"].ToString());
+                    pdfFormFields.SetField("IndvHaveFireSafetyNeed", row["IndvHaveFireSafetyNeed"].ToString());
+                    pdfFormFields.SetField("ExpIndvFireSafetyConcern", row["ExpIndvFireSafetyConcern"].ToString());
+                    pdfFormFields.SetField("IndvHaveInfoAboutFireStartStoppedEtc", row["IndvHaveInfoAboutFireStartStoppedEtc"].ToString());
+                    pdfFormFields.SetField("IndvEvacuateDuringFire", row["IndvEvacuateDuringFire"].ToString());
+                    pdfFormFields.SetField("ExpAbilityToMaintainSafetyInEmergency", row["ExpAbilityToMaintainSafetyInEmergency"].ToString());
+                    pdfFormFields.SetField("IsBackupPlanWhenNoHCBSProvider", row["IsBackupPlanWhenNoHCBSProvider"].ToString());
+                    pdfFormFields.SetField("SupervisionNeedOfTheMember", row["SupervisionNeedOfTheMember"].ToString());
+                    pdfFormFields.SetField("ExpSupervisionNeed", row["ExpSupervisionNeed"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillSocialServiceNeedsSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableSocialServiceNeeds;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableSocialServiceNeeds = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableSocialServiceNeeds.Rows[0];
+
+                    pdfFormFields.SetField("IndvRepresentativePay", row["IndvRepresentativePay"].ToString());
+                    pdfFormFields.SetField("TypeOfRepresentativePay", row["TypeOfRepresentativePay"].ToString());
+                    pdfFormFields.SetField("SocialSecurity", row["SocialSecurity"].ToString());
+                    pdfFormFields.SetField("SSI", row["SSI"].ToString());
+                    pdfFormFields.SetField("SSDI", row["SSDI"].ToString());
+                    pdfFormFields.SetField("DisabledAdultChild", row["DisabledAdultChild"].ToString());
+                    pdfFormFields.SetField("OtherFinancialResource", row["OtherFinancialResource"].ToString());
+                    pdfFormFields.SetField("IndvPrivateInsuranceProvider", row["IndvPrivateInsuranceProvider"].ToString());
+                    pdfFormFields.SetField("IndvInsurerName", row["IndvInsurerName"].ToString());
+                    pdfFormFields.SetField("PrivateInsurerId", row["PrivateInsurerId"].ToString());
+                    pdfFormFields.SetField("HUDVoucher", row["HUDVoucher"].ToString());
+                    pdfFormFields.SetField("ISSHousingSubsidy", row["ISSHousingSubsidy"].ToString());
+                    pdfFormFields.SetField("OtherHousingAssistance", row["OtherHousingAssistance"].ToString());
+                    pdfFormFields.SetField("MemInvolCriminalJusticeSystem", row["MemInvolCriminalJusticeSystem"].ToString());
+                    pdfFormFields.SetField("ExpInvolCriminalJusticeSystem", row["ExpInvolCriminalJusticeSystem"].ToString());
+                    pdfFormFields.SetField("MemCurrOnProbation", row["MemCurrOnProbation"].ToString());
+                    pdfFormFields.SetField("ProbationContact", row["ProbationContact"].ToString());
+                    pdfFormFields.SetField("MemNeedLegalAid", row["MemNeedLegalAid"].ToString());
+                    pdfFormFields.SetField("CrimJustSystemImpactHousing", row["CrimJustSystemImpactHousing"].ToString());
+                    pdfFormFields.SetField("ExpCrimJustSystemImpactHousing", row["ExpCrimJustSystemImpactHousing"].ToString());
+                    pdfFormFields.SetField("CrimJustSystemImpactEmployment", row["CrimJustSystemImpactEmployment"].ToString());
+                    pdfFormFields.SetField("ExpCrimJustSystemImpactEmployment", row["ExpCrimJustSystemImpactEmployment"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillMedicalHealthSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableMedicalHealth;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableMedicalHealth = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableMedicalHealth.Rows[0];
+
+                    
+                    pdfFormFields.SetField("SeizureDisorder", row["SeizureDisorder"].ToString());
+                    pdfFormFields.SetField("CerebralPalsy", row["CerebralPalsy"].ToString());
+                    pdfFormFields.SetField("Spasticity", row["Spasticity"].ToString());
+                    pdfFormFields.SetField("Asthma", row["Asthma"].ToString());
+                    pdfFormFields.SetField("GERD", row["GERD"].ToString());
+                    pdfFormFields.SetField("PICA", row["PICA"].ToString());
+                    pdfFormFields.SetField("FailureToThrive", row["FailureToThrive"].ToString());
+                    pdfFormFields.SetField("Arthritis", row["Arthritis"].ToString());
+                    pdfFormFields.SetField("TypeOneDiabetes", row["TypeOneDiabetes"].ToString());
+                    pdfFormFields.SetField("TypeTwoDiabetes", row["TypeTwoDiabetes"].ToString());
+                    pdfFormFields.SetField("PreDiabetic", row["PreDiabetic"].ToString());
+                    pdfFormFields.SetField("HIV", row["HIV"].ToString());
+                    pdfFormFields.SetField("RecurrentUrinaryTractInfection", row["RecurrentUrinaryTractInfection"].ToString());
+                    pdfFormFields.SetField("HeartDisease", row["HeartDisease"].ToString());
+                    pdfFormFields.SetField("ChronicLungDisease", row["ChronicLungDisease"].ToString());
+                    pdfFormFields.SetField("Stroke", row["Stroke"].ToString());
+                    pdfFormFields.SetField("ChronicKidneyDisease", row["ChronicKidneyDisease"].ToString());
+                    pdfFormFields.SetField("AlzheimerDisease", row["AlzheimerDisease"].ToString());
+                    pdfFormFields.SetField("Cancer", row["Cancer"].ToString());
+                    pdfFormFields.SetField("AllMemAllergies", row["AllMemAllergies"].ToString());
+                    pdfFormFields.SetField("ExpAllMemAllergies", row["ExpAllMemAllergies"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+        private void fillHealthPromotionSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableHealthPromotion;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableHealthPromotion = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableHealthPromotion.Rows[0];
+
+
+                    pdfFormFields.SetField("MemHospitalizedInLastMonths", row["MemHospitalizedInLastMonths"].ToString());
+                    pdfFormFields.SetField("MemRecentHospitalized", row["MemRecentHospitalized"].ToString());
+                    pdfFormFields.SetField("MemLastAnnualPhysicalExam", row["MemLastAnnualPhysicalExam"].ToString());
+                    pdfFormFields.SetField("MemLastDentalExam", row["MemLastDentalExam"].ToString());
+                    pdfFormFields.SetField("NoConcernsAtThisTime", row["NoConcernsAtThisTime"].ToString());
+                    pdfFormFields.SetField("DentalHygieneSupport", row["DentalHygieneSupport"].ToString());
+                    pdfFormFields.SetField("Presedation", row["Presedation"].ToString());
+                    pdfFormFields.SetField("Dentures", row["Dentures"].ToString());
+                    pdfFormFields.SetField("MIPS", row["MIPS"].ToString());
+                    pdfFormFields.SetField("Other", row["Other"].ToString());
+                    pdfFormFields.SetField("Orthodondist", row["Orthodondist"].ToString());
+                    pdfFormFields.SetField("ExpSupptResultDentalOralCare", row["ExpSupptResultDentalOralCare"].ToString());
+                    pdfFormFields.SetField("MemLastEyeExam", row["MemLastEyeExam"].ToString());
+                    pdfFormFields.SetField("MemHadColonoscopy", row["MemHadColonoscopy"].ToString());
+                    pdfFormFields.SetField("MemRecentColonoscopy", row["MemRecentColonoscopy"].ToString());
+                    pdfFormFields.SetField("MemHadMammogram", row["MemHadMammogram"].ToString());
+                    pdfFormFields.SetField("MemRecentMammogram", row["MemRecentMammogram"].ToString());
+                    pdfFormFields.SetField("MemHadCervicalCancerExam", row["MemHadCervicalCancerExam"].ToString());
+                    pdfFormFields.SetField("MemRecentCervicalCancerExam", row["MemRecentCervicalCancerExam"].ToString());
+                    pdfFormFields.SetField("MemHadProstateExam", row["MemHadProstateExam"].ToString());
+                    pdfFormFields.SetField("MemRecentProstateExam", row["MemRecentProstateExam"].ToString());
+                    pdfFormFields.SetField("MemDementiaInPastMonths", row["MemDementiaInPastMonths"].ToString());
+                    pdfFormFields.SetField("MemRecentDementia", row["MemRecentDementia"].ToString());
+                    pdfFormFields.SetField("MemHeight", row["MemHeight"].ToString());
+                    pdfFormFields.SetField("MemWeight", row["MemWeight"].ToString());
+                    pdfFormFields.SetField("BMI", row["BMI"].ToString());
+                    pdfFormFields.SetField("MemConcernAboutSleep", row["MemConcernAboutSleep"].ToString());
+                    pdfFormFields.SetField("MemAwakeDuringNight", row["MemAwakeDuringNight"].ToString());
+                    pdfFormFields.SetField("MemHadDiabeticScreening", row["MemHadDiabeticScreening"].ToString());
+                    pdfFormFields.SetField("MemRecentDiabeticScreening", row["MemRecentDiabeticScreening"].ToString());
+                    pdfFormFields.SetField("NoConcernForDiabetes", row["NoConcernForDiabetes"].ToString());
+                    pdfFormFields.SetField("RequiredMedicationForDiabetes", row["RequiredMedicationForDiabetes"].ToString());
+                    pdfFormFields.SetField("AssistanceWithDiabetesMonitoring", row["AssistanceWithDiabetesMonitoring"].ToString());
+                    pdfFormFields.SetField("MedicationAdministration", row["MedicationAdministration"].ToString());
+                    pdfFormFields.SetField("DietaryModification", row["DietaryModification"].ToString());
+                    pdfFormFields.SetField("EducationTraining", row["EducationTraining"].ToString());
+                    pdfFormFields.SetField("ExpSupptResultForMemDiabetes", row["ExpSupptResultForMemDiabetes"].ToString());
+                    pdfFormFields.SetField("NoRespiratoryConcern", row["NoRespiratoryConcern"].ToString());
+                    pdfFormFields.SetField("RequiresMedicationForRespConcren", row["RequiresMedicationForRespConcren"].ToString());
+                    pdfFormFields.SetField("UseCPAPMachine", row["UseCPAPMachine"].ToString());
+                    pdfFormFields.SetField("UseNebulizer", row["UseNebulizer"].ToString());
+                    pdfFormFields.SetField("UseOxygen", row["UseOxygen"].ToString());
+                    pdfFormFields.SetField("ExerciseRestrictions", row["ExerciseRestrictions"].ToString());
+                    pdfFormFields.SetField("OtherTherapies", row["OtherTherapies"].ToString());
+                    pdfFormFields.SetField("ExpServicesRespiratoryNeed", row["ExpServicesRespiratoryNeed"].ToString());
+                    pdfFormFields.SetField("NoConcernsForCholesterol", row["NoConcernsForCholesterol"].ToString());
+                    pdfFormFields.SetField("ModifiedDiet", row["ModifiedDiet"].ToString());
+                    pdfFormFields.SetField("CholesterolLoweringMedications", row["CholesterolLoweringMedications"].ToString());
+                    pdfFormFields.SetField("IncreaseExercise", row["IncreaseExercise"].ToString());
+                    pdfFormFields.SetField("EncourageWeightLossForCholesterol", row["EncourageWeightLossForCholesterol"].ToString());
+                    pdfFormFields.SetField("ProvideAssistanceWithMealPlanning", row["ProvideAssistanceWithMealPlanning"].ToString());
+                    pdfFormFields.SetField("ProvideEducationToThePerson", row["ProvideEducationToThePerson"].ToString());
+                    pdfFormFields.SetField("ExpSupptForHighCholesterol", row["ExpSupptForHighCholesterol"].ToString());
+                    pdfFormFields.SetField("NoConcernForHighBloodPressure", row["NoConcernForHighBloodPressure"].ToString());
+                    pdfFormFields.SetField("EncourageWeightLossForHighBloodPressure", row["EncourageWeightLossForHighBloodPressure"].ToString());
+                    pdfFormFields.SetField("BloodPressureMonitoringPlan", row["BloodPressureMonitoringPlan"].ToString());
+                    pdfFormFields.SetField("ReduceSaltIntake", row["ReduceSaltIntake"].ToString());
+                    pdfFormFields.SetField("EncourageExercise", row["EncourageExercise"].ToString());
+                    pdfFormFields.SetField("MedicationRequired", row["MedicationRequired"].ToString());
+                    pdfFormFields.SetField("ExpSupptForHighBloodPressure", row["ExpSupptForHighBloodPressure"].ToString());
+                    pdfFormFields.SetField("MemBloodTestForLeadPoisoning", row["MemBloodTestForLeadPoisoning"].ToString());
+                    pdfFormFields.SetField("MemRecentBloodTestForLeadPoisoning", row["MemRecentBloodTestForLeadPoisoning"].ToString());
+                    pdfFormFields.SetField("MemSexuallyActive", row["MemSexuallyActive"].ToString());
+                    pdfFormFields.SetField("BirthControlOral", row["BirthControlOral"].ToString());
+                    pdfFormFields.SetField("BirthControlProphylactic", row["BirthControlProphylactic"].ToString());
+                    pdfFormFields.SetField("NaturalFamilyPlanning", row["NaturalFamilyPlanning"].ToString());
+                    pdfFormFields.SetField("NoBirthControl", row["NoBirthControl"].ToString());
+                    pdfFormFields.SetField("Unknown", row["Unknown"].ToString());
+                    pdfFormFields.SetField("STIInPastMonths", row["STIInPastMonths"].ToString());
+                    pdfFormFields.SetField("MemHIVPositive", row["MemHIVPositive"].ToString());
+                    pdfFormFields.SetField("MemLastHIVAppointment", row["MemLastHIVAppointment"].ToString());
+                    pdfFormFields.SetField("MemExerciseInWeekForThirtyMintues", row["MemExerciseInWeekForThirtyMintues"].ToString());
+                    pdfFormFields.SetField("MemInterestedIncPhysicalActivity", row["MemInterestedIncPhysicalActivity"].ToString());
+                    pdfFormFields.SetField("MemHaveSeizureDisorder", row["MemHaveSeizureDisorder"].ToString());
+                    pdfFormFields.SetField("MemNeedSupptOnSeizure", row["MemNeedSupptOnSeizure"].ToString());
+                    pdfFormFields.SetField("ExpMemSupptExpectedForSeizureDisorder", row["ExpMemSupptExpectedForSeizureDisorder"].ToString());
+                    pdfFormFields.SetField("HealthRelatedConcernsNotAddressed", row["HealthRelatedConcernsNotAddressed"].ToString());
+                    pdfFormFields.SetField("ExpHealthConcerns", row["ExpHealthConcerns"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillBehavioralHealthSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableBehavioralHealth;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableBehavioralHealth = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableBehavioralHealth.Rows[0];
+
+                    pdfFormFields.SetField("MemberBeenDiagnosed", row["MemberBeenDiagnosed"].ToString());
+                    pdfFormFields.SetField("PrevAnxiety", row["PrevAnxiety"].ToString());
+                    pdfFormFields.SetField("PrevDepression", row["PrevDepression"].ToString());
+                    pdfFormFields.SetField("PrevADHD", row["PrevADHD"].ToString());
+                    pdfFormFields.SetField("PrevPanicDisorder", row["PrevPanicDisorder"].ToString());
+                    pdfFormFields.SetField("PrevPsychosis", row["PrevPsychosis"].ToString());
+                    pdfFormFields.SetField("PrevSchizophrenia", row["PrevSchizophrenia"].ToString());
+                    pdfFormFields.SetField("PrevBipolarDisorder", row["PrevBipolarDisorder"].ToString());
+                    pdfFormFields.SetField("PrevPostTraumaticStressDisorder", row["PrevPostTraumaticStressDisorder"].ToString());
+                    pdfFormFields.SetField("PrevObsessiveCompulsiveDisorder", row["PrevObsessiveCompulsiveDisorder"].ToString());
+                    pdfFormFields.SetField("PrevEatingDisorder", row["PrevEatingDisorder"].ToString());
+                    pdfFormFields.SetField("PrevImpulsiveControlDisorder", row["PrevImpulsiveControlDisorder"].ToString());
+                    pdfFormFields.SetField("PrevPersonalityDisorder", row["PrevPersonalityDisorder"].ToString());
+                    pdfFormFields.SetField("PrevBorderlinePersonalityDisorder", row["PrevBorderlinePersonalityDisorder"].ToString());
+                    pdfFormFields.SetField("CurreAnxiety", row["CurreAnxiety"].ToString());
+                    pdfFormFields.SetField("CurreDepression", row["CurreDepression"].ToString());
+                    pdfFormFields.SetField("CurreADHD", row["CurreADHD"].ToString());
+                    pdfFormFields.SetField("CurrePanicDisorder", row["CurrePanicDisorder"].ToString());
+                    pdfFormFields.SetField("CurrePsychosis", row["CurrePsychosis"].ToString());
+                    pdfFormFields.SetField("CurreSchizophrenia", row["CurreSchizophrenia"].ToString());
+                    pdfFormFields.SetField("CurreBipolarDisorder", row["CurreBipolarDisorder"].ToString());
+                    pdfFormFields.SetField("CurrePostTraumaticStressDisorder", row["CurrePostTraumaticStressDisorder"].ToString());
+                    pdfFormFields.SetField("CurreObsessiveCompulsiveDisorder", row["CurreObsessiveCompulsiveDisorder"].ToString());
+
+                    pdfFormFields.SetField("CurreEatingDisorder", row["CurreEatingDisorder"].ToString());
+                    pdfFormFields.SetField("CurreImpulsiveControlDisorder", row["CurreImpulsiveControlDisorder"].ToString());
+                    pdfFormFields.SetField("CurrePersonalityDisorder", row["CurrePersonalityDisorder"].ToString());
+                    pdfFormFields.SetField("CurreBorderlinePersonalityDisorder", row["CurreBorderlinePersonalityDisorder"].ToString());
+                    pdfFormFields.SetField("DiagnosMemberAcuteChronicHealthCondition", row["DiagnosMemberAcuteChronicHealthCondition"].ToString());
+                    pdfFormFields.SetField("PsychiatricConditionInterfereWithMem", row["PsychiatricConditionInterfereWithMem"].ToString());
+                    pdfFormFields.SetField("SourceOfMentalHealthDiagnos", row["SourceOfMentalHealthDiagnos"].ToString());
+                    pdfFormFields.SetField("OutpatientOneToOneTherapy", row["OutpatientOneToOneTherapy"].ToString());
+                    pdfFormFields.SetField("OutpatientGroupTherapy", row["OutpatientGroupTherapy"].ToString());
+                    pdfFormFields.SetField("PsychiatricMedication", row["PsychiatricMedication"].ToString());
+                    pdfFormFields.SetField("FamilyTherapy", row["FamilyTherapy"].ToString());
+                    pdfFormFields.SetField("ParentSupportAndTraining", row["ParentSupportAndTraining"].ToString());
+                    pdfFormFields.SetField("PeerMentor", row["PeerMentor"].ToString());
+                    pdfFormFields.SetField("PROSClinic", row["PROSClinic"].ToString());
+                    pdfFormFields.SetField("AcuteInpatientTreatment", row["AcuteInpatientTreatment"].ToString());
+                    pdfFormFields.SetField("LongTermInpatientTreatment", row["LongTermInpatientTreatment"].ToString());
+                    pdfFormFields.SetField("Other", row["Other"].ToString());
+                    pdfFormFields.SetField("MemRecentPsychiatricHospitalization", row["MemRecentPsychiatricHospitalization"].ToString());
+                    pdfFormFields.SetField("MemRecvSuicidalThoughtsInPast", row["MemRecvSuicidalThoughtsInPast"].ToString());
+                    pdfFormFields.SetField("MemMonitoredForSuicidalRisk", row["MemMonitoredForSuicidalRisk"].ToString());
+                    pdfFormFields.SetField("NatureOfSelfHarmBehavior", row["NatureOfSelfHarmBehavior"].ToString());
+                    pdfFormFields.SetField("MemMonitoredForSelfHarmRisk", row["MemMonitoredForSelfHarmRisk"].ToString());
+                    pdfFormFields.SetField("MemMedicationMonitoringPlan", row["MemMedicationMonitoringPlan"].ToString());
+                    pdfFormFields.SetField("MedicationMonitoredByPsychiatrist", row["MedicationMonitoredByPsychiatrist"].ToString());
+                    pdfFormFields.SetField("PscyhiatricMonitoringFrequency", row["PscyhiatricMonitoringFrequency"].ToString());
+                    pdfFormFields.SetField("MemHistoryOfTrauma", row["MemHistoryOfTrauma"].ToString());
+                    pdfFormFields.SetField("MemPhysicallyHurtOthers", row["MemPhysicallyHurtOthers"].ToString());
+                    pdfFormFields.SetField("MemInsultOthers", row["MemInsultOthers"].ToString());
+                    pdfFormFields.SetField("MemThreatenOthers", row["MemThreatenOthers"].ToString());
+                    pdfFormFields.SetField("MemScreamCurseOthers", row["MemScreamCurseOthers"].ToString());
+                    pdfFormFields.SetField("MemSmoke", row["MemSmoke"].ToString());
+                    pdfFormFields.SetField("IndvDrinkAlcohol", row["IndvDrinkAlcohol"].ToString());
+                    pdfFormFields.SetField("IndvUseRecreationalDrugs", row["IndvUseRecreationalDrugs"].ToString());
+                    pdfFormFields.SetField("PersonBeenPrescribedPRN", row["PersonBeenPrescribedPRN"].ToString());
+                    pdfFormFields.SetField("ReasonForPRNMedication", row["ReasonForPRNMedication"].ToString());
+                    pdfFormFields.SetField("FrequencyForPRNGiven", row["FrequencyForPRNGiven"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillChallengingBehaviorsSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableChallengingBehaviors;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableChallengingBehaviors = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableChallengingBehaviors.Rows[0];
+
+                    pdfFormFields.SetField("MemHasChallengingBehavior", row["MemHasChallengingBehavior"].ToString());
+                    pdfFormFields.SetField("SelfHarmfulBehavior", row["SelfHarmfulBehavior"].ToString());
+                    pdfFormFields.SetField("PhysicallyHurtOther", row["PhysicallyHurtOther"].ToString());
+                    pdfFormFields.SetField("HarmOther", row["HarmOther"].ToString());
+                    pdfFormFields.SetField("DestructionOfProperty", row["DestructionOfProperty"].ToString());
+                    pdfFormFields.SetField("DisruptiveBehavior", row["DisruptiveBehavior"].ToString());
+                    pdfFormFields.SetField("UnusualBehavior", row["UnusualBehavior"].ToString());
+                    pdfFormFields.SetField("Withdrawal", row["Withdrawal"].ToString());
+                    pdfFormFields.SetField("SociallyOffensiveBehavior", row["SociallyOffensiveBehavior"].ToString());
+                    pdfFormFields.SetField("PersistentlyUncooperative", row["PersistentlyUncooperative"].ToString());
+                    pdfFormFields.SetField("ProblemWithSelfcare", row["ProblemWithSelfcare"].ToString());
+                    pdfFormFields.SetField("Pica", row["Pica"].ToString());
+                    pdfFormFields.SetField("Elopement", row["Elopement"].ToString());
+                    pdfFormFields.SetField("Other", row["Other"].ToString());
+                    pdfFormFields.SetField("MemChallengingBehaviorManifests", row["MemChallengingBehaviorManifests"].ToString());
+                    pdfFormFields.SetField("OutpatientOneToOneTherpay", row["OutpatientOneToOneTherpay"].ToString());
+                    pdfFormFields.SetField("OutpatientGroupTherapy", row["OutpatientGroupTherapy"].ToString());
+                    pdfFormFields.SetField("PsychiatricMedication", row["PsychiatricMedication"].ToString());
+                    pdfFormFields.SetField("FamilyTherapy", row["FamilyTherapy"].ToString());
+                    pdfFormFields.SetField("ParentSupportAndTraining", row["ParentSupportAndTraining"].ToString());
+                    pdfFormFields.SetField("PeerMentor", row["PeerMentor"].ToString());
+                    pdfFormFields.SetField("PROSClinic", row["PROSClinic"].ToString());
+                    pdfFormFields.SetField("AcuteInpatientTreatment", row["AcuteInpatientTreatment"].ToString());
+                    pdfFormFields.SetField("LongTermInpatientTreatment", row["LongTermInpatientTreatment"].ToString());
+                    pdfFormFields.SetField("OtherChalleningBehaviorInPast", row["OtherChalleningBehaviorInPast"].ToString());
+                    pdfFormFields.SetField("RestrictiveEater", row["RestrictiveEater"].ToString());
+                    pdfFormFields.SetField("MemShowAggressiveOnMeals", row["MemShowAggressiveOnMeals"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillBehavioralSupportPlanSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableBehavioralSupportPlan;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableBehavioralSupportPlan = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableBehavioralSupportPlan.Rows[0];
+
+                    pdfFormFields.SetField("MemHaveBehavioralSupportPlan", row["MemHaveBehavioralSupportPlan"].ToString());
+                    pdfFormFields.SetField("MemHumanRightApproval", row["MemHumanRightApproval"].ToString());
+                    pdfFormFields.SetField("MemReqPhyInterventionInPastForSafety", row["MemReqPhyInterventionInPastForSafety"].ToString());
+                    pdfFormFields.SetField("PhyInterventionPartOfSupportPlan", row["PhyInterventionPartOfSupportPlan"].ToString());
+                    pdfFormFields.SetField("MemSupptPlanContainRestrictiveIntervention", row["MemSupptPlanContainRestrictiveIntervention"].ToString());
+                    pdfFormFields.SetField("SCIPR", row["SCIPR"].ToString());
+                    pdfFormFields.SetField("Medication", row["Medication"].ToString());
+                    pdfFormFields.SetField("RightLimitation", row["RightLimitation"].ToString());
+                    pdfFormFields.SetField("TimeOut", row["TimeOut"].ToString());
+                    pdfFormFields.SetField("MechanicalRestrainingDevice", row["MechanicalRestrainingDevice"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillMedicationsSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableMedications;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableMedications = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableMedications.Rows[0];
+
+                    pdfFormFields.SetField("IndividualMiddleName", row["IndividualMiddleName"].ToString());
+                    pdfFormFields.SetField("IndividualSuffix", row["IndividualSuffix"].ToString());
+                    pdfFormFields.SetField("Nickname", row["Nickname"].ToString());
+                    pdfFormFields.SetField("TABSId", row["TABSId"].ToString());
+                    pdfFormFields.SetField("MedicaidId", row["MedicaidId"].ToString());
+                    pdfFormFields.SetField("DateofBirth", row["DateofBirth"].ToString());
+                    pdfFormFields.SetField("Gender", row["Gender"].ToString());
+                    pdfFormFields.SetField("PreferredGender", row["PreferredGender"].ToString());
+                    pdfFormFields.SetField("Race", row["Race"].ToString());
+                    pdfFormFields.SetField("Ethnicity", row["Ethnicity"].ToString());
+                    pdfFormFields.SetField("PhoneNumber", row["PhoneNumber"].ToString());
+                    pdfFormFields.SetField("StreetAddress1", row["StreetAddress1"].ToString());
+                    pdfFormFields.SetField("StreetAddress2", row["StreetAddress2"].ToString());
+                    pdfFormFields.SetField("City", row["City"].ToString());
+                    pdfFormFields.SetField("State", row["State"].ToString());
+                    pdfFormFields.SetField("ZipCode", row["ZipCode"].ToString());
+                    pdfFormFields.SetField("LivingSituation", row["LivingSituation"].ToString());
+                    pdfFormFields.SetField("WillowbrookStatus", row["WillowbrookStatus"].ToString());
+                    pdfFormFields.SetField("RepresentationStatus", row["RepresentationStatus"].ToString());
+                    pdfFormFields.SetField("CABRepContact1", row["CABRepContact1"].ToString());
+                    pdfFormFields.SetField("CABRepContact2", row["CABRepContact2"].ToString());
+                    pdfFormFields.SetField("ExpectationsforCommunityInclusion", row["ExpectationsforCommunityInclusion"].ToString());
+                    pdfFormFields.SetField("HospitalStaffingCoverage", row["HospitalStaffingCoverage"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillCommumunitySocialParticipationSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableCommumunitySocialParticipation;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableCommumunitySocialParticipation = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableCommumunitySocialParticipation.Rows[0];
+
+                    pdfFormFields.SetField("MemCurreSelfDirectSupportService", row["MemCurreSelfDirectSupportService"].ToString());
+                    pdfFormFields.SetField("MemWishSelfDirectSupportService", row["MemWishSelfDirectSupportService"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillEducationSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableEducation;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableEducation = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableEducation.Rows[0];
+
+                    pdfFormFields.SetField("MemCompletedEducationLevel", row["MemCompletedEducationLevel"].ToString());
+                    pdfFormFields.SetField("MemCurreSchoolEducation", row["MemCurreSchoolEducation"].ToString());
+                    pdfFormFields.SetField("CurreEducationMeetNeed", row["CurreEducationMeetNeed"].ToString());
+                    pdfFormFields.SetField("MemPursuingAdditionalEducation", row["MemPursuingAdditionalEducation"].ToString());
+                    pdfFormFields.SetField("ChooseCurrentEducation", row["ChooseCurrentEducation"].ToString());
+                    pdfFormFields.SetField("DescribeSupptResultInEducationSetting", row["DescribeSupptResultInEducationSetting"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillTransitionPlanningSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableTransitionPlanning;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableTransitionPlanning = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableTransitionPlanning.Rows[0];
+
+                    pdfFormFields.SetField("DescribePrevocationalSkill", row["DescribePrevocationalSkill"].ToString());
+                    pdfFormFields.SetField("MemCompetitivelyEmployed", row["MemCompetitivelyEmployed"].ToString());
+                    pdfFormFields.SetField("MemCurreReceivingServices", row["MemCurreReceivingServices"].ToString());
+                    pdfFormFields.SetField("StartDateACCESVRService", row["StartDateACCESVRService"].ToString());
+                    pdfFormFields.SetField("VocationalCounseling", row["VocationalCounseling"].ToString());
+                    pdfFormFields.SetField("AssessmentsAndEvaluations", row["AssessmentsAndEvaluations"].ToString());
+                    pdfFormFields.SetField("RehabilitationTechnology", row["RehabilitationTechnology"].ToString());
+                    pdfFormFields.SetField("SpecialTransportation", row["SpecialTransportation"].ToString());
+                    pdfFormFields.SetField("AdaptiveDriverTraining", row["AdaptiveDriverTraining"].ToString());
+                    pdfFormFields.SetField("WorkReadiness", row["WorkReadiness"].ToString());
+                    pdfFormFields.SetField("TuitionFeesTextbooks", row["TuitionFeesTextbooks"].ToString());
+                    pdfFormFields.SetField("NoteTaker", row["NoteTaker"].ToString());
+                    pdfFormFields.SetField("YouthService", row["YouthService"].ToString());
+                    pdfFormFields.SetField("PhysicalMentalRestoration", row["PhysicalMentalRestoration"].ToString());
+                    pdfFormFields.SetField("HomeVehicleWorksite", row["HomeVehicleWorksite"].ToString());
+                    pdfFormFields.SetField("JobDevelopmentPlacement", row["JobDevelopmentPlacement"].ToString());
+                    pdfFormFields.SetField("WorkTryOut", row["WorkTryOut"].ToString());
+                    pdfFormFields.SetField("JobCoaching", row["JobCoaching"].ToString());
+                    pdfFormFields.SetField("OccupationalToolEquipment", row["OccupationalToolEquipment"].ToString());
+                    pdfFormFields.SetField("GoodsInventoryEquipment", row["GoodsInventoryEquipment"].ToString());
+                    pdfFormFields.SetField("OccupationalBusinessLicense", row["OccupationalBusinessLicense"].ToString());
+                    pdfFormFields.SetField("TicketToWork", row["TicketToWork"].ToString());
+                    pdfFormFields.SetField("PASS", row["PASS"].ToString());
+                    pdfFormFields.SetField("WelfareToWork", row["WelfareToWork"].ToString());
+                    pdfFormFields.SetField("Other", row["Other"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+        private void fillEmploymentSection(AcroFields pdfFormFields, DataSet dataSetFillPDF)
+        {
+            DataTable dataTableEmployment;
+            try
+            {
+
+                if (dataSetFillPDF.Tables.Count > 0 && dataSetFillPDF.Tables[10].Rows.Count > 0)
+                {
+                    dataTableEmployment = dataSetFillPDF.Tables[10];
+                    DataRow row = dataTableEmployment.Rows[0];
+
+                    pdfFormFields.SetField("MemCurrentlyHCBSSupptService", row["MemCurrentlyHCBSSupptService"].ToString());
+                    pdfFormFields.SetField("MemCurreEmploymentStatus", row["MemCurreEmploymentStatus"].ToString());
+                    pdfFormFields.SetField("MemWishIncCurreLevelOfEmployment", row["MemWishIncCurreLevelOfEmployment"].ToString());
+                    pdfFormFields.SetField("MemSatisfiedWithCurrentEmployer", row["MemSatisfiedWithCurrentEmployer"].ToString());
+                    pdfFormFields.SetField("EmployerName", row["EmployerName"].ToString());
+                    pdfFormFields.SetField("EmployerLocation", row["EmployerLocation"].ToString());
+                    pdfFormFields.SetField("StartDateOfCurrentJob", row["StartDateOfCurrentJob"].ToString());
+                    pdfFormFields.SetField("TerminationDateOfRecentJob", row["TerminationDateOfRecentJob"].ToString());
+                    pdfFormFields.SetField("ReasonToChangeEmploymentStatus", row["ReasonToChangeEmploymentStatus"].ToString());
+                    pdfFormFields.SetField("MemHoursWorkInWeek", row["MemHoursWorkInWeek"].ToString());
+                    pdfFormFields.SetField("MemEarnInWeek", row["MemEarnInWeek"].ToString());
+                    pdfFormFields.SetField("MemPaycheck", row["MemPaycheck"].ToString());
+                    pdfFormFields.SetField("DescMemEmploymentSetting", row["DescMemEmploymentSetting"].ToString());
+                    pdfFormFields.SetField("SatisfiedCurrentEmploymentSetting", row["SatisfiedCurrentEmploymentSetting"].ToString());
+                    pdfFormFields.SetField("MemWorkInIntegratedSetting", row["MemWorkInIntegratedSetting"].ToString());
+                    pdfFormFields.SetField("Status", row["Status"].ToString());
+
+
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                throw Ex;
+            }
         }
 
     }

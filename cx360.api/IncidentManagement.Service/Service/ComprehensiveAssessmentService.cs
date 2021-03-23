@@ -48,6 +48,14 @@ namespace IncidentManagement.Service.Service
         {
             return await _ComprehensiveAssessmentRepository.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
         }
+        public async Task<CCOComprehensiveAssessmentDetailResponse> HandleCCOComprehensiveAssessmentVersioning(CCOComprehensiveAssessmentRequest cCOComprehensiveAssessmentRequest)
+        {
+            return await _ComprehensiveAssessmentRepository.HandleCCOComprehensiveAssessmentVersioning(cCOComprehensiveAssessmentRequest);
+        }
+        public async Task<CCOComprehensivePDFResponse> FillableCCOComprehensiveAssessmentPDF(FillableCCOComprehensiveAssessmentPDFRequest fillableCCOComprehensiveAssessmentPDFRequest)
+        {
+            return await _ComprehensiveAssessmentRepository.FillableCCOComprehensiveAssessmentPDF(fillableCCOComprehensiveAssessmentPDFRequest);
+        }
 
     }
 }

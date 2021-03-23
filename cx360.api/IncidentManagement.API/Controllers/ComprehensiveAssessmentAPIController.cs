@@ -27,6 +27,8 @@ namespace IncidentManagement.API.Controllers
         private IComprehensiveAssessmentService _ComprehensiveAssessmentService = null;
         private ComprehensiveAssessmentDetailResponse cadResponse = null;
         private CCOComprehensiveAssessmentDetailResponse ccoResponse = null;
+        private CCOComprehensivePDFResponse cCOComprehensivePDFResponse = null;
+        private CCOComprehensiveAssessmentDetailTabResponse cCOComprehensiveAssessmentDetailTabResponse = null;
         private ComprehensiveAssessmentPDFResponse comprehensiveAssessmentPDFResponse = null;
         CommonFunctions common = null;
         private readonly DocumentUpload _documentUpload;
@@ -77,6 +79,14 @@ namespace IncidentManagement.API.Controllers
             }
             return httpResponseMessage;
         }
+
+
+        /// <summary>
+        /// Get Comprehensive Assessment
+        /// </summary>
+        /// <remarks>This API is used to Comprehensive Assessment.</remarks>
+        /// <param name="comprehensiveAssessmentRequest"> Model</param>
+        /// <returns></returns>
         [HttpPost]
         [Route("HandleAssessmentVersioning")]
         [ActionName("HandleAssessmentVersioning")]
@@ -295,7 +305,7 @@ namespace IncidentManagement.API.Controllers
             try
             {
                 httpResponseMessage = new HttpResponseMessage();
-                cadResponse = new ComprehensiveAssessmentDetailResponse();
+                ccoResponse = new CCOComprehensiveAssessmentDetailResponse();
                 if (ModelState.IsValid && comprehensiveAssessmentRequest != null)
                 {
                     if (Request.Headers.Contains("Source"))
@@ -303,16 +313,93 @@ namespace IncidentManagement.API.Controllers
                         companyId = Request.Headers.GetValues("Source").First();
                     }
                     ccoResponse = await _ComprehensiveAssessmentService.GetCCOComprehensiveAssessmentDetail(comprehensiveAssessmentRequest, companyId);
-                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, ccoResponse);
                 }
 
             }
             catch (Exception Ex)
             {
-                cadResponse.Success = false;
-                cadResponse.IsException = true;
-                cadResponse.Message = Ex.Message;
-                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cadResponse);
+                ccoResponse.Success = false;
+                ccoResponse.IsException = true;
+                ccoResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, ccoResponse);
+                CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+
+        /// <summary>
+        /// Publish CCO Comprehensive Assessment
+        /// </summary>
+        /// <remarks>This API is used to CCO Comprehensive Assessment.</remarks>
+        /// <param name="cCOComprehensiveAssessmentRequest"> Model</param>
+        /// <returns></returns>
+
+        [HttpPost]
+        [Route("HandleCCOComprehensiveAssessmentVersioning")]
+        [ActionName("HandleCCOComprehensiveAssessmentVersioning")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> HandleCCOComprehensiveAssessmentVersioning(CCOComprehensiveAssessmentRequest cCOComprehensiveAssessmentRequest)
+        {
+            try
+            {
+                httpResponseMessage = new HttpResponseMessage();
+                ccoResponse = new CCOComprehensiveAssessmentDetailResponse();
+                if (ModelState.IsValid && cCOComprehensiveAssessmentRequest != null)
+                {
+
+                    ccoResponse = await _ComprehensiveAssessmentService.HandleCCOComprehensiveAssessmentVersioning(cCOComprehensiveAssessmentRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, ccoResponse);
+                }
+
+            }
+            catch (Exception Ex)
+            {
+                ccoResponse.Success = false;
+                ccoResponse.IsException = true;
+                ccoResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, ccoResponse);
+                CommonFunctions.LogError(Ex);
+            }
+            return httpResponseMessage;
+        }
+
+
+        /// <summary>
+        /// tab details
+        /// </summary>
+        /// <remarks>This API fills the life plan pdf .</remarks>
+        /// <param name="fillableCCOComprehensiveAssessmentPDFRequest"> Model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("FillableCCOComprehensiveAssessment")]
+        [ActionName("FillableCCOComprehensiveAssessment")]
+        [AuthorizeUser]
+        public async Task<HttpResponseMessage> FillableCCOComprehensiveAssessment(FillableCCOComprehensiveAssessmentPDFRequest fillableCCOComprehensiveAssessmentPDFRequest)
+        {
+            try
+            {
+                common = new CommonFunctions();
+                httpResponseMessage = new HttpResponseMessage();
+                cCOComprehensivePDFResponse = new CCOComprehensivePDFResponse();
+                cCOComprehensiveAssessmentDetailTabResponse = new CCOComprehensiveAssessmentDetailTabResponse();
+                if (ModelState.IsValid && fillableCCOComprehensiveAssessmentPDFRequest != null)
+                {
+                    cCOComprehensivePDFResponse = await _ComprehensiveAssessmentService.FillableCCOComprehensiveAssessmentPDF(fillableCCOComprehensiveAssessmentPDFRequest);
+                    httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cCOComprehensivePDFResponse);
+                    Stream stream = CommonFunctions.GetFilesStream(cCOComprehensivePDFResponse.CCOComprehensiveAssessmentPDF[0].FileName);
+                    httpResponseMessage.Content = new StreamContent(stream);
+                    httpResponseMessage.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+                    httpResponseMessage.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+                    httpResponseMessage.Content.Headers.ContentDisposition.FileName = "fileNameOfYourChoice";
+                }
+            }
+            catch (Exception Ex)
+            {
+                cCOComprehensiveAssessmentDetailTabResponse.Success = false;
+                cCOComprehensiveAssessmentDetailTabResponse.IsException = true;
+                cCOComprehensiveAssessmentDetailTabResponse.Message = Ex.Message;
+                httpResponseMessage = Request.CreateResponse(HttpStatusCode.OK, cCOComprehensiveAssessmentDetailTabResponse);
                 CommonFunctions.LogError(Ex);
             }
             return httpResponseMessage;

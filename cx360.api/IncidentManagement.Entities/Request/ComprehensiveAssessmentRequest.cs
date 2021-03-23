@@ -25,4 +25,19 @@ namespace IncidentManagement.Entities.Request
         public int? PreviousComprehensiveAssessmentId { get; set; }
        
     }
+
+    public class CCOComprehensiveAssessmentRequest : CommonRequestParameter
+    {
+       
+        public int ClientId { get; set; }
+        public int CompAssessmentId { get; set; }
+        public string TabName { get; set; }
+        public string Json { get; set; }
+        public string JsonChildFirstTable { get; set; }
+        public string JsonChildSecondTable { get; set; }
+        public int? CompAssessmentVersioningId { get; set; }
+        public string DocumentStatus { get; set; }
+        public string DocumentVersion { get; set; }
+
+    }
 }

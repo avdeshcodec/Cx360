@@ -513,6 +513,7 @@
     <Content Include="PDFTemplate\newHousingSubsidiesTableMerge.pdf" />
     <Content Include="PDFTemplate\Comprehensive_Assessment.pdf" />
     <Content Include="PDFTemplate\Completed_Comprehensive_Assessment.pdf" />
+    <Content Include="PDFTemplate\CCO_ComprehensiveAssessmentPDF.pdf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

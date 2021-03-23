@@ -442,8 +442,17 @@ namespace IncidentManagement.Entities.Common
                 case "CCO_UnknownCount":
                     storeProcedure = MappedStoreProcedure.CCO_UnknownCount;
                     break;
+                case "PublishCCOComprehensiveAssessmentVersion":
+                    storeProcedure = MappedStoreProcedure.PublishCCOComprehensiveAssessmentVersion;
+                    break;
+                case "CreateNewVersionCCOComprehensiveAssessment":
+                    storeProcedure = MappedStoreProcedure.CreateNewVersionCCOComprehensiveAssessment;
+                    break;
+                case "GetMemberRight":
+                    storeProcedure = MappedStoreProcedure.GetMemberRight;
+                    break;
 
-                    //Life plan 
+                //Life plan 
                 case "InsertMemberRepresentative":
                     storeProcedure = MappedStoreProcedure.InsertMemberRepresentative;
                     break;
@@ -453,8 +462,8 @@ namespace IncidentManagement.Entities.Common
                 case "InsertMemberRight":
                     storeProcedure = MappedStoreProcedure.InsertMemberRight;
                     break;
-                case "GetMemberRight":
-                    storeProcedure = MappedStoreProcedure.GetMemberRight;
+                case "CCOComprehensiveAssessmentPDF":
+                    storeProcedure = MappedStoreProcedure.CCOComprehensiveAssessmentPDF;
                     break;
 
             }
@@ -478,6 +487,9 @@ namespace IncidentManagement.Entities.Common
                     break;
                 case "LifePlanPDF":
                     pathName = ConfigurationManager.AppSettings["FillablePDF"].ToString()+"Lifeplan.pdf";
+                    break;
+                case "CCOComprehensiveAssessmentPDF":
+                    pathName = ConfigurationManager.AppSettings["FillablePDF"].ToString() + "CCO_ComprehensiveAssessmentPDF.pdf";
                     break;
                 default:
                     // code block

@@ -21,7 +21,9 @@ namespace IncidentManagement.Repository.IRepository
         Task<ComprehensiveAssessmentDetailResponse> UploadOfflinePDF(string json, string companyId);
         Task<CCOComprehensiveAssessmentDetailResponse> GetCCOComprehensiveAssessmentDetail(ComprehensiveAssessmentRequest comprehensiveAssessmentRequest, string companyId);
 
-
+        Task<CCOComprehensiveAssessmentDetailResponse> HandleCCOComprehensiveAssessmentVersioning(CCOComprehensiveAssessmentRequest cCOComprehensiveAssessmentRequest);
+        Task<CCOComprehensivePDFResponse> FillableCCOComprehensiveAssessmentPDF(FillableCCOComprehensiveAssessmentPDFRequest fillableCCOComprehensiveAssessmentPDFRequest);
+     
         #endregion
     }
 }

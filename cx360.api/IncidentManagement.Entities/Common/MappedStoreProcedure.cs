@@ -45,6 +45,7 @@ namespace IncidentManagement.Entities.Common
         public static readonly string GetLifePlanPDFDetails = "usp_GetLifePlanPDFDetails";
 
         public static readonly string PublishLifePlanVersion = "usp_PublishLifePlanVersion";
+
         public static readonly string CreateNewVersion = "usp_CreateNewVersion";
         public static readonly string InsertLifePlanNotifications = "usp_InsertModifyLifeplanNotifications";
 
@@ -137,6 +138,10 @@ namespace IncidentManagement.Entities.Common
         public static readonly string CCO_TransitionPlanning = "usp_InsertModifyCCO_TransitionPlanning";
         public static readonly string CCO_Employment = "usp_InsertModifyCCO_Employment";
         public static readonly string CCO_UnknownCount = "usp_UpdateCountUnknown";
+        public static readonly string PublishCCOComprehensiveAssessmentVersion = "usp_PublishCCOComprehensiveAssessmentVersion";
+        public static readonly string CreateNewVersionCCOComprehensiveAssessment = "usp_CreateNewVersionCCOComprehensiveAssessment";
+        public static readonly string CCOComprehensiveAssessmentPDF = "usp_GetCCOComprehensiveAssessmentDetails";
+
 
         //Life Plan
         public static readonly string InsertMemberRepresentative = "usp_InsertMemberRepresentative";
